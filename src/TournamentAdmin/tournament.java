@@ -28,6 +28,22 @@ public class tournament {
         this.participants = new ArrayList<>();
     }
 
+    public String getName() {return this.name;}
+
+    public int getMinELO() {return this.minELO;}
+
+    public char getGender() {return this.gender;}
+
+    public LocalDate getRegisterStartDate() {return this.registerStartDate;}
+
+    public LocalDate getRegisteredEndDate() {return this.registerEndDate;}
+
+    public LocalDate getStartDate() {return this.startDate;}
+
+    public LocalDate getEndDate() {return this.endDate;}
+
+    public List<Player> getParticipants() {return this.participants;}
+
     public void register(Player player) {
         if (player.getGender != gender) {
             System.out.println("Failed to register " + player.getName() + ",must be gender " + gender);
