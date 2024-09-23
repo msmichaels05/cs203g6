@@ -15,4 +15,17 @@ public class PlayerService {
     public Player savePlayer(Player player) {
         return playerRepository.save(player);  // Save player to the database
     }
+    public void updateEloAndRecord(Long playerId, int opponentElo, boolean hasWon) {
+        // Find player by ID
+        Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+
+        // Update player's ELO and win/loss record
+        player.updateElo(opponentElo, hasWon);
+        player.updateWinsAndLosses(hasWon);
+
+        // Save updated player back to the repository
+        playerRepository.save(player);
+    }
+
 }

@@ -17,16 +17,22 @@ public class Player {
     private String email;
     private String password;
     private String phoneNumber;
+    private int elo = 1500;  // Starting ELO
+    private int wins = 0;
+    private int losses = 0;
 
-    // Constructors
+    // Default Constructor
     public Player() {}
 
-    public Player(String name, String gender, String email, String password, String phoneNumber) {
+    // Updated Constructor with wins and losses
+    public Player(String name, String gender, String email, String password, String phoneNumber, int wins, int losses) {
         this.name = name;
         this.gender = gender;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.wins = wins;
+        this.losses = losses;
     }
 
     // Getters and Setters
@@ -76,5 +82,40 @@ public class Player {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public int getLosses() {
+        return losses;
+    }
+
+    public void setLosses(int losses) {
+        this.losses = losses;
+    }
+
+    // Methods for updating ELO, wins, and losses
+    public void updateElo(int opponentElo, boolean hasWon) {
+        int K = 32;
+        double expectedScore = 1 / (1 + Math.pow(10, (opponentElo - this.elo) / 400.0));
+        if (hasWon) {
+            this.elo += (int) (K * (1 - expectedScore));
+        } else {
+            this.elo += (int) (K * (0 - expectedScore));
+        }
+    }
+
+    public void updateWinsAndLosses(boolean hasWon) {
+        if (hasWon) {
+            this.wins++;
+        } else {
+            this.losses++;
+        }
     }
 }
