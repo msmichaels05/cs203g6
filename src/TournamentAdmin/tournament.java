@@ -28,22 +28,31 @@ public class tournament {
         this.participants = new ArrayList<>();
     }
 
+    @Autowired
     public String getName() {return this.name;}
 
+    @Autowired
     public int getMinELO() {return this.minELO;}
 
+    @Autowired
     public char getGender() {return this.gender;}
 
+    @Autowired
     public LocalDate getRegisterStartDate() {return this.registerStartDate;}
 
+    @Autowired
     public LocalDate getRegisteredEndDate() {return this.registerEndDate;}
 
+    @Autowired
     public LocalDate getStartDate() {return this.startDate;}
 
+    @Autowired
     public LocalDate getEndDate() {return this.endDate;}
 
+    @Autowired
     public List<Player> getParticipants() {return this.participants;}
 
+    @Autowired
     public void register(Player player) {
         if (player.getGender != gender) {
             System.out.println("Failed to register " + player.getName() + ",must be gender " + gender);
