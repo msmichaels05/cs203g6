@@ -1,6 +1,5 @@
 package com.amateuraces.project.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +19,7 @@ public class AdminController {
     // private TournamentService tournamentService;
     // private ReportingService reportingService;
 
-    @Autowired
+    // @Autowired
     private PlayerService playerService;
 
     // Endpoint for admin to update player ELO and stats
