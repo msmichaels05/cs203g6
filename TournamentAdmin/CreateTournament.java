@@ -12,7 +12,7 @@
 
 import java.util.Scanner;
 
-public class createTournament {
+public class CreateTournament {
     public static void main(String[] args) {
         System.out.println("Creating a tournament");
         Scanner sc = new Scanner(System.in);
@@ -30,7 +30,13 @@ public class createTournament {
 
         // Allow admin to input registered start & end date, and also tournament start & end date
 
-        //Tournament tourny = new Tournament(name, minELO, gender, registerStartDate, registerEndDate, startDate, endDate)
-        //upcomingtournaments.add(tourny)
+        LocalDate registerStartDate = LocalDate.of(2025, 1, 1);
+        LocalDate registerEndDate = LocalDate.of(2025, 1, 15);
+        LocalDate startDate = localDate.of(2025,2,1);
+        LocalDate endDate = localDate.of(2025, 2, 8);
+
+        Tournament tourny = new Tournament(name, minELO, gender, registerStartDate, registerEndDate, startDate, endDate);
+        TournamentList upcomingtournaments = new TournamentList();
+        upcomingtournaments.add(tourny);
     }
 }

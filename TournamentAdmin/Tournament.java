@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
-public class tournament {
+public class Tournament {
 
     private String name;
     private int minELO;
@@ -17,7 +17,7 @@ public class tournament {
     private LocalDate endDate;
     private List<Player> participants = null;
 
-    public tournament(String name, int minELO, char gender, LocalDate registerStartDate, LocalDate registerEndDate, LocalDate startDate, LocalDate endDate) {
+    public Tournament(String name, int minELO, char gender, LocalDate registerStartDate, LocalDate registerEndDate, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.minELO = minELO;
         this.gender = gender;
