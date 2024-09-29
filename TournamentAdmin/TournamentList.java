@@ -2,10 +2,11 @@ public class TournamentList {
     private List<Tournament>  tournamentlist = null;
 
     @Autowired
-    public TournamentList() {this.tournamentlist = new ArrayList<Tournament>();}
+    public TournamentList() {
+        this.tournamentlist = new ArrayList<Tournament>();
+    }
 
-
-    public void get_tournaments() {
+    public List<Tournament> get_tournaments() {
         return tournamentlist;
     }
 
