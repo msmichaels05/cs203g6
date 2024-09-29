@@ -1,3 +1,9 @@
+Instructions to start the app
+1. cd to my-react-app
+2. npm start
+3. open your browser and navigate to: http://localhost:3000
+4. If you encounter any issues with dependencies, try running: npm install --force
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
