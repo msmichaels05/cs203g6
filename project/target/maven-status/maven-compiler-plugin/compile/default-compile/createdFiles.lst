@@ -1,0 +1,6 @@
+com\amateuraces\project\Cs302G6Application.class
+com\amateuraces\project\service\PlayerService.class
+com\amateuraces\project\controller\RegistrationController.class
+com\amateuraces\project\controller\AdminController.class
+com\amateuraces\project\repository\PlayerRepository.class
+com\amateuraces\project\app\Player.class
