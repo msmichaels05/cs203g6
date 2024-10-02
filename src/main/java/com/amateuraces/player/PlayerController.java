@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.amateuraces.book.BookService;
+
 
 @RestController
 public class PlayerController {
@@ -18,6 +20,12 @@ public class PlayerController {
     // private TournamentService tournamentService;
 
     // Constructor Injection
+
+    private PlayerService playerService;
+
+    public PlayerController(PlayerService ps) {
+        playerService = ps;
+    }
 
     @GetMapping("/dashboard")
     public String viewDashboard(Model model) {
@@ -40,7 +48,7 @@ public class PlayerController {
     @GetMapping("/matches")
     public String viewMatchSchedule(Model model) {
         // Show match schedule
-        return "THIS IS TESYT";
+        return "THIS IS TEST";
     }
 
     @GetMapping("/profile")

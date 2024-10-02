@@ -3,6 +3,10 @@ package com.amateuraces.player;
 
 public class Player{
 
+    private @Id @GeneratedValue (strategy = GenerationType.IDENTITY) Long id;
+    private String name;
+    private String email;
+    private String password;
     private String phoneNumber;
     private int age;
     private String gender;
@@ -14,7 +18,7 @@ public class Player{
     public Player() {}
 
     // Updated Constructor with wins and losses
-    public Player(String id, String name, String gender, int age, String email, String password, String phoneNumber, int matchesPlayed, int matchesWon) {
+    public Player(String name, String gender, int age, String email, String password, String phoneNumber, int matchesPlayed, int matchesWon) {
         this.age = age;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
