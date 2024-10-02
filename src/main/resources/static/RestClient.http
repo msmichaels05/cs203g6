@@ -1,5 +1,16 @@
 
 GET http://localhost:8080/matches
+
+###
+
+POST http://localhost:8080/players
+Content-Type: application/json
+
+{
+    "id" : 1, 
+    "name" : "player"
+     
+}
 ###
 GET http://localhost:8080/books
 
@@ -11,7 +22,7 @@ DELETE http://localhost:8080/books/3
 GET http://localhost:8080/books/3
 
 ###
-POST http://localhost:8080/books
+POST http://localhost:8080/players/
 Content-Type: application/json
 
 {

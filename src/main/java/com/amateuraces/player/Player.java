@@ -9,17 +9,27 @@ public class Player{
     private int elo = 1500;  // Starting ELO
     private int matchesPlayed;
     private int matchesWon;
+    private String name;
+    private Long id; 
 
     // // Default Constructor
     public Player() {}
 
+    public Player(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     // Updated Constructor with wins and losses
-    public Player(String id, String name, String gender, int age, String email, String password, String phoneNumber, int matchesPlayed, int matchesWon) {
+    public Player(Long id, String name, String gender, int age, String email, String password, String phoneNumber, int matchesPlayed, int matchesWon) {
         this.age = age;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.matchesPlayed = matchesPlayed;
         this.matchesWon = matchesWon;
+        this.name = name;
+        this.id = id;
+        // this.elo = elo;
     }
 
     // Getters and Setters
@@ -76,5 +86,18 @@ public class Player{
             this.matchesWon++;
         }
         matchesPlayed++;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
