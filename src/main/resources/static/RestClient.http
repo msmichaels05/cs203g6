@@ -1,0 +1,28 @@
+
+GET http://localhost:8080/matches
+###
+GET http://localhost:8080/books
+
+###
+
+DELETE http://localhost:8080/books/3
+
+###
+GET http://localhost:8080/books/3
+
+###
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+    "title": "I, Robot"
+}
+
+###
+PUT http://localhost:8080/books/3
+Content-Type: application/json
+
+{
+    "title": "Sapiens"
+}
+
