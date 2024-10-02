@@ -11,33 +11,40 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.amateuraces.book.Book;
+import java.util.*;
 
 
 
 @RestController
 @RequestMapping("/players")
 public class PlayerController {
-    private PlayerService playerService;
     
-
-     @GetMapping("/players")
-        public String viewPlayers(){
-            return "testing";
-        }
-
- /**
-     * Add a new book with POST request to "/books"
-     * Note the use of @RequestBody
-     * @param player
-     * @return list of all books
-     */
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/players")
-    public Player addPlayer(@RequestBody Player player){
-        return playerService.addPlayer(player);
+    private final PlayerService playerService; // Make it final and use constructor injection
+    
+    // Constructor Injection
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
     }
 
+    /**
+     * Get all players
+     * @return List of players
+     */
+    @GetMapping("/")
+    public List<Player> viewPlayers() {
+        return playerService.listPlayers(); // Assuming you have this method in PlayerService
+    }
+
+    /**
+     * Add a new player with POST request to "/players"
+     * @param player
+     * @return the added player
+     */
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/")
+    public Player addPlayer(@RequestBody Player player) {
+        return playerService.addPlayer(player);
+    }
     
 
     // to be used
