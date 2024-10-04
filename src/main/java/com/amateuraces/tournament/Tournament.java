@@ -8,24 +8,26 @@ import java.util.List;
 public class Tournament {
     private Long id;
     private String name;
-    private String registrationStartDate;  // Separate Start Date
-    private String registrationEndDate;    // Separate End Date
-    private List<Player> players = new ArrayList<>();  // Players who have registered
-    private String requirements;  // E.g., Age, ELO minimum, etc.
-    private boolean isRegistrationOpen = false;  // Boolean to check if registration is currently open
+    private String registrationStartDate;
+    private String registrationEndDate;
+    private List<Player> players = new ArrayList<>();
+    private String requirements;
+    private boolean isRegistrationOpen = false;
+    private String status;  // Add a status field to the tournament class
 
     // Default Constructor
     public Tournament() {}
 
     // Parameterized Constructor
-    public Tournament(Long id, String name, String registrationStartDate, String registrationEndDate, List<Player> players, String requirements) {
+    public Tournament(Long id, String name, String registrationStartDate, String registrationEndDate, List<Player> players, String requirements, String status) {
         this.id = id;
         this.name = name;
         this.registrationStartDate = registrationStartDate;
         this.registrationEndDate = registrationEndDate;
         this.players = players != null ? players : new ArrayList<>();
         this.requirements = requirements;
-        this.isRegistrationOpen = checkRegistrationPeriod(); // Update the registration status
+        this.status = status;  // Initialize the status field
+        this.isRegistrationOpen = checkRegistrationPeriod(); // Update registration status
     }
 
     // Getters and Setters
@@ -52,7 +54,7 @@ public class Tournament {
 
     public void setRegistrationStartDate(String registrationStartDate) {
         this.registrationStartDate = registrationStartDate;
-        this.isRegistrationOpen = checkRegistrationPeriod(); // Update registration status
+        this.isRegistrationOpen = checkRegistrationPeriod();
     }
 
     public String getRegistrationEndDate() {
@@ -61,7 +63,7 @@ public class Tournament {
 
     public void setRegistrationEndDate(String registrationEndDate) {
         this.registrationEndDate = registrationEndDate;
-        this.isRegistrationOpen = checkRegistrationPeriod(); // Update registration status
+        this.isRegistrationOpen = checkRegistrationPeriod();
     }
 
     public List<Player> getPlayers() {
@@ -84,13 +86,16 @@ public class Tournament {
         return isRegistrationOpen;
     }
 
-    // Additional Methods
+    public String getStatus() {
+        return status;
+    }
 
-    /**
-     * Add a player to the tournament's player list if they meet the requirements.
-     * @param player the player to be added
-     * @return true if the player was added, false if not
-     */
+    // New setter for status
+    public void setStatus(String status) {
+        this.status = status;  // Set the status of the tournament
+    }
+
+    // Additional Methods
     public boolean addPlayer(Player player) {
         if (isRegistrationOpen) {
             players.add(player);
@@ -99,12 +104,7 @@ public class Tournament {
         return false;
     }
 
-    /**
-     * Check if the current date is within the registration period.
-     * @return true if registration is open, false otherwise
-     */
     public boolean checkRegistrationPeriod() {
-        // Assume the start and end dates are in the format "YYYY-MM-DD"
         if (registrationStartDate == null || registrationEndDate == null || 
             registrationStartDate.isEmpty() || registrationEndDate.isEmpty()) {
             return false;
@@ -117,17 +117,10 @@ public class Tournament {
                 currentDate.isEqual(java.time.LocalDate.parse(registrationEndDate)));
     }
 
-    /**
-     * Get the number of players registered for the tournament.
-     * @return the number of players
-     */
     public int getRegisteredPlayerCount() {
         return players.size();
     }
 
-    /**
-     * Clear all players from the tournament (useful for resetting tournaments).
-     */
     public void clearPlayers() {
         players.clear();
     }

@@ -1,7 +1,7 @@
 package com.amateuraces.admin;
 
-// import com.amateuraces.admin.Admin;
-// import com.amateuraces.admin.AdminRepository;
+import com.amateuraces.admin.Admin;
+import com.amateuraces.admin.AdminRepository;
 import com.amateuraces.tournament.Tournament;
 import com.amateuraces.tournament.TournamentService;
 import com.amateuraces.match.Match;
@@ -66,11 +66,7 @@ public class AdminServiceImpl implements AdminService {
         return tournamentService.getAllTournaments();
     }
 
-    // // Register an admin for a tournament
-    // @Override
-    // public Tournament registerForTournament(Long tournamentId, Long adminId) {
-    //     return tournamentService.addAdminToTournament(tournamentId, adminId);
-    // }
+ 
 
     // Perform a randomized draw for a tournament
     @Override

@@ -30,7 +30,7 @@ public class JdbcAdminRepository implements AdminRepository {
         // Use KeyHolder to obtain the auto-generated key from the "insert" statement
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         jdbcTemplate.update((Connection conn) -> {
-            PreparedStatement statement = conn.prepareStatement("insert into players (name) values (?) ", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = conn.prepareStatement("insert into admins (name) values (?) ", Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, admin.getName());
             return statement;
         }, holder);
@@ -47,7 +47,7 @@ public class JdbcAdminRepository implements AdminRepository {
     @Override
     public int update(Admin admin) {
         return jdbcTemplate.update(
-            "update players set name = ? where id = ?",
+            "update admins set name = ? where id = ?",
             admin.getName(), admin.getId()
         );
     }
@@ -58,17 +58,13 @@ public class JdbcAdminRepository implements AdminRepository {
     @Override
     public int deleteById(Long id) {
         return jdbcTemplate.update(
-                "delete players where id = ?", id);
+                "delete admins where id = ?", id);
     }
 
-    /**
-     * TODO: Activity 1 - Add code to return all admins
-     * Hint: use the "query" method of JdbcTemplate
-     */
     @Override
     public List<Admin> findAll() {
         return jdbcTemplate.query(
-                "select * from players",
+                "select * from admins",
                 adminRowMapper
             );
     }
@@ -85,7 +81,7 @@ public class JdbcAdminRepository implements AdminRepository {
     @Override
 public Optional<Admin> findById(Long id) {
     try {
-        Admin admin = jdbcTemplate.queryForObject("select * from players where id = ?",
+        Admin admin = jdbcTemplate.queryForObject("select * from admins where id = ?",
                 adminRowMapper, id);
         return Optional.ofNullable(admin); // Wrap admin in Optional
     } catch (EmptyResultDataAccessException e) {
