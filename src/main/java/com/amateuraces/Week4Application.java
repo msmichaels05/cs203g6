@@ -6,10 +6,13 @@ import java.util.List;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.amateuraces.player.Player;
-import com.amateuraces.player.PlayerRepository;
+import com.amateuraces.player.*;
+import com.amateuraces.client.RestTemplateClient;
+import com.amateuraces.user.User;
+import com.amateuraces.user.UserRepository;
+
 
 @SpringBootApplication
 public class Week4Application {
@@ -18,24 +21,35 @@ public class Week4Application {
         
         ApplicationContext ctx = SpringApplication.run(Week4Application.class, args);
 
-        // Acquire the various instances we need
-        JdbcTemplate template = ctx.getBean(JdbcTemplate.class);
-        PlayerRepository repo = ctx.getBean(PlayerRepository.class);
+        // JPA book repository init
+        PlayerRepository players = ctx.getBean(PlayerRepository.class);
+        System.out.println("[Add player]: " + players.save(new Player("Tim")));
+        System.out.println("[Add player]: " + players.save(new Player("Gone With The Wind")));
+
+        // JPA user repository init
+        UserRepository users = ctx.getBean(UserRepository.class);
+        BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
+        System.out.println("[Add user]: " + users.save(
+            new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN")).getUsername());
+        System.out.println("[Add user]: " + users.save(
+            new User("betatester" , encoder.encode("betatester"), "ROLE_USER")).getUsername());
+            
         
-        // Initialize the H2 database
-        // Comment or remove this code if you want the DB to persist data
-        template.execute("DROP TABLE players IF EXISTS");
-        template.execute("CREATE TABLE players(" +
-                "id SERIAL PRIMARY KEY, name VARCHAR(255))"); // Change field names as necessary
+        // // Test the RestTemplate client with authentication
+        /**
+         * TODO: Activity 3 (after class)
+         * Uncomment the following code and test the changes
+         * Here we use our own Rest client to test the service
+         * Authentication info has been added int the RestTemplateClient.java
+        //  */
+        
+        RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
+        System.out.println("[Add player]: " + client.addPlayer("http://localhost:8080/players", new Player("Spring in Actions")).getName());
 
-        List<Player> listPlayers = Arrays.asList(
-            new Player(1L, "name1"), // Adjust the constructor based on your Player class
-            new Player(2L, "name2")  // Adjust the constructor based on your Player class
-        );
-
-        listPlayers.forEach(player -> {
-            repo.save(player);
-        });
+        // Get the 1st book, obtain a HTTP response and print out the title of the book
+        System.out.println("[Get player]: " + client.getPlayerEntity("http://localhost:8080/players", 1L).getBody().getName());
+        
     }
+    
 }
 
