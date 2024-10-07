@@ -111,10 +111,10 @@ public class Match {
 
     public void rescheduleMatch(LocalDateTime newDateTime) {
         this.scheduledDateTime = newDateTime;
-        this.status = "rescheduled"; // Optional: set a new status
+        this.status = "rescheduled"; // set a new status
     }
 
     public void cancelMatch() {
-        this.status = "canceled";
+        this.status = "cancelled";
     }
 }
