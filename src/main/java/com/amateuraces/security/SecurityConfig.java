@@ -38,23 +38,6 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    /**
-     * TODO: Activity 2a - Authentication
-     * Add code to secure requests to Reviews
-     * In particular, only authenticated users would be able to create/update/delete Reviews
-     * Hint: Add requestMatchers rules
-     * 
-     * 
-     * 
-     * 
-     * TODO: Activity 2b - Authorization
-     * Add roles to specify permissions for each enpoint
-     * User role: can add review.
-     * Admin role: can add/delete/update books/reviews, and add/list users
-     *  
-     * Note: '*' matches zero or more characters, e.g., /books/* matches /books/20
-             '**' matches zero or more 'directories' in a path, e.g., /books/** matches /books/1/reviews 
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -62,11 +45,8 @@ public class SecurityConfig {
                 .requestMatchers("/error").permitAll() // the default error page
                 .requestMatchers(HttpMethod.GET, "/players", "/players/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/players").hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/players/*").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/players/*").hasAnyRole("ADMIN","USER")
                 .requestMatchers(HttpMethod.DELETE, "/players/*").authenticated()
-                .requestMatchers(HttpMethod.POST, "/players/*/reviews").hasAnyRole("ADMIN","USER")
-                .requestMatchers(HttpMethod.PUT, "/players/*/reviews/*").authenticated()
-                .requestMatchers(HttpMethod.DELETE, "/players/*/reviews/*").authenticated()
                 // note that Spring Security 6 secures all endpoints by default
                 // remove the below line after adding the required rules
                 .anyRequest().permitAll() 

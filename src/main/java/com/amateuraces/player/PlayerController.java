@@ -55,7 +55,7 @@ public class PlayerController {
     }
 
  /**
-     * Add a new book with POST request to "/players"
+     * Add a new player with POST request to "/players"
      * Note the use of @RequestBody
      * @param player
      * @return list of all players

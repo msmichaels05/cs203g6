@@ -32,9 +32,6 @@ DELETE http://localhost:8080/players/4
 Authorization: Basic admin goodpassword
 
 ###
-GET http://localhost:8080/books/3
-
-###
 POST http://localhost:8080/players
 Content-Type: application/json
 Authorization: Basic admin goodpassword
@@ -46,7 +43,7 @@ Authorization: Basic admin goodpassword
 ###
 PUT http://localhost:8080/players/2
 Content-Type: application/json
-Authorization: Basic username password
+Authorization: Basic betatester betatester
 
 
 {

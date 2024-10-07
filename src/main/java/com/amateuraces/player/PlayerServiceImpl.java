@@ -41,12 +41,18 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     /**
-     * Remove a book with the given id
+     * Remove a player with the given id
      * Spring Data JPA does not return a value for delete operation
-     * Cascading: removing a book will also remove all its associated reviews
+     * Cascading: removing a player will also remove all its associated reviews
      */
     @Override
     public void deletePlayer(Long id){
-         players.deleteById(id);
+    // Check if the player exists before attempting to delete
+    if (!players.existsById(id)) {
+        throw new PlayerNotFoundException(id);
+    }
+    
+    // If the player exists, delete them
+    players.deleteById(id);
     }
 }

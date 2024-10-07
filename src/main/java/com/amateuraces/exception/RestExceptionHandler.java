@@ -15,17 +15,6 @@ import java.util.Map;
 @ControllerAdvice
 public class RestExceptionHandler{
 
-    /**
-     * TODO - Activity 1
-     * Study the below code to understand consistent exception handling
-     * 
-     */
-    
-    /**
-     * Construct a new ResponseEntity to customize the Http error messages
-     * This method handles the case in which validation failed for
-     * controller method's arguments.
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         Map<String, Object> body = new HashMap<>();
@@ -35,7 +24,7 @@ public class RestExceptionHandler{
 
     /**
      * Handle the case in which arguments for controller's methods did not match the type.
-     * E.g., bookId passed in is not a number
+     * E.g., player name passed in is not a String
      */
     
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

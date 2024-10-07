@@ -15,11 +15,11 @@ import com.amateuraces.user.UserRepository;
 
 
 @SpringBootApplication
-public class Week4Application {
+public class AmateurAces {
 
     public static void main(String[] args) {
         
-        ApplicationContext ctx = SpringApplication.run(Week4Application.class, args);
+        ApplicationContext ctx = SpringApplication.run(AmateurAces.class, args);
 
         // JPA book repository init
         PlayerRepository players = ctx.getBean(PlayerRepository.class);
