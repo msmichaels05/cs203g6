@@ -1,34 +1,35 @@
 package com.amateuraces.highlight;
 
 import com.amateuraces.player.Player;
+import com.amateuraces.tournament.Tournament;
 import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
 
 public class Highlight {
-    private int month;
-    private int year;
+    private Long month;
+    private Long year;
     private Tournament tournamentOfTheMonth;
     private Player playerOfTheMonth;
     private Player mostImprovedPlayer;
     private Match highestScoringMatch;
 
-    public Highlight(int month, int year) {
+    public Highlight(Long year, Long month) {
         this.month = month;
         this.year = year;
     }
 
-    public int getMonth() {
+    public Long getMonth() {
         return month;
     }
 
-    public void setMonth(int month) {
+    public void setMonth(Long month) {
         this.month = month;
     }
 
-    public int getYear() {
+    public Long getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Long year) {
         this.year = year;
     }
 

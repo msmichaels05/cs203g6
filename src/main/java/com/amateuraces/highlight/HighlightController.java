@@ -1,24 +1,25 @@
 package com.amateuraces.highlight;
 
-import javax.swing.text.Highlighter;
+import java.util.List;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import com.amateuraces.highlight.HighlightsService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HighlightController {
     private HighlightService highlightService;
 
-    public HighlightsController(HighlightService hs){
+    public HighlightController(HighlightService hs){
         highlightService = hs;
     }
 
     @GetMapping("/highlight")
     public List<Highlight> getHighlight(){
-        return highlightsService.listHighlight();
+        return highlightService.listHighlights();
     }
 
     @ResponseStatus(HttpStatus.CREATED)

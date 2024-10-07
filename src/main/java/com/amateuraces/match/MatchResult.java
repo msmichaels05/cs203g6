@@ -1,4 +1,6 @@
-package com.amateuraces;
+package com.amateuraces.match;
+
+import com.amateuraces.player.Player;
 
 public class MatchResult {
     private Player winner;
