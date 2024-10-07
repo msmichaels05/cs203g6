@@ -1,10 +1,10 @@
 package com.amateuraces.admin;
+
 import com.amateuraces.match.Match;
-import com.amateuraces.player.Player; // Import the Player class
+import com.amateuraces.player.Player;
 import com.amateuraces.tournament.Tournament;
 import com.amateuraces.tournament.TournamentService;
 import org.springframework.http.HttpStatus;
-//import org.springframework.security.access.prepost.PreAuthorize; // Uncomment if using security
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,86 +22,77 @@ public class AdminController {
         this.tournamentService = tournamentService;
     }
 
-    // Get all admins
-    //change this up 
+    // 1. Retrieve all admins (aligned with the PlayerController)
     @GetMapping("/")
-    public List<Admin> viewAdmin() {
+    public List<Admin> viewAdmins() {
         return adminService.listAdmins();
     }
 
-    // Add a new player with POST request to "/admins/players"
+    // 2. Add a new admin (aligned with the PlayerController, use of POST)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/")
-    public Admin addPlayer(@RequestBody Admin admin) {
+    public Admin addAdmin(@RequestBody Admin admin) {
         return adminService.addAdmin(admin);
     }
 
-    // Admin can view the dashboard
+    // 3. Admin can view the dashboard (returning string as placeholder, same structure as in PlayerController)
     @GetMapping("/dashboard")
     public String viewDashboard() {
-        // Logic for admin dashboard
-        return "dashboard";
+        return "admin_dashboard";
     }
 
-    // List available tournaments
+    // 4. List available tournaments (mirroring how you list tournaments for players)
     @GetMapping("/tournaments")
     public List<Tournament> viewTournaments() {
-        // Logic to fetch the list of tournaments
-        return tournamentService.getAllTournaments(); 
+        return tournamentService.getAllTournaments();
     }
 
-    // Register player for a tournament
+    // 5. Register player for a tournament (mirroring PlayerController)
     @PostMapping("/tournaments/register")
     public Tournament registerForTournament(@RequestParam Long tournamentId, @RequestParam Long playerId) {
-        // Logic for player registration in tournament
         return tournamentService.addPlayerToTournament(tournamentId, playerId);
     }
 
-    // Show match schedule
+    // 6. Show match schedule (use a placeholder for now)
     @GetMapping("/matches")
     public String viewMatchSchedule() {
-        return "matchSchedule";
+        return "admin_match_schedule";
     }
 
-    // Show player profile
+    // 7. Show player profile (use a placeholder)
     @GetMapping("/profile")
     public String viewProfile() {
-        // Logic for profile
-        return "profile";
+        return "admin_profile";
     }
 
-    // Show notifications
+    // 8. Show notifications (same as PlayerController)
     @GetMapping("/notifications")
     public String viewNotifications() {
-        return "notifications";
+        return "admin_notifications";
     }
 
     // =================== Admin-only Actions ===================
 
-    // Admin creates a new tournament
-    // @PreAuthorize("hasRole('ADMIN')") // Uncomment if using security
+    // 9. Admin creates a new tournament
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/tournaments")
     public Tournament createTournament(@RequestBody Tournament tournament) {
         return tournamentService.createTournament(tournament);
     }
 
-    // Set tournament registration period (Admin only)
-    // @PreAuthorize("hasRole('ADMIN')") // Uncomment if using security
+    // 10. Set tournament registration period (aligned with PlayerController)
     @PutMapping("/tournaments/{tournamentId}/registration")
     public Tournament setRegistrationPeriod(@PathVariable Long tournamentId, @RequestParam String startDate, @RequestParam String endDate) {
         return tournamentService.setRegistrationPeriod(tournamentId, startDate, endDate);
     }
 
-    // View the list of players registered for a tournament
-    // @PreAuthorize("hasRole('ADMIN')") // Uncomment if using security
+    // 11. View the list of players registered for a tournament (aligned with PlayerController)
     @GetMapping("/tournaments/{tournamentId}/players")
     public List<Player> viewRegisteredPlayers(@PathVariable Long tournamentId) {
         return tournamentService.getPlayersInTournament(tournamentId);
     }
 
-    // Perform a randomized draw for a tournament (Admin only)
-    // @PreAuthorize("hasRole('ADMIN')") // Uncomment if using security
+    // 12. Perform a randomized draw for a tournament (Admin only)
     @PostMapping("/tournaments/{tournamentId}/draw")
     public List<Match> performRandomizedDraw(@PathVariable Long tournamentId) {
         return tournamentService.performRandomDraw(tournamentId);

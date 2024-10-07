@@ -40,5 +40,23 @@ GET http://localhost:8080/books/3
 ###
 GET http://localhost:8080/players/
 
+
+### GET All Admins
+GET http://localhost:8080/admins/
+
+### PUT (Update Admin Information)
+PUT http://localhost:8080/admins/1
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "updatedAdminName",
+    "email": "updatedadmin@example.com"
+}
+
+### DELETE Admin by ID
+DELETE http://localhost:8080/admins/1
+
+### GET All Admins
 GET http://localhost:8080/admins/
 

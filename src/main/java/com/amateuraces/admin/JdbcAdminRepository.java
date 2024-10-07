@@ -12,13 +12,17 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Repository
 public class JdbcAdminRepository implements AdminRepository {
-    
+
     private JdbcTemplate jdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(JdbcAdminRepository.class); // Add logger
 
     // Autowired the JdbcTemplate with constructor injection
-    public JdbcAdminRepository(JdbcTemplate template){
+    public JdbcAdminRepository(JdbcTemplate template) {
         this.jdbcTemplate = template;
     }
 
@@ -30,7 +34,9 @@ public class JdbcAdminRepository implements AdminRepository {
         // Use KeyHolder to obtain the auto-generated key from the "insert" statement
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         jdbcTemplate.update((Connection conn) -> {
-            PreparedStatement statement = conn.prepareStatement("insert into admins (name) values (?) ", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = conn.prepareStatement(
+                "INSERT INTO admins (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS
+            );
             statement.setString(1, admin.getName());
             return statement;
         }, holder);
@@ -40,14 +46,12 @@ public class JdbcAdminRepository implements AdminRepository {
     }
 
     /**
-     * TODO: Activity 1 - Implement the update method
-     * 
-     * This method needs to return the number of rows affected by the update
+     * Implement the update method
      */
     @Override
     public int update(Admin admin) {
         return jdbcTemplate.update(
-            "update admins set name = ? where id = ?",
+            "UPDATE admins SET name = ? WHERE id = ?",
             admin.getName(), admin.getId()
         );
     }
@@ -58,48 +62,51 @@ public class JdbcAdminRepository implements AdminRepository {
     @Override
     public int deleteById(Long id) {
         return jdbcTemplate.update(
-                "delete admins where id = ?", id);
-    }
-
-    @Override
-    public List<Admin> findAll() {
-        return jdbcTemplate.query(
-                "select * from admins",
-                adminRowMapper
-            );
+            "DELETE FROM admins WHERE id = ?", id);  // Fix the missing "FROM"
     }
 
     /**
-     * QueryForObject method: to query a single row in the database
-     * 
-     * The "select *" returns a ResultSet (rs)
-     * The Lambda expression (an instance of RowMapper) returns an object instance using "rs"
-     * 
-     * Optional: a container which may contain null objects
-     *  -> To handle the case in which the given id is not found
+     * Find all admins
      */
     @Override
-public Optional<Admin> findById(Long id) {
-    try {
-        Admin admin = jdbcTemplate.queryForObject("select * from admins where id = ?",
-                adminRowMapper, id);
-        return Optional.ofNullable(admin); // Wrap admin in Optional
-    } catch (EmptyResultDataAccessException e) {
-        // admin not found - return an empty Optional
-        return Optional.empty();
+    public List<Admin> findAll() {
+        try {
+            return jdbcTemplate.query("SELECT * FROM admins", adminRowMapper);
+        } catch (Exception e) {
+            logger.error("Error while querying all admins", e);  // Add logging
+            throw e;
+        }
     }
-}
+
+    /**
+     * Find admin by ID
+     */
+    @Override
+    public Optional<Admin> findById(Long id) {
+        try {
+            Admin admin = jdbcTemplate.queryForObject(
+                "SELECT * FROM admins WHERE id = ?",
+                adminRowMapper, id
+            );
+            return Optional.ofNullable(admin); // Wrap admin in Optional
+        } catch (EmptyResultDataAccessException e) {
+            logger.warn("Admin not found for ID: " + id);  // Add warning log
+            return Optional.empty();
+        } catch (Exception e) {
+            logger.error("Error while finding admin by ID", e);  // Add logging
+            throw e;
+        }
+    }
 
     // RowMapper for Admin class
     private RowMapper<Admin> adminRowMapper = (rs, rowNum) -> {
         Admin admin = new Admin(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("email"),
-                rs.getString("password")
-                // Add more fields as needed
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getString("email"),
+            rs.getString("password")
+            // Add more fields as needed
         );
-        // Populate other fields of Admin object if necessary
         return admin;
     };
 }
