@@ -58,5 +58,17 @@ Content-Type: application/json
 DELETE http://localhost:8080/admins/1
 
 ### GET All Admins
-GET http://localhost:8080/admins/
+GET http://localhost:8080/admins
+
+### Post
+POST http://localhost:8080/admins
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "adminName",
+    "email": "admin@example.com",
+    "password": "securepassword"
+}
+
 

@@ -8,45 +8,42 @@ import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Repository
 public class JdbcAdminRepository implements AdminRepository {
 
     private JdbcTemplate jdbcTemplate;
-    private static final Logger logger = LoggerFactory.getLogger(JdbcAdminRepository.class); // Add logger
 
-    // Autowired the JdbcTemplate with constructor injection
-    public JdbcAdminRepository(JdbcTemplate template) {
-        this.jdbcTemplate = template;
+    // Constructor injection of JdbcTemplate
+    public JdbcAdminRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     /**
-     * We need to return the auto-generated id of the insert operation
+     * Save admin and return the auto-generated ID
      */
     @Override
     public Long save(Admin admin) {
-        // Use KeyHolder to obtain the auto-generated key from the "insert" statement
-        GeneratedKeyHolder holder = new GeneratedKeyHolder();
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update((Connection conn) -> {
             PreparedStatement statement = conn.prepareStatement(
-                "INSERT INTO admins (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS
+                "INSERT INTO admins (name, email, password) VALUES (?, ?, ?)", 
+                Statement.RETURN_GENERATED_KEYS
             );
             statement.setString(1, admin.getName());
+            statement.setString(2, admin.getEmail());
+            statement.setString(3, admin.getPassword());
             return statement;
-        }, holder);
+        }, keyHolder);
+        return keyHolder.getKey().longValue(); // Return the auto-generated key
+}
 
-        Long primaryKey = holder.getKey().longValue();
-        return primaryKey;
-    }
+
 
     /**
-     * Implement the update method
+     * Update admin's information and return the number of rows affected
      */
     @Override
     public int update(Admin admin) {
@@ -57,12 +54,13 @@ public class JdbcAdminRepository implements AdminRepository {
     }
 
     /**
-     * Return the number of rows affected by the delete
+     * Delete admin by ID and return the number of rows affected
      */
     @Override
     public int deleteById(Long id) {
         return jdbcTemplate.update(
-            "DELETE FROM admins WHERE id = ?", id);  // Fix the missing "FROM"
+            "DELETE FROM admins WHERE id = ?", id
+        );
     }
 
     /**
@@ -70,43 +68,35 @@ public class JdbcAdminRepository implements AdminRepository {
      */
     @Override
     public List<Admin> findAll() {
-        try {
-            return jdbcTemplate.query("SELECT * FROM admins", adminRowMapper);
-        } catch (Exception e) {
-            logger.error("Error while querying all admins", e);  // Add logging
-            throw e;
-        }
+        return jdbcTemplate.query(
+            "SELECT * FROM admins",
+            (rs, rowNum) -> new Admin(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("email"),
+                rs.getString("password")  // Adjust to include required fields
+            )
+        );
     }
 
     /**
-     * Find admin by ID
+     * Find admin by ID, using Optional to handle the case where no admin is found
      */
     @Override
     public Optional<Admin> findById(Long id) {
         try {
-            Admin admin = jdbcTemplate.queryForObject(
+            return jdbcTemplate.queryForObject(
                 "SELECT * FROM admins WHERE id = ?",
-                adminRowMapper, id
+                (rs, rowNum) -> Optional.of(new Admin(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("password")  // Adjust fields as per your Admin class
+                )),
+                id
             );
-            return Optional.ofNullable(admin); // Wrap admin in Optional
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("Admin not found for ID: " + id);  // Add warning log
             return Optional.empty();
-        } catch (Exception e) {
-            logger.error("Error while finding admin by ID", e);  // Add logging
-            throw e;
         }
     }
-
-    // RowMapper for Admin class
-    private RowMapper<Admin> adminRowMapper = (rs, rowNum) -> {
-        Admin admin = new Admin(
-            rs.getLong("id"),
-            rs.getString("name"),
-            rs.getString("email"),
-            rs.getString("password")
-            // Add more fields as needed
-        );
-        return admin;
-    };
 }

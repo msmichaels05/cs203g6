@@ -22,15 +22,15 @@ public class Admin {
     }
 
     // Updated Constructor with additional fields
-    public Admin(Long id, String name, String gender, int age, String phoneNumber, int matchesPlayed, int matchesWon) {
-        this.age = age;
-        this.gender = gender;
-        this.phoneNumber = phoneNumber;
-        this.matchesPlayed = matchesPlayed;
-        this.matchesWon = matchesWon;
-        this.name = name;
-        this.id = id;
-    }
+    // public Admin(Long id, String name, String gender, int age, String phoneNumber, int matchesPlayed, int matchesWon) {
+    //     this.age = age;
+    //     this.gender = gender;
+    //     this.phoneNumber = phoneNumber;
+    //     this.matchesPlayed = matchesPlayed;
+    //     this.matchesWon = matchesWon;
+    //     this.name = name;
+    //     this.id = id;
+    // }
 
     // Getters and Setters
 

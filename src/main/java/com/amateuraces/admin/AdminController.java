@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admins")
+// @RequestMapping("/admins")
 public class AdminController {
 
     private final AdminService adminService;  // Admin service
@@ -22,15 +22,16 @@ public class AdminController {
         this.tournamentService = tournamentService;
     }
 
-    // 1. Retrieve all admins (aligned with the PlayerController)
-    @GetMapping("/")
+    // 1. Retrieve all admins
+    @GetMapping("/admins")
     public List<Admin> viewAdmins() {
         return adminService.listAdmins();
+        // return "test";
     }
 
     // 2. Add a new admin (aligned with the PlayerController, use of POST)
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/")
+    @PostMapping("/admins")
     public Admin addAdmin(@RequestBody Admin admin) {
         return adminService.addAdmin(admin);
     }
