@@ -57,4 +57,23 @@ public class Player{
         this.name = name;
     }
 
+     // Method to update the wins and losses
+     public void updateWinsAndLosses(boolean hasWon) {
+        this.matchesPlayed += 1; // Increment matches played
+
+        if (hasWon) {
+            this.matchesWon += 1; // Increment matches won if player has won
+        }
+    }
+
+    // Method to update ELO based on opponent's ELO and result
+    public void updateElo(int opponentElo, boolean hasWon) {
+        // Elo updating logic here (for example)
+        if (hasWon) {
+            this.elo += 10; // Example logic: Increase ELO if player won
+        } else {
+            this.elo -= 10; // Example logic: Decrease ELO if player lost
+        }
+    }
+
 }
