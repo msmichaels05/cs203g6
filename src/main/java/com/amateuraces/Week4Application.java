@@ -1,17 +1,15 @@
 package com.amateuraces;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.amateuraces.player.Player;
-import com.amateuraces.admin.Admin;
 import com.amateuraces.player.PlayerRepository;
-import com.amateuraces.admin.AdminRepository;
+import com.amateuraces.client.RestTemplateClient;
+import com.amateuraces.user.User;
+import com.amateuraces.user.UserRepository;
 
 @SpringBootApplication
 public class Week4Application {
@@ -20,38 +18,26 @@ public class Week4Application {
         
         ApplicationContext ctx = SpringApplication.run(Week4Application.class, args);
 
-        // Acquire the various instances we need
-        JdbcTemplate template = ctx.getBean(JdbcTemplate.class);
-        PlayerRepository playerRepo = ctx.getBean(PlayerRepository.class);
-        AdminRepository adminRepo = ctx.getBean(AdminRepository.class);  // Corrected: added AdminRepository
+        // JPA Player repository initialization
+        PlayerRepository playerRepository = ctx.getBean(PlayerRepository.class);
+        System.out.println("[Add player]: " + playerRepository.save(new Player("Tim")).getName());
+        System.out.println("[Add player]: " + playerRepository.save(new Player("Gone With The Wind")).getName());
 
-        // Initialize the H2 database for players
-        // Comment or remove this code if you want the DB to persist data
-        template.execute("DROP TABLE IF EXISTS players");
-        template.execute("CREATE TABLE players(" +
-                "id SERIAL PRIMARY KEY, name VARCHAR(255))"); // Change field names as necessary
+        // JPA User repository initialization
+        UserRepository userRepository = ctx.getBean(UserRepository.class);
+        BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
+        System.out.println("[Add user]: " + userRepository.save(
+            new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN")).getUsername());
+        System.out.println("[Add user]: " + userRepository.save(
+            new User("betatester", encoder.encode("betatester"), "ROLE_USER")).getUsername());
 
-        List<Player> listPlayers = Arrays.asList(
-            new Player(1L, "name1"), // Adjust the constructor based on your Player class
-            new Player(2L, "name2")  // Adjust the constructor based on your Player class
-        );
+        // Test the RestTemplate client with authentication
+        RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
+        System.out.println("[Add player via RestTemplate]: " + client.addPlayer(
+            "http://localhost:8080/players", new Player("Spring in Actions")).getName());
 
-        listPlayers.forEach(player -> {
-            playerRepo.save(player);
-        });
-
-        // Initialize the H2 database for admins
-        template.execute("DROP TABLE IF EXISTS admins");
-        template.execute("CREATE TABLE admins(" +
-                "id SERIAL PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), password VARCHAR(255))"); // Adjust field names as necessary
-
-        List<Admin> listAdmins = Arrays.asList(
-            new Admin(1L, "admin1", "admin1@example.com", "password1"), // Adjust the constructor based on your Admin class
-            new Admin(2L, "admin2", "admin2@example.com", "password2")  // Adjust the constructor based on your Admin class
-        );
-
-        listAdmins.forEach(admin -> {
-            adminRepo.save(admin);
-        });
+        // Get the first player via RestTemplate and print out the name
+        System.out.println("[Get player via RestTemplate]: " + client.getPlayerEntity(
+            "http://localhost:8080/players", 1L).getBody().getName());
     }
 }
