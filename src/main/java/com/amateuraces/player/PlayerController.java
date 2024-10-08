@@ -103,52 +103,10 @@ public class PlayerController {
 
     // Constructor Injection
 
-<<<<<<< HEAD
-    private PlayerService playerService;
-
-    public PlayerController(PlayerService ps) {
-        playerService = ps;
-    }
-
-    @GetMapping("/dashboard")
-    public String viewDashboard(Model model) {
-        // Return player dashboard view
-        return "";
-    }
-
-    @GetMapping("/tournaments")
-    public String viewTournaments(Model model) {
-        // List available tournaments
-        return "";
-    }
-
-    @PostMapping("/tournaments/register")
-    public String registerForTournament(@RequestParam String tournamentId) {
-        // Register player for tournament
-        return "";
-    }
-
-    @GetMapping("/matches")
-    public String viewMatchSchedule(Model model) {
-        // Show match schedule
-        return "THIS IS TEST";
-    }
-
-    @GetMapping("/profile")
-    public String viewProfile(Model model) {
-        // Show player profile
-        return "";
-    }
-
-    // @PostMapping("/profile")
-    // public String updateProfile(@ModelAttribute PlayerProfileDTO profileDTO) {
-    //     // Update player profile
-=======
     // @GetMapping("/dashboard")
     // public String viewDashboard(Model model) {
     //     // Return player dashboard view
     //     return "";
->>>>>>> 3e3de983188d74e9d50551f17476ca4dfd004347
     // }
 
     // @GetMapping("/tournaments")
