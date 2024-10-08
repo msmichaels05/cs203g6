@@ -1,20 +1,31 @@
 package com.amateuraces.highlight;
 
 import com.amateuraces.player.Player;
-import com.amateuraces.tournament.Tournament;
 import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
 
 public class Highlight {
     private Long month;
     private Long year;
-    private Tournament tournamentOfTheMonth;
+    // private Tournament tournamentOfTheMonth;
+    private String tournamentOfTheMonth;
     private Player playerOfTheMonth;
     private Player mostImprovedPlayer;
     private Match highestScoringMatch;
 
+    public Highlight() {
+
+    }
+    
     public Highlight(Long year, Long month) {
-        this.month = month;
         this.year = year;
+        this.month = month;
+        tournamentOfTheMonth = null;
+    }
+
+    public Highlight(Long year, Long month, String tournamentOfTheMonth) {
+        this.year = year;
+        this.month = month;
+        this.tournamentOfTheMonth = tournamentOfTheMonth;
     }
 
     public Long getMonth() {
@@ -33,11 +44,11 @@ public class Highlight {
         this.year = year;
     }
 
-    public Tournament getTournamentOfTheMonth() {
+    public String getTournamentOfTheMonth() {
         return tournamentOfTheMonth;
     }
 
-    public void setTournamentOfTheMonth(Tournament tournamentOfTheMonth) {
+    public void setTournamentOfTheMonth(String tournamentOfTheMonth) {
         this.tournamentOfTheMonth = tournamentOfTheMonth;
     }
 

@@ -7,27 +7,26 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class HighlightClient {
     
-    private RestTemplate template;
+    private final RestTemplate template;
     
     HighlightClient(RestTemplateBuilder builder) {
         this.template = builder.build();
     }
     
     /**
-     * Get a book with given id
      * 
      * @param URI
      * @param year
      * @param month
      * @return
      */
-    public Highlight getHighlight(final String URI, final int year, final int month) {
+    public Highlight getHighlight(final String URI, final Long year, final Long month) {
         final Highlight highlight = template.getForObject(URI + "/" + year + "/" + month, Highlight.class);
         return highlight;
     }
 
     /**
-     * Add a new book
+     * Add a new highlight
      * 
      * @param URI
      * @param newHighlight

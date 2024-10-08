@@ -3,7 +3,7 @@ GET http://localhost:8080/matches
 
 ###
 
-POST http://localhost:8080/players/
+POST http://localhost:8080/players
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
      
 }
 ###
-GET http://localhost:8080/players/
+GET http://localhost:8080/books
 
 ###
 
@@ -38,7 +38,7 @@ GET http://localhost:8080/books/3
 # }
 
 ###
-GET http://localhost:8080/players/
+GET http://localhost:8080/players
 
 
 ### GET All Admins
@@ -60,3 +60,24 @@ DELETE http://localhost:8080/admins/1
 ### GET All Admins
 GET http://localhost:8080/admins/
 
+
+###
+GET http://localhost:8080/highlights
+
+###
+
+POST http://localhost:8080/highlights
+Content-Type: application/json
+
+{
+    "year": 2024,
+    "month": 10,
+    "tournamentOfTheMonth": "tester"
+}
+
+###
+
+DELETE http://localhost:8080/highlights/1
+
+###
+GET http://localhost:8080/highlights/3

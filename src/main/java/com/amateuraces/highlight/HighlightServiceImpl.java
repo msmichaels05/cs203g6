@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class HighlightServiceImpl implements HighlightService {
    
-    private HighlightRepository highlights;
+    private final HighlightRepository highlights;
     public HighlightServiceImpl(HighlightRepository highlights){
         this.highlights = highlights;
     
