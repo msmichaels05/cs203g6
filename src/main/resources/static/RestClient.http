@@ -1,28 +1,52 @@
 
-GET http://localhost:8080/matches
-###
-GET http://localhost:8080/books
-
-###
-
-DELETE http://localhost:8080/books/3
-
-###
-GET http://localhost:8080/books/3
-
-###
-POST http://localhost:8080/books
+POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-    "title": "I, Robot"
+    "username": "username",
+    "password": "password",
+    "authorities":"ROLE_USER"
+    
 }
 
 ###
-PUT http://localhost:8080/books/3
+
+GET http://localhost:8080/users
+
+###
+
+POST http://localhost:8080/players
 Content-Type: application/json
+Authorization: Basic username password
 
 {
-    "title": "Sapiens"
+    "name" : "player"
+     
+}
+###
+GET http://localhost:8080/players
+
+###
+
+DELETE http://localhost:8080/players/4
+Authorization: Basic admin goodpassword
+
+###
+POST http://localhost:8080/players
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "name": "I, Robot"
+}
+
+###
+PUT http://localhost:8080/players/2
+Content-Type: application/json
+Authorization: Basic betatester betatester
+
+
+{
+    "name": "jon"
 }
 
