@@ -6,17 +6,20 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class PlayerClient {
-    
+
     private RestTemplate template;
-    
+
     PlayerClient(RestTemplateBuilder builder) {
         this.template = builder.build();
     }
-    
+
     /**
-     * Get a Player with given id
-     * 
-     * @param URI
+
+    Get a
+    Player with
+    given id**
+
+    @param URI
      * @param id
      * @return
      */

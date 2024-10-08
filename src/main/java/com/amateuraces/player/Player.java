@@ -1,17 +1,18 @@
 package com.amateuraces.player;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 
 @Entity
@@ -24,8 +25,9 @@ import lombok.ToString;
 public class Player{
     @Id 
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
+    private  Long id;
 
+   
     @Size(min = 1, max = 15)
     private String phoneNumber;
   
