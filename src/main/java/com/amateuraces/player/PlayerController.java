@@ -1,96 +1,62 @@
 package com.amateuraces.player;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+// import com.amateuraces.book.Book;
+// import com.amateuraces.book.BookNotFoundException;
 
-
+import java.util.List;
 
 @RestController
 @RequestMapping("/players")
 public class PlayerController {
-    
-    private final PlayerService playerService; // Make it final and use constructor injection
-    
-    // Constructor Injection
+
+    @Autowired
+    private PlayerService playerService;
+
     public PlayerController(PlayerService playerService) {
         this.playerService = playerService;
     }
 
-    /**
-     * Get all players
-     * @return List of players
-     */
-    @GetMapping("/")
-    public List<Player> viewPlayers() {
-        return playerService.listPlayers(); // Assuming you have this method in PlayerService
+    // Get all players
+    @GetMapping("/players")
+    public List<Player> listPlayers() {
+        return playerService.listPlayers();
     }
 
-    /**
-     * Add a new player with POST request to "/players"
-     * @param player
-     * @return the added player
-     */
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/")
-    public Player addPlayer(@RequestBody Player player) {
-        return playerService.addPlayer(player);
-    }
-    
-
-    // to be used
-    // private PlayerService playerService;
-    // private TournamentService tournamentService;
-
-    // Constructor Injection
-
-    @GetMapping("/dashboard")
-    public String viewDashboard(Model model) {
-        // Return player dashboard view
-        return "";
+    // Get a player by ID
+    @GetMapping("/players/{id}")
+    public Player getPlayer(@PathVariable Long id) {  //or should i return ResponseEntity<Player> type instead?
+        Player player = playerService.getPlayer(id);
+        // Need to handle "book not found" error using proper HTTP status code
+        // In this case it should be HTTP 404
+        if(player == null) throw new PlayerNotFoundException(id);
+        return playerService.getPlayer(id);
     }
 
-    @GetMapping("/tournaments")
-    public String viewTournaments(Model model) {
-        // List available tournaments
-        return "";
+    // Add a new player
+    @PostMapping
+    public ResponseEntity<Player> addPlayer(@RequestBody Player player) {
+        Player newPlayer = playerService.addPlayer(player);
+        return new ResponseEntity<>(newPlayer, HttpStatus.CREATED);
     }
 
-    @PostMapping("/tournaments/register")
-    public String registerForTournament(@RequestParam String tournamentId) {
-        // Register player for tournament
-        return "";
+    // Update an existing player
+    @PutMapping("/books/{id}")
+    public Player updatePlayer(@PathVariable Long id, @RequestBody Player player) { //Return ResponseEntity<Player> type instead?
+        Player updatedPlayer = playerService.updatePlayer(id, player);
+        if (player == null) throw new PlayerNotFoundException(id);
+
+        return updatedPlayer;
     }
 
-    @GetMapping("/matches")
-    public String viewMatchSchedule(Model model) {
-        // Show match schedule
-        return "THIS IS TESYT";
+    // Delete a player by ID
+    @DeleteMapping("/players/{id}")
+    public void deletePlayer(@PathVariable Long id) {
+        if (playerService.deletePlayer(id) == 0) throw new PlayerNotFoundException(id);
     }
 
-    @GetMapping("/profile")
-    public String viewProfile(Model model) {
-        // Show player profile
-        return "";
-    }
-
-    // @PostMapping("/profile")
-    // public String updateProfile(@ModelAttribute PlayerProfileDTO profileDTO) {
-    //     // Update player profile
-    // }
-
-    @GetMapping("/notifications")
-    public String viewNotifications(Model model) {
-        // Show notifications
-        return "";
-    }
 }

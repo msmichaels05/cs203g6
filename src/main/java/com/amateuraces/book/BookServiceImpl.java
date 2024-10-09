@@ -33,8 +33,6 @@ public class BookServiceImpl implements BookService {
             return b.get();
         else
             return null;
-        
-        
     }
     
   

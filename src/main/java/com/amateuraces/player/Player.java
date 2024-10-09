@@ -93,6 +93,10 @@ public class Player{
         return name;
     }
 
+    public void setName(String newName) {
+        name = newName;
+    }
+
     public Long getId() {
         return id;
     }
