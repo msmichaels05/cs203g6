@@ -19,7 +19,7 @@ public class HighlightServiceImpl implements HighlightService {
     }
     
     @Override
-    public Highlight getHighlight(HighlightKey id){
+    public Highlight getHighlight(Long id){
         return highlights.findById(id).orElse(null);
     }
     
@@ -30,14 +30,14 @@ public class HighlightServiceImpl implements HighlightService {
     }
 
     @Override
-    public Highlight updateHighlight(HighlightKey id, Highlight newHighlightInfo) {
+    public Highlight updateHighlight(Long id, Highlight newHighlightInfo) {
         return highlights.findById(id).map(highlight -> {highlight.setTournamentOfTheMonth(newHighlightInfo.getTournamentOfTheMonth());
             return highlights.save(highlight);
         }).orElse(null);
     }
 
     @Override
-    public void deleteHighlight(HighlightKey id){
+    public void deleteHighlight(Long id){
         if (!highlights.existsById(id)) {
             throw new HighlightNotFoundException(id);
         }

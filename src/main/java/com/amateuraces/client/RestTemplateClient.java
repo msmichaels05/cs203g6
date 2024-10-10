@@ -34,6 +34,11 @@ public class RestTemplateClient {
         return player;
     }
 
+    // public Highlight getHighlight(final String URI, final Long id) {
+    //     final Highlight highlight = template.getForObject(URI + "/" + id, Highlight.class);
+    //     return highlight;
+    // }
+
     /**
      * Add a new player
      * 
@@ -47,6 +52,12 @@ public class RestTemplateClient {
         return returned;
     }
 
+    // public Highlight addHighlight(final String URI, final Highlight newHighlight) {
+    //     final Highlight returned = template.postForObject(URI, newHighlight, Highlight.class);
+        
+    //     return returned;
+    // }
+
     /**
      * Get a player, but return a HTTP response entity.
      * @param URI
@@ -56,5 +67,9 @@ public class RestTemplateClient {
     public ResponseEntity<Player> getPlayerEntity(final String URI, final Long id){
         return template.getForEntity(URI + "/{id}", Player.class, Long.toString(id));
     }
+
+    // public ResponseEntity<Highlight> getHighlighEntity(final String URI, final Long id){
+    //     return template.getForEntity(URI + "/{id}", Highlight.class, Long.toString(id));
+    // }
     
 }

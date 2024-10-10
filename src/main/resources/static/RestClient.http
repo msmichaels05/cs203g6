@@ -50,3 +50,23 @@ Authorization: Basic betatester betatester
     "name": "jon"
 }
 
+###
+GET http://localhost:8080/highlights
+
+###
+
+POST http://localhost:8080/highlights
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "tournamentOfTheMonth" : "testing"
+     
+}
+###
+GET http://localhost:8080/highlights
+
+###
+
+DELETE http://localhost:8080/highlights/4
+Authorization: Basic admin goodpassword

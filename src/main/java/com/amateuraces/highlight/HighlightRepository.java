@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  * For the purpose of this exercise, CrudRepository would also be sufficient
  */
 @Repository
-public interface HighlightRepository extends JpaRepository <Highlight, HighlightKey>{
+public interface HighlightRepository extends JpaRepository <Highlight, Long>{
 }

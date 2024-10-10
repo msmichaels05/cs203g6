@@ -28,11 +28,9 @@ public class HighlightController {
         return highlightService.listHighlights();
     }
 
-    @GetMapping("/highlights/{year}/{month}")
-    public Highlight getHighlight(@PathVariable Long year, @PathVariable Long month){
-        HighlightKey id = new HighlightKey(year, month);
+    @GetMapping("/highlights/{id}")
+    public Highlight getHighlight(@PathVariable Long id){
         Highlight highlight = highlightService.getHighlight(id);
-
         if(highlight == null) throw new HighlightNotFoundException(id);
         return highlightService.getHighlight(id);
     }
@@ -49,9 +47,8 @@ public class HighlightController {
      * @param newBookInfo
      * @return the updated, or newly added book
      */
-    @PutMapping("/highlights/{year}/{month}")
-    public Highlight updateHighlight(@PathVariable Long year, @PathVariable Long month, @Valid @RequestBody Highlight newHighlightInfo){
-        HighlightKey id = new HighlightKey(year, month);
+    @PutMapping("/highlights/{id}")
+    public Highlight updateHighlight(@PathVariable Long id, @Valid @RequestBody Highlight newHighlightInfo){
         Highlight highlight = highlightService.updateHighlight(id, newHighlightInfo);
         if(highlight == null) throw new HighlightNotFoundException(id);
         return highlight;
@@ -62,9 +59,8 @@ public class HighlightController {
      * If there is no book with the given "id", throw a BookNotFoundException
      * @param id
      */
-    @DeleteMapping("/highlights/{year}/{month}")
-    public void deleteHighlight(@PathVariable Long year, @PathVariable Long month){
-        HighlightKey id = new HighlightKey(year, month);
+    @DeleteMapping("/highlights/{id}")
+    public void deleteHighlight(@PathVariable Long id){
         try{
             highlightService.deleteHighlight(id);
          }catch(EmptyResultDataAccessException e) {
