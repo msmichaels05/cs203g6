@@ -1,4 +1,4 @@
-package com.amateuraces.player;
+package com.amateuraces.highlight;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  * For the purpose of this exercise, CrudRepository would also be sufficient
  */
 @Repository
-public interface PlayerRepository extends JpaRepository <Player, Long>{
+public interface HighlightRepository extends JpaRepository <Highlight, Long>{
 }
