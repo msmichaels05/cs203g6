@@ -2,6 +2,7 @@ package com.amateuraces.highlight;
 
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 
 @RestController
 public class HighlightController {
@@ -25,12 +28,11 @@ public class HighlightController {
         return highlightService.listHighlights();
     }
 
-    @GetMapping("/highlights/{year}/{month}")
-    public Highlight getHighlight(@PathVariable Long year, @PathVariable Long month){
-        Highlight highlight = highlightService.getHighlight(year, month);
-
-        if(highlight == null) throw new HighlightNotFoundException(year, month);
-        return highlightService.getHighlight(year, month);
+    @GetMapping("/highlights/{id}")
+    public Highlight getHighlight(@PathVariable Long id){
+        Highlight highlight = highlightService.getHighlight(id);
+        if(highlight == null) throw new HighlightNotFoundException(id);
+        return highlightService.getHighlight(id);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -45,10 +47,10 @@ public class HighlightController {
      * @param newBookInfo
      * @return the updated, or newly added book
      */
-    @PutMapping("/highlights/{year}")
-    public Highlight updateHighlight(@PathVariable Long year, Long month, @RequestBody Highlight newHighlightInfo){
-        Highlight highlight = highlightService.updateHighlight(year, month, newHighlightInfo);
-        if(highlight == null) throw new HighlightNotFoundException(year, month);
+    @PutMapping("/highlights/{id}")
+    public Highlight updateHighlight(@PathVariable Long id, @Valid @RequestBody Highlight newHighlightInfo){
+        Highlight highlight = highlightService.updateHighlight(id, newHighlightInfo);
+        if(highlight == null) throw new HighlightNotFoundException(id);
         return highlight;
     }
 
@@ -57,8 +59,12 @@ public class HighlightController {
      * If there is no book with the given "id", throw a BookNotFoundException
      * @param id
      */
-    @DeleteMapping("/highlights/{year}")
-    public void deleteHighlight(@PathVariable Long year, Long month){
-        if(highlightService.deleteHighlight(year, month) == 0) throw new HighlightNotFoundException(year, month);
+    @DeleteMapping("/highlights/{id}")
+    public void deleteHighlight(@PathVariable Long id){
+        try{
+            highlightService.deleteHighlight(id);
+         }catch(EmptyResultDataAccessException e) {
+            throw new HighlightNotFoundException(id);
+         }
     }
 }

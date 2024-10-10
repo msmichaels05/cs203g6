@@ -1,7 +1,6 @@
 package com.amateuraces.highlight;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -9,9 +8,9 @@ import org.springframework.stereotype.Service;
 public class HighlightServiceImpl implements HighlightService {
    
     private final HighlightRepository highlights;
+
     public HighlightServiceImpl(HighlightRepository highlights){
         this.highlights = highlights;
-    
     }
 
     @Override
@@ -20,35 +19,30 @@ public class HighlightServiceImpl implements HighlightService {
     }
     
     @Override
-    public Highlight getHighlight(Long year, Long month){
-        Optional<Highlight> h = highlights.findCurrentHighlight(year, month);
-        if (h.isPresent())
-            return h.get();
-        else
-            return null;
+    public Highlight getHighlight(Long id){
+        return highlights.findById(id).orElse(null);
     }
     
   
     @Override
     public Highlight addHighlight(Highlight highlight) {
-        highlight.setYear(highlights.save(highlight));
-        highlight.setMonth(highlights.save(highlight));
-        return highlight;
+        return highlights.save(highlight);
     }
 
     @Override
-    public Highlight updateHighlight(Long year, Long month, Highlight newHighlightInfo) {
-   
-        Optional<Highlight> existingHighlightOptional = highlights.findCurrentHighlight(year, month);
+    public Highlight updateHighlight(Long id, Highlight newHighlightInfo) {
+        return highlights.findById(id).map(highlight -> {highlight.setTournamentOfTheMonth(newHighlightInfo.getTournamentOfTheMonth());
+            return highlights.save(highlight);
+        }).orElse(null);
+    }
+
+    @Override
+    public void deleteHighlight(Long id){
+        if (!highlights.existsById(id)) {
+            throw new HighlightNotFoundException(id);
+        }
     
-        Highlight highlight = newHighlightInfo;
-        highlight.setYear(year);
-        highlight.setMonth(month);
-        return highlights.update(highlight)>0 ? highlight : null;
-    }
-
-    @Override
-    public int deleteHighlight(Long year, Long month){
-        return highlights.deleteByYearMonth(year, month);
+        // If the highlight exists, delete them
+        highlights.deleteById(id);
     }
 }

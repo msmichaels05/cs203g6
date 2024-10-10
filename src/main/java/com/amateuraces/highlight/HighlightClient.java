@@ -20,8 +20,8 @@ public class HighlightClient {
      * @param month
      * @return
      */
-    public Highlight getHighlight(final String URI, final Long year, final Long month) {
-        final Highlight highlight = template.getForObject(URI + "/" + year + "/" + month, Highlight.class);
+    public Highlight getHighlight(final String URI, final Highlight id) {
+        final Highlight highlight = template.getForObject(URI + "/" + id, Highlight.class);
         return highlight;
     }
 

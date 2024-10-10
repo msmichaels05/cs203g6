@@ -10,8 +10,8 @@ public class HighlightNotFoundException extends RuntimeException{
      */
     private static final long serialVersionUID = 1L;
 
-    HighlightNotFoundException(Long year, Long month) {
-        super("Could not find highlight " + year + " " + month);
+    HighlightNotFoundException(Long id) {
+        super("Could not find highlight " + id);
     }
     
 }
