@@ -12,6 +12,8 @@ import com.amateuraces.player.*;
 import com.amateuraces.client.RestTemplateClient;
 import com.amateuraces.user.User;
 import com.amateuraces.user.UserRepository;
+import com.amateuraces.highlight.*;
+
 
 
 @SpringBootApplication
@@ -33,7 +35,11 @@ public class AmateurAces {
             new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN")).getUsername());
         System.out.println("[Add user]: " + users.save(
             new User("betatester" , encoder.encode("betatester"), "ROLE_USER")).getUsername());
-            
+
+        // Highlight repository initialization
+        HighlightRepository highlights = ctx.getBean(HighlightRepository.class);
+        
+        // System.out.println("[Add highlight]: " + highlightRepository.save(new Highlight(2024L,10L,"Hello")));
         
         // // Test the RestTemplate client with authentication
         /**
