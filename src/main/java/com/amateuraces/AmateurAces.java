@@ -21,7 +21,7 @@ public class AmateurAces {
         
         ApplicationContext ctx = SpringApplication.run(AmateurAces.class, args);
 
-        // JPA book repository init
+        // JPA player repository init
         PlayerRepository players = ctx.getBean(PlayerRepository.class);
         System.out.println("[Add player]: " + players.save(new Player("Tim")));
         System.out.println("[Add player]: " + players.save(new Player("Gone With The Wind")));

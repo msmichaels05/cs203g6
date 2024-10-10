@@ -1,4 +1,5 @@
 
+# Users
 POST http://localhost:8080/users
 Content-Type: application/json
 
@@ -15,6 +16,7 @@ GET http://localhost:8080/users
 
 ###
 
+# Players
 POST http://localhost:8080/players
 Content-Type: application/json
 Authorization: Basic username password
@@ -50,7 +52,7 @@ Authorization: Basic betatester betatester
     "name": "jon"
 }
 
-###
+### Highlights
 GET http://localhost:8080/highlights
 
 ###
@@ -69,4 +71,26 @@ GET http://localhost:8080/highlights
 ###
 
 DELETE http://localhost:8080/highlights/4
+Authorization: Basic admin goodpassword
+
+### Tournament
+GET http://localhost:8080/tournaments
+
+###
+
+POST http://localhost:8080/tournaments
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "name" : "US OPEN",
+    "requirement" : 1500
+     
+}
+###
+GET http://localhost:8080/tournaments
+
+###
+
+DELETE http://localhost:8080/tournaments
 Authorization: Basic admin goodpassword

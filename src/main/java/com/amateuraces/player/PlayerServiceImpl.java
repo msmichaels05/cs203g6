@@ -1,6 +1,7 @@
 package com.amateuraces.player;
 
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 /*This implementation is meant for business logic,which could be added later*Currently,it does not have much in terms of the business logic yet*/
@@ -24,8 +25,6 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Player getPlayer(Long id){
         return players.findById(id).orElse(null);
-        
-        
     }
 
     @Override
