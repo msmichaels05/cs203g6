@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -24,12 +25,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Match {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long tournamentId;
+    @ManyToOne
+    @JoinColumn(name = "tournamentName")
+    private Tournament tournament;
 
     @OneToOne
     @JoinColumn(name = "matchPlayer1")
@@ -39,25 +41,18 @@ public class Match {
     @JoinColumn(name = "matchPlayer2")
     private Player player2;
 
-    private String result; // Could store values like "Player1 wins", "Player2 wins", or "Draw"
-
+    @OneToOne
+    @JoinColumn(name = "matchWinner")
+    private Player winner;
 
     public Match(Tournament tournament, Player player1, Player player2) {
-        this.tournamentId = tournament.getId();
+        this.tournament = tournament;
         this.player1 = player1;
         this.player2 = player2;
     }
 
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    // Optionally, you could add logic for determining a winner and updating ELO scores
-    public void determineWinner() {
-        // Add logic to determine the winner and update result
+    public Match(Player player1, Player player2) {
+        this.player1 = player1;
+        this.player2 = player2;
     }
 }

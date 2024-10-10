@@ -100,4 +100,22 @@ public class TournamentServiceImpl implements TournamentService {
 
     //     return tournament.checkRegistrationPeriod();
     // }
+
+    /**
+     * Register a player for a tournament.
+     *
+     * @param tournamentId the ID of the tournament
+     * @param playerId     the ID of the player to register
+     * @return the updated Tournament object after registration
+     */
+    // public Tournament registerPlayerForTournament(Long tournamentId, Long playerId) {
+    //     Tournament tournament = getTournamentById(tournamentId);
+    //     if (tournament != null && tournament.isRegistrationOpen()) {
+    //         // Assuming you have a Player class and a way to find a Player by ID
+    //         Player player = new Player(); // Retrieve player based on playerId
+    //         tournament.addPlayer(player);
+    //         return tournamentRepository.save(tournament);
+    //     }
+    //     return null; // Or throw an exception
+    // }
 }

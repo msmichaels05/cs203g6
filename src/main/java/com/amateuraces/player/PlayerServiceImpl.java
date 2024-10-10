@@ -9,12 +9,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
-    private PlayerRepository players;
+    private final PlayerRepository players;
 
     public PlayerServiceImpl(PlayerRepository players){
-
         this.players = players;
-     
     }
 
     @Override

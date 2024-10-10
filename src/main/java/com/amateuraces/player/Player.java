@@ -1,6 +1,5 @@
 package com.amateuraces.player;
 
-import com.amateuraces.match.Match;
 import com.amateuraces.tournament.Tournament;
 
 import jakarta.persistence.Entity;
@@ -10,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -44,12 +42,6 @@ public class Player {
     private int elo = 1500;  // Starting ELO
     private int matchesPlayed;
     private int matchesWon;
-
-    @OneToOne(mappedBy = "player1")
-    private Match matchForPlayer1;
-
-    @OneToOne(mappedBy = "player2")
-    private Match matchForPlayer2;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tournament_id")
