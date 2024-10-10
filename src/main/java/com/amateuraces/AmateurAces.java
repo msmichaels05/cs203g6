@@ -13,6 +13,7 @@ import com.amateuraces.player.PlayerRepository;
 import com.amateuraces.user.User;
 import com.amateuraces.user.UserRepository;
 
+
 @SpringBootApplication
 public class AmateurAces {
 
