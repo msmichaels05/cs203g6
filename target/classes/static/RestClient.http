@@ -65,8 +65,6 @@ Authorization: Basic admin goodpassword
     "tournamentOfTheMonth" : "testing"
      
 }
-###
-GET http://localhost:8080/highlights
 
 ###
 
@@ -87,10 +85,26 @@ Authorization: Basic admin goodpassword
     "requirement" : 1500
      
 }
-###
-GET http://localhost:8080/tournaments
 
 ###
 
-DELETE http://localhost:8080/tournaments
+DELETE http://localhost:8080/tournaments/4
+Authorization: Basic admin goodpassword
+
+### Match
+GET http://localhost:8080/matches
+
+###
+
+POST http://localhost:8080/matches
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    
+}
+
+###
+
+DELETE http://localhost:8080/matches/3
 Authorization: Basic admin goodpassword

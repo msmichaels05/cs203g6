@@ -2,9 +2,6 @@ package com.amateuraces.player;
 
 import java.util.List;
 
-import jakarta.validation.Valid;
-
-
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 
 @RestController
 public class PlayerController {
-    private PlayerService playerService;
+    private final PlayerService playerService;
     
     public PlayerController(PlayerService ps){
         this.playerService = ps ; 
