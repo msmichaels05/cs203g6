@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 GET http://localhost:8080/players
 
@@ -39,3 +40,163 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/players/
+=======
+
+###
+PUT http://localhost:8080/tournaments/2
+Content-Type: application/json
+Authorization: Basic betatester betatester
+
+
+{
+    "name": "jon",
+    "requirement": 9999
+}
+### 
+
+DELETE http://localhost:8080/tournaments/1
+
+### Tournament
+GET http://localhost:8080/tournaments
+
+
+### Tournament
+POST http://localhost:8080/tournaments
+Content-Type: application/json
+
+{
+    "name": "test",
+    "requirement": 100
+}
+
+###Users
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+    "username": "username",
+    "password": "password"
+    
+}
+
+###Users
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+    "username": "username",
+    "password": "password",
+    "authorities":"ROLE_ADMIN"
+    
+}
+
+###
+
+GET http://localhost:8080/users
+
+###
+
+# Players
+POST http://localhost:8080/players
+Content-Type: application/json
+Authorization: Basic username password
+
+{
+    "name" : "player"
+     
+}
+###
+GET http://localhost:8080/players
+
+###
+
+DELETE http://localhost:8080/players/4
+Authorization: Basic admin goodpassword
+
+###
+POST http://localhost:8080/players
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "name": "I, Robot"
+}
+
+###
+PUT http://localhost:8080/players/2
+Content-Type: application/json
+Authorization: Basic betatester betatester
+
+
+{
+    "name": "jon"
+}
+
+###
+PUT http://localhost:8080/highlights/2
+Content-Type: application/json
+Authorization: Basic betatester betatester
+
+
+{
+    "tournamentOfTheMonth": "jon"
+}
+
+### Highlights
+GET http://localhost:8080/highlights
+
+###
+
+POST http://localhost:8080/highlights
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "tournamentOfTheMonth" : "testing"
+     
+}
+
+###
+
+DELETE http://localhost:8080/highlights/4
+Authorization: Basic admin goodpassword
+
+### Tournament
+GET http://localhost:8080/tournaments
+
+###
+
+POST http://localhost:8080/tournaments
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "name" : "US OPEN",
+    "requirement" : 1500
+     
+}
+
+###
+
+DELETE http://localhost:8080/tournaments/4
+Authorization: Basic admin goodpassword
+
+### Match
+GET http://localhost:8080/matches
+
+###
+
+POST http://localhost:8080/matches
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "Tournament"
+    "Player1"
+}
+
+###
+
+DELETE http://localhost:8080/matches/3
+Authorization: Basic admin goodpassword
+>>>>>>> 4de22c8975a822eef95aef27a91cb5f4b2b102a0

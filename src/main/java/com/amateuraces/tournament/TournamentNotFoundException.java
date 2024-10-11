@@ -1,17 +1,17 @@
-package com.amateuraces.player;
+package com.amateuraces.tournament;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND) // 404 Error
-public class PlayerNotFoundException extends RuntimeException{
+public class TournamentNotFoundException extends RuntimeException{
     /**
      *
      */
     private static final long serialVersionUID = 1L;
 
-    PlayerNotFoundException(Long id) {
-        super("Could not find player " + id);
+    TournamentNotFoundException(Long id) {
+        super("Could not find tournament " + id);
     }
     
 }
