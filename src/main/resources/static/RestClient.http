@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 GET http://localhost:8080/matches
 
 ###
@@ -8,10 +9,36 @@ Content-Type: application/json
 
 {
     "id" : 1, 
+=======
+# Users
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+    "username": "username",
+    "password": "password",
+    "authorities":"ROLE_USER"
+    
+}
+
+###
+
+GET http://localhost:8080/users
+
+###
+
+# Players
+POST http://localhost:8080/players
+Content-Type: application/json
+Authorization: Basic username password
+
+{
+>>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68
     "name" : "player"
      
 }
 ###
+<<<<<<< HEAD
 GET http://localhost:8080/players/
 
 ###
@@ -39,3 +66,87 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/players/
+=======
+GET http://localhost:8080/players
+
+###
+
+DELETE http://localhost:8080/players/4
+Authorization: Basic admin goodpassword
+
+###
+POST http://localhost:8080/players
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "name": "I, Robot"
+}
+
+###
+PUT http://localhost:8080/players/2
+Content-Type: application/json
+Authorization: Basic betatester betatester
+
+
+{
+    "name": "jon"
+}
+
+### Highlights
+GET http://localhost:8080/highlights
+
+###
+
+POST http://localhost:8080/highlights
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "tournamentOfTheMonth" : "testing"
+     
+}
+
+###
+
+DELETE http://localhost:8080/highlights/4
+Authorization: Basic admin goodpassword
+
+### Tournament
+GET http://localhost:8080/tournaments
+
+###
+
+POST http://localhost:8080/tournaments
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "name" : "US OPEN",
+    "requirement" : 1500
+     
+}
+
+###
+
+DELETE http://localhost:8080/tournaments/4
+Authorization: Basic admin goodpassword
+
+### Match
+GET http://localhost:8080/matches
+
+###
+
+POST http://localhost:8080/matches
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    
+}
+
+###
+
+DELETE http://localhost:8080/matches/3
+Authorization: Basic admin goodpassword
+>>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68

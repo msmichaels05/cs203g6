@@ -1,5 +1,6 @@
 package com.amateuraces.match;
 
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
@@ -144,5 +145,27 @@ public class MatchClient {
      */
     public void cancelMatch(Long matchId) {
         restTemplate.delete(baseUrl + "/" + matchId + "/cancel");
+=======
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+@Component
+public class MatchClient {
+    private final RestTemplate template;
+
+    MatchClient(RestTemplateBuilder builder) {
+        this.template = builder.build();
+    }
+
+    public Match getMatch(final String URI, final Long id) {
+        final Match player = template.getForObject(URI + "/" + id, Match.class);
+        return player;
+    }
+
+    public Match addMatch(final String URI, final Match newMatch) {
+        final Match returned = template.postForObject(URI, newMatch, Match.class);
+        return returned;
+>>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68
     }
 }
