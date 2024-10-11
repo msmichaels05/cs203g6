@@ -8,8 +8,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.amateuraces.client.RestTemplateClient;
 import com.amateuraces.highlight.Highlight;
 import com.amateuraces.highlight.HighlightRepository;
+import com.amateuraces.match.MatchRepository;
 import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerRepository;
+import com.amateuraces.tournament.Tournament;
+import com.amateuraces.tournament.TournamentRepository;
 import com.amateuraces.user.User;
 import com.amateuraces.user.UserRepository;
 
@@ -34,11 +37,17 @@ public class AmateurAces {
         System.out.println("[Add user]: " + users.save(
             new User("betatester" , encoder.encode("betatester"), "ROLE_USER")).getUsername());
 
-        // Highlight repository initialization
+        // JPA Highlight repository initialization
         HighlightRepository highlights = ctx.getBean(HighlightRepository.class);
         
         System.out.println("[Add highlight]: " + highlights.save(new Highlight("TESTING")));
-        
+
+        //JPA Match repository initialization
+        MatchRepository match = ctx.getBean(MatchRepository.class);
+
+        //JPA Tournament repository initialization
+        TournamentRepository tournament = ctx.getBean(TournamentRepository.class);
+
         // // Test the RestTemplate client with authentication-
         /**
          * TODO: Activity 3 (after class)

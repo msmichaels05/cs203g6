@@ -43,7 +43,7 @@ public class Player {
     private int matchesPlayed;
     private int matchesWon;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
 

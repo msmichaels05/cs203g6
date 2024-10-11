@@ -2,17 +2,24 @@ package com.amateuraces.tournament;
 
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.amateuraces.match.Match;
 import com.amateuraces.player.Player;
+import com.amateuraces.player.PlayerNotFoundException;
+
+import jakarta.validation.Valid;
 
 @RestController
 public class TournamentController {
@@ -34,12 +41,39 @@ public class TournamentController {
      * @param tournament the tournament to be created
      * @return ResponseEntity containing the created tournament
      */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/tournaments")
-    public ResponseEntity<Tournament> createTournament(@RequestBody Tournament tournament) {
-        Tournament createdTournament = tournamentService.createTournament(tournament);
-        return new ResponseEntity<>(createdTournament, HttpStatus.CREATED);
+    public Tournament addTournament(@RequestBody Tournament tournament){
+        return tournamentService.addTournament(tournament);
     }
 
+            /**
+     * Remove a tournament with the DELETE request to "/tournaments/{id}"
+     * If there is no tournament with the given "id", throw a TournamentNotFoundException
+     * @param id
+     */
+    @DeleteMapping("/tournaments/{id}")
+    public void deleteTournament(@PathVariable Long id){
+        try{
+            tournamentService.deleteTournament(id);
+         }catch(EmptyResultDataAccessException e) {
+            throw new TournamentNotFoundException(id);
+         }
+    }
+
+            /**
+     * If there is no tournament with the given "id", throw a TournamentNotFoundException
+     * @param id
+     * @param newTournamentInfo
+     * @return the updated, or newly added book
+     */
+    @PutMapping("/tournaments/{id}")
+    public Tournament updateTournament(@PathVariable Long id, @Valid @RequestBody Tournament newTournamentInfo){
+        Tournament Tournament = tournamentService.updateTournament(id,newTournamentInfo);
+        if(Tournament == null) throw new TournamentNotFoundException(id);
+        
+        return Tournament;
+    }
     /**
      * Set the registration period for a tournament.
      * 

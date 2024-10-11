@@ -69,7 +69,7 @@ public class PlayerController {
      * @return the updated, or newly added book
      */
     @PutMapping("/players/{id}")
-    public Player updatPlayer(@PathVariable Long id, @Valid @RequestBody Player newPlayerInfo){
+    public Player updatePlayer(@PathVariable Long id, @Valid @RequestBody Player newPlayerInfo){
         Player player = playerService.updatePlayer(id, newPlayerInfo);
         if(player == null) throw new PlayerNotFoundException(id);
         
