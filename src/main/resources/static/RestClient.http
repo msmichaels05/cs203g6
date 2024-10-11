@@ -1,15 +1,4 @@
 
-<<<<<<< HEAD
-GET http://localhost:8080/matches
-
-###
-
-POST http://localhost:8080/players
-Content-Type: application/json
-
-{
-    "id" : 1, 
-=======
 # Users
 POST http://localhost:8080/users
 Content-Type: application/json
@@ -33,40 +22,10 @@ Content-Type: application/json
 Authorization: Basic username password
 
 {
->>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68
     "name" : "player"
      
 }
 ###
-<<<<<<< HEAD
-GET http://localhost:8080/players/
-
-###
-
-DELETE http://localhost:8080/books/3
-
-###
-GET http://localhost:8080/books/3
-
-###
-POST http://localhost:8080/players/
-Content-Type: application/json
-
-{
-    "title": "I, Robot"
-}
-
-###
-PUT http://localhost:8080/books/3
-Content-Type: application/json
-
-{
-    "title": "Sapiens"
-}
-
-###
-GET http://localhost:8080/players/
-=======
 GET http://localhost:8080/players
 
 ###
@@ -149,4 +108,3 @@ Authorization: Basic admin goodpassword
 
 DELETE http://localhost:8080/matches/3
 Authorization: Basic admin goodpassword
->>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68

@@ -1,19 +1,5 @@
 package com.amateuraces.player;
 
-<<<<<<< HEAD
-import java.util.List;
-import java.util.Optional;
-
-public interface PlayerRepository {
-    Long save(Player player);
-    int update(Player player);
-    int deleteById(Long id);
-    List<Player> findAll();
-
-    // Using Optional - the return value of this method may contain a null value
-    Optional<Player> findById(Long id);
- 
-=======
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,5 +12,4 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PlayerRepository extends JpaRepository <Player, Long>{
->>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68
 }

@@ -1,11 +1,5 @@
 package com.amateuraces.player;
 
-<<<<<<< HEAD
-
-public class Player{
-
-    private String phoneNumber;
-=======
 import com.amateuraces.tournament.Tournament;
 
 import jakarta.persistence.Entity;
@@ -43,27 +37,11 @@ public class Player {
     @Size(min = 1, max = 15)
     private String phoneNumber;
 
->>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68
     private int age;
     private String gender;
     private int elo = 1500;  // Starting ELO
     private int matchesPlayed;
     private int matchesWon;
-<<<<<<< HEAD
-    private String name;
-    private Long id; 
-
-    // // Default Constructor
-    public Player() {}
-
-    public Player(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    // Updated Constructor with wins and losses
-    public Player(Long id, String name, String gender, int age, String email, String password, String phoneNumber, int matchesPlayed, int matchesWon) {
-=======
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tournament_id")
@@ -71,88 +49,12 @@ public class Player {
 
     // Constructor with wins and losses
     public Player(String name, String gender, int age, String email, String password, String phoneNumber, int matchesPlayed, int matchesWon) {
->>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68
         this.age = age;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
         this.matchesPlayed = matchesPlayed;
         this.matchesWon = matchesWon;
         this.name = name;
-<<<<<<< HEAD
-        this.id = id;
-        // this.elo = elo;
-    }
-
-    // Getters and Setters
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public int getWins() {
-        return matchesWon;
-    }
-
-    public void setWins(int matchesWon) {
-        this.matchesWon = matchesWon;
-    }
-
-    public int getLosses() {
-        return matchesPlayed - matchesWon;
-    }
-
-    // Methods for updating ELO, wins, and losses
-    public void updateElo(int opponentElo, boolean hasWon) {
-        int K = 32;
-        double expectedScore = 1 / (1 + Math.pow(10, (opponentElo - this.elo) / 400.0));
-        if (hasWon) {
-            this.elo += (int) (K * (1 - expectedScore));
-        } else {
-            this.elo += (int) (K * (0 - expectedScore));
-        }
-    }
-
-    public void updateWinsAndLosses(boolean hasWon) {
-        if (hasWon) {
-            this.matchesWon++;
-        }
-        matchesPlayed++;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-}
-=======
     }
 
     public Player(String name) {
@@ -180,4 +82,3 @@ public class Player {
         return this.matchesPlayed - this.matchesWon;
     }
 }
->>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68

@@ -1,10 +1,6 @@
 package com.amateuraces.player;
 
 import java.util.List;
-<<<<<<< HEAD
-import java.util.Optional;
-=======
->>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68
 
 import org.springframework.stereotype.Service;
 
@@ -13,19 +9,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
-<<<<<<< HEAD
-    private PlayerRepository players;
-
-    public PlayerServiceImpl(PlayerRepository players){
-
-        this.players = players;
-     
-=======
     private final PlayerRepository players;
 
     public PlayerServiceImpl(PlayerRepository players){
         this.players = players;
->>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68
     }
 
     @Override
@@ -35,50 +22,11 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player getPlayer(Long id){
-<<<<<<< HEAD
-        Optional<Player> b = players.findById(id);
-        if (b.isPresent())
-            return b.get();
-        else
-            return null;
-        
-        
-=======
         return players.findById(id).orElse(null);
->>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68
     }
 
     @Override
     public Player addPlayer(Player player) {
-<<<<<<< HEAD
-        player.setId(players.save(player));
-        return player;
-    }
-
-    /*TODO:Activity 1-
-
-    Implement the
-    update method*
-    This method should return
-    the updated Player,or null if
-    the given
-    id is
-    not found**/
-
-    @Override
-    public Player updatePlayer(Long id, Player newPlayerInfo) {
-   
-        Optional<Player> existingPlayerOptional = players.findById(id);
-    
-        Player player = newPlayerInfo;
-        player.setId(id);
-        return players.update(player)>0 ? player : null;
-    }
-
-    @Override
-    public int deletePlayer(Long id){
-        return players.deleteById(id);
-=======
         return players.save(player);
     }
 
@@ -103,6 +51,5 @@ public class PlayerServiceImpl implements PlayerService {
     
     // If the player exists, delete them
     players.deleteById(id);
->>>>>>> a84a5a3c7149033df22ad0b28304fe880ce57d68
     }
 }
