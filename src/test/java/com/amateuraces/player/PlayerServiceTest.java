@@ -26,49 +26,40 @@ public class PlayerServiceTest {
     @InjectMocks
     private PlayerServiceImpl playerService;
     
-    
     @Test
-    void addPlayer_SameName_ReturnNull(){
-    // your code here
-    Player player = new Player("The Same Name Exists");
-    List<Player> samePlayer = new ArrayList<Player>();
-    samePlayer.add(new Player("The Same Name Exists"));
-    when(players.findByName(player.getName())).thenReturn(samePlayer);
-    Player savedPlayer = playerService.addPlayer(player);
-    assertNull(savedPlayer);
-    verify(players).findByName(player.getName());
+    void addPlayer_NewName_ReturnSavedPlayer(){
+        
+        Player player = new Player("This is a New Player");
+        when(players.save(any(Player.class))).thenReturn(player);
+        Player savedPlayer = playerService.addPlayer(player);
+        
+        assertNotNull(savedPlayer);
+        assertEquals(player.getName(),savedPlayer.getName());
+        verify(players).save(player);
     }
-    
-//     /**
-//      * 
-//      * TODO: Activity 1 (Week 6)
-//      * Write a test case: when adding a new book but the title already exists
-//      * The test case should pass if BookServiceImpl.addBook(book)
-//      * returns null (can't add book), otherwise it will fail.
-//      * Remember to include suitable "verify" operations
-//      * 
-//      */
-//     @Test
-//     void addBook_SameTitle_ReturnNull(){
-//         // your code here
-//         Book book = new Book("The same title exists");
-        
-//         List<Book> sameTitles = new ArrayList<Book>();
-//         sameTitles.add(new Book("The same title exists"));
-//         when(books.findByTitle(book.getTitle())).thenReturn(sameTitles);
-//         Book savedBook = bookService.addBook(book);
-//         assertNull(savedBook);
-//         verify(books).findByTitle(book.getTitle());                
-//     }
 
-//     @Test
-//     void updateBook_NotFound_ReturnNull(){
-//         Book book = new Book("Updated Title of Book");
-//         Long bookId = 10L;
-//         when(books.findById(bookId)).thenReturn(Optional.empty());
+    @Test
+    void updatePlayer_NotFound_ReturnNull(){
+        Player player = new Player("Updated Name of Player");
+        Long playerID = 10L;
+        when(players.findById(playerID)).thenReturn(Optional.empty());
         
-//         Book updatedBook = bookService.updateBook(bookId, book);
+        Player updatedPlayer = playerService.updatePlayer(playerID, player);
         
-//         assertNull(updatedBook);
-//         verify(books).findById(bookId);
+        assertNull(updatedPlayer);
+        verify(players).findById(playerID);
+    }
+
+    // @Test
+    // void addPlayer_SameName_ReturnNull(){
+    // // your code here
+    // Player player = new Player("The Same Name Exists");
+    // List<Player> samePlayer = new ArrayList<Player>();
+    // samePlayer.add(new Player("The Same Name Exists"));
+    // when(players.findByName(player.getName())).thenReturn(samePlayer);
+    // Player savedPlayer = playerService.addPlayer(player);
+    // assertNull(savedPlayer);
+    // verify(players).findByName(player.getName());
+    // }
+    
     }

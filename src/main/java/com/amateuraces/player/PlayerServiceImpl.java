@@ -27,14 +27,8 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public Player addPlayer(Player player) {
-        List<Player> sameName = players.findByName(player.getName());
-        if(sameName.size() == 0)
-            return players.save(player);
-        else
-            return null;
+        return players.save(player);
     }
-    //     return players.save(player);
-    // }
 
     @Override
     public Player updatePlayer(Long id, Player newPlayerInfo) {

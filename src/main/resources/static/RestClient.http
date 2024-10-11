@@ -83,13 +83,13 @@ Authorization: Basic admin goodpassword
 }
 
 ###
-PUT http://localhost:8080/players/2
+PUT http://localhost:8080/players/3
 Content-Type: application/json
-Authorization: Basic betatester betatester
+Authorization: Basic admin goodpassword
 
 
 {
-    "name": "jon"
+    "name": "balloon"
     
 }
 
