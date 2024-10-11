@@ -1,55 +1,89 @@
 package com.amateuraces.player;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.amateuraces.book.Book;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.amateuraces.tournament.*;
+
+import jakarta.persistence.EntityNotFoundException;
+
+/*This implementation is meant for business logic,which could be added later*Currently,it does not have much in terms of the business logic yet*/
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
-    @Autowired
-    private PlayerRepository playerRepository;
+    private final PlayerRepository players;
+    private final TournamentRepository tournamentRepository;
 
-    public PlayerServiceImpl(PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
+    public PlayerServiceImpl(PlayerRepository players, TournamentRepository tournamentRepository){
+        this.players = players;
+        this.tournamentRepository = tournamentRepository;
     }
 
     @Override
     public List<Player> listPlayers() {
-        return playerRepository.findAll();
+        return players.findAll();
     }
 
     @Override
     public Player getPlayer(Long id){
-        Optional<Player> player = playerRepository.findById(id);
-        if (player.isPresent())
-            return player.get();
-        else
-            return null;
+        return players.findById(id).orElse(null);
     }
 
     @Override
-    public Player addPlayer(Player player) {  //Creating an account
-        //return playerRepository.save(player);  // Save and return the new player
-        player.setId(playerRepository.save(player));
-        return player;
+    public Player addPlayer(Player player) {
+        return players.save(player);
     }
 
     @Override
-    public Player updatePlayer(Long id, Player updatedPlayerInfo) {
-        Optional<Player> existingPlayer = playerRepository.findById(id);
+    public Player updatePlayer(Long id, Player newPlayerInfo) {
+        return players.findById(id).map(player -> {player.setName(newPlayerInfo.getName());
+            return players.save(player);
+        }).orElse(null);
+    }
 
-        Player player = updatedPlayerInfo;
-        player.setId(id);
-        return playerRepository.update(player)>0 ? player : null;
+    /**
+     * Remove a player with the given id
+     * Spring Data JPA does not return a value for delete operation
+     * Cascading: removing a player will also remove all its associated reviews
+     */
+    @Override
+    public void deletePlayer(Long id){
+    // Check if the player exists before attempting to delete
+    if (!players.existsById(id)) {
+        throw new PlayerNotFoundException(id);
+    }
+    
+    // If the player exists, delete them
+    players.deleteById(id);
     }
 
     @Override
-    public int deletePlayer(Long id) {
-        return playerRepository.deleteById(id);
+    public Player registerForTournament(Long playerId, Tournament tournament) {
+        // Fetch player by ID
+        Optional<Player> optionalPlayer = players.findById(playerId);
+
+        if (optionalPlayer.isPresent()) {
+            Player player = optionalPlayer.get();
+
+            // Check if the tournament already exists in the DB or save it
+            Optional<Tournament> existingTournament = tournamentRepository.findById(tournament.getId());
+
+            if (existingTournament.isPresent()) {
+                tournament = existingTournament.get(); // Use the existing tournament from DB
+            } else {
+                tournament = tournamentRepository.save(tournament); // Save new tournament to DB
+            }
+
+            // Register the player for the tournament
+            player.addToTournamentHistory(tournament);
+
+            // Save the updated player back to the repository
+            return players.save(player);
+        } else {
+            throw new EntityNotFoundException("Player with ID " + playerId + " not found.");
+        }
     }
 }

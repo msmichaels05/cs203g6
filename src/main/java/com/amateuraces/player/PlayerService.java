@@ -2,35 +2,35 @@ package com.amateuraces.player;
 
 import java.util.List;
 
+import com.amateuraces.tournament.Tournament;
+
 public interface PlayerService {
-    /**
-     * Retrieve all players.
-     * @return List of players.
-     */
     List<Player> listPlayers();
 
-    /**
-     * Retrieve a player by ID.
-     * @param id the player's ID
-     * @return the player
-     */
     Player getPlayer(Long id);
 
     /**
-     * Return the newly added player.
-     * @param player the player to add
-     * @return the added player
+     * Return the newly added player
      */
     Player addPlayer(Player player);
 
     /**
-     * Return the updated player.
-     * @param id the player ID
-     * @param player the updated player details
-     * @return the updated player
+     * Return the updated player
+     * 
+     * @param id
+     * @param player
+     * @return
      */
     Player updatePlayer(Long id, Player player);
 
+    /**
+     * Change method's signature: do not return a value for delete operation
+     * @param id
+     */
+    void deletePlayer(Long id);
+
+    Player registerForTournament(Long playerId, Tournament tournament);
+}
     /**
      * Return status of the delete.
      * If it's 1: the player has been removed.
