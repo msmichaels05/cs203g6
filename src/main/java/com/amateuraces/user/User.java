@@ -3,6 +3,7 @@ package com.amateuraces.user;
 import java.util.Arrays;
 import java.util.Collection;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import org.hibernate.mapping.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,7 +44,13 @@ public class User implements UserDetails{
 
     @NotNull(message = "Authorities should not be null")
     // We define two roles/authorities: ROLE_USER or ROLE_ADMIN
-    private String authorities;
+    private String authorities = "ROLE_USER";
+
+    public User(String username, String password){
+        this.username = username;
+        this.password = password;
+      
+    }
 
     public User(String username, String password, String authorities){
         this.username = username;
@@ -50,9 +58,11 @@ public class User implements UserDetails{
         this.authorities = authorities;
     }
 
+    
+
 
     /* Return a collection of authorities (roles) granted to the user.
-    */
+    // */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority(authorities));

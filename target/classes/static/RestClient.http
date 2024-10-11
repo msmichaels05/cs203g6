@@ -32,8 +32,18 @@ Content-Type: application/json
 
 {
     "username": "username",
+    "password": "password"
+    
+}
+
+###Users
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+    "username": "username",
     "password": "password",
-    "authorities":"ROLE_USER"
+    "authorities":"ROLE_ADMIN"
     
 }
 
