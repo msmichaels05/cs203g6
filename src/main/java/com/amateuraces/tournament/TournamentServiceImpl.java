@@ -51,7 +51,7 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public Tournament updateTournament(Long id, Tournament newTournamentInfo) {
         return tournamentRepository.findById(id).map(tournament -> {tournament.setName(newTournamentInfo.getName());
-            tournament.setRequirement(newTournamentInfo.getRequirement());
+            tournament.setELOrequirement(newTournamentInfo.getELOrequirement());
             return tournamentRepository.save(tournament);
         }).orElse(null);
     }

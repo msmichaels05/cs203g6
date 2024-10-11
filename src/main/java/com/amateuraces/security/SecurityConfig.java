@@ -37,7 +37,8 @@ public class SecurityConfig {
  
         return authProvider;
     }
-
+//                .requestMatchers(HttpMethod.PUT, "/players/*").hasAnyRole("ADMIN","USER")
+//                .requestMatchers(HttpMethod.DELETE, "/players/*").authenticated()
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -45,8 +46,17 @@ public class SecurityConfig {
                 .requestMatchers("/error").permitAll() // the default error page
                 .requestMatchers(HttpMethod.GET, "/players", "/players/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/players").hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/players/*").hasAnyRole("ADMIN","USER")
-                .requestMatchers(HttpMethod.DELETE, "/players/*").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/players/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/players/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/tournaments", "/tournaments/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/tournaments").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/tournaments/*").hasAuthority("ROLE_ADMIN")
+
+
+
+                
+
                 // note that Spring Security 6 secures all endpoints by default
                 // remove the below line after adding the required rules
                 .anyRequest().permitAll() 

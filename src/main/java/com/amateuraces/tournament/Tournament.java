@@ -32,11 +32,11 @@ public class Tournament {
     @Size(min = 1, max = 100)
     private String name;
 
-    private int requirement;
+    private int ELOrequirement;
 
     // Constructor with wins and losses
-    public Tournament(String name, int requirement) {
-        this.requirement = requirement;
+    public Tournament(String name, int ELOrequirement) {
+        this.ELOrequirement = ELOrequirement;
         this.name = name;
     }
 
