@@ -2,8 +2,6 @@ package com.amateuraces.player;
 
 import java.util.List;
 
-import com.amateuraces.tournament.Tournament;
-
 public interface PlayerService {
     List<Player> listPlayers();
 
@@ -28,15 +26,4 @@ public interface PlayerService {
      * @param id
      */
     void deletePlayer(Long id);
-
-    Player registerForTournament(Long playerId, Tournament tournament);
-}
-    /**
-     * Return status of the delete.
-     * If it's 1: the player has been removed.
-     * If it's 0: the player does not exist.
-     * @param id the player ID
-     * @return status of the delete operation
-     */
-    int deletePlayer(Long id);
 }
