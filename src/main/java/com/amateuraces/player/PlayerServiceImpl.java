@@ -1,8 +1,13 @@
 package com.amateuraces.player;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+
+import com.amateuraces.tournament.*;
+
+import jakarta.persistence.EntityNotFoundException;
 
 /*This implementation is meant for business logic,which could be added later*Currently,it does not have much in terms of the business logic yet*/
 
@@ -10,9 +15,11 @@ import org.springframework.stereotype.Service;
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository players;
+    private final TournamentRepository tournamentRepository;
 
-    public PlayerServiceImpl(PlayerRepository players){
+    public PlayerServiceImpl(PlayerRepository players, TournamentRepository tournamentRepository){
         this.players = players;
+        this.tournamentRepository = tournamentRepository;
     }
 
     @Override
@@ -52,4 +59,35 @@ public class PlayerServiceImpl implements PlayerService {
     // If the player exists, delete them
     players.deleteById(id);
     }
+
+    @Override
+    public Player registerForTournament(Long playerId, Tournament tournament) {
+        // Fetch player by ID
+        Optional<Player> optionalPlayer = players.findById(playerId);
+
+        if (optionalPlayer.isPresent()) {
+            Player player = optionalPlayer.get();
+
+            // Check if the tournament already exists in the DB or save it
+            Optional<Tournament> existingTournament = tournamentRepository.findById(tournament.getId());
+
+            if (existingTournament.isPresent()) {
+                tournament = existingTournament.get(); // Use the existing tournament from DB
+            } else {
+                tournament = tournamentRepository.save(tournament); // Save new tournament to DB
+            }
+
+            // Register the player for the tournament
+            player.addToTournamentHistory(tournament);
+
+            // Save the updated player back to the repository
+            return players.save(player);
+        } else {
+            throw new EntityNotFoundException("Player with ID " + playerId + " not found.");
+        }
+    }
 }
+
+
+
+
