@@ -27,6 +27,11 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     @Override
+    public Tournament getTournament(Long name){
+        return tournaments.findByName(name).orElse(null);
+    }
+
+    @Override
     public Tournament createTournament(Tournament tournament) {
         // Validate tournament before saving
         if (tournament.getName() == null || tournament.getName().isEmpty()) {
