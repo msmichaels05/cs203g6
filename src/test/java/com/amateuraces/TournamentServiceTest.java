@@ -19,6 +19,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.amateuraces.match.Match;
+import com.amateuraces.match.MatchRepository;
+import com.amateuraces.match.MatchServiceImpl;
 import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerRepository;
 import com.amateuraces.player.PlayerServiceImpl;
@@ -32,10 +35,12 @@ public class TournamentServiceTest {
     @Mock
     private TournamentRepository tournamentRepository;
     private PlayerRepository players;
+    private MatchRepository matches;
 
     @InjectMocks
     private TournamentServiceImpl tournamentService;
     private PlayerServiceImpl playerService;
+    private MatchServiceImpl matchService;
 
     @Test
     void createTournament_NewName_ReturnSavedTounament() {
@@ -79,8 +84,8 @@ public class TournamentServiceTest {
     @Test
     void getPlayersInTournament_ValidTournamentId_ReturnPlayerList() {
         // Arrange
-        Player player1 = new Player("player 1", "Male", 25, "player1@example.com", "password", "12345678", 10, 5);
-        Player player2 = new Player("player 2", "Male", 23, "player2@example.com", "password", "12345678", 12, 8);
+        Player player1 = new Player("player 1", "Male", 20, "player1@example.com", "password", "12345678", 10, 5);
+        Player player2 = new Player("player 2", "Male", 20, "player2@example.com", "password", "12345678", 12, 8);
         List<Player> playerList = Arrays.asList(player1, player2);
 
         Tournament tournament = new Tournament("Tournament 1", 10L);
@@ -97,6 +102,28 @@ public class TournamentServiceTest {
         assertEquals(2, players.size());
         assertEquals("player 1", players.get(0).getName());
         assertEquals("player 2", players.get(1).getName());
+    }
+
+    @Test
+    void recordMatchResult_ValidMatch_ReturnUpdatedTournament() {
+        // Arrange
+        Tournament tournament = new Tournament("Test Tournament", 10L);
+        Player player1 = new Player("player 1", "Male", 20, "player1@example.com", "password", "12345678", 10, 5);
+        Player player2 = new Player("player 2", "Male", 20, "player2@example.com", "password", "12345678", 12, 8);
+        Match match = new Match(tournament, player1, player2);
+
+        // Mock finding the tournament and match
+        when(tournamentRepository.findById(any(Long.class))).thenReturn(Optional.of(tournament));
+        when(matches.findById(any(Long.class))).thenReturn(Optional.of(match));
+
+        // Act: Player 1 wins the match
+        Tournament updatedTournament = tournamentService.recordMatchResult(10L, 1L, "Player 1");
+
+        // Assert
+        assertNotNull(updatedTournament);
+        assertEquals(player1, match.getWinner()); // Ensure the winner was correctly set
+        verify(matches).save(match);  // Ensure the match was saved
+        verify(tournamentRepository).save(tournament); // Ensure the tournament was updated
     }
 
     // @Test

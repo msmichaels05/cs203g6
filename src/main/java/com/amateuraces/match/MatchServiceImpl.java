@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.amateuraces.player.Player;
+
 /*This implementation is meant for business logic,which could be added later*Currently,it does not have much in terms of the business logic yet*/
 
 @Service
@@ -51,5 +53,46 @@ public class MatchServiceImpl implements MatchService {
     
     // If the match exists, delete them
     matches.deleteById(id);
+    }
+
+    @Override
+    public Match declareWinner(Long matchId, Long winnerId) {
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("Match not found"));
+        
+        Player winner = playerRepository.findById(winnerId)
+                .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+        
+        match.setWinner(winner); // Set the winner
+        return matchRepository.save(match); // Persist the changes
+    }
+
+    @Override
+    public Match recordMatchResult(Long matchId, Long winnerId, Long loserId, String score) {
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("Match not found"));
+
+        Player winner = playerRepository.findById(winnerId)
+                .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+
+        Player loser = playerRepository.findById(loserId)
+                .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+
+        // Update the match result
+        match.setWinner(winner);
+
+        // Update both players' statistics
+        winner.updateWinsAndLosses(true);
+        loser.updateWinsAndLosses(false);
+
+        // Update ELO scores (optional, depends on your system)
+        winner.updateElo(loser.getElo(), true);
+        loser.updateElo(winner.getElo(), false);
+
+        // Save the changes
+        playerRepository.save(winner);
+        playerRepository.save(loser);
+
+        return matchRepository.save(match); // Persist the match result
     }
 }

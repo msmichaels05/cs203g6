@@ -3,6 +3,7 @@ package com.amateuraces.match;
 import com.amateuraces.player.Player;
 import com.amateuraces.tournament.Tournament;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -44,6 +45,9 @@ public class Match {
     @OneToOne
     @JoinColumn(name = "matchWinner")
     private Player winner;
+
+    @Column(name = "matchScore")
+    private String score;
 
     public Match(Tournament tournament, Player player1, Player player2) {
         this.tournament = tournament;
