@@ -1,7 +1,6 @@
 package com.amateuraces.player;
 
 import java.util.List;
-<<<<<<< HEAD
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -10,28 +9,17 @@ import com.amateuraces.tournament.*;
 
 import jakarta.persistence.EntityNotFoundException;
 
-=======
-
-import org.springframework.stereotype.Service;
-
->>>>>>> 4de22c8975a822eef95aef27a91cb5f4b2b102a0
 /*This implementation is meant for business logic,which could be added later*Currently,it does not have much in terms of the business logic yet*/
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository players;
-<<<<<<< HEAD
     private final TournamentRepository tournamentRepository;
 
     public PlayerServiceImpl(PlayerRepository players, TournamentRepository tournamentRepository){
         this.players = players;
         this.tournamentRepository = tournamentRepository;
-=======
-
-    public PlayerServiceImpl(PlayerRepository players){
-        this.players = players;
->>>>>>> 4de22c8975a822eef95aef27a91cb5f4b2b102a0
     }
 
     @Override
@@ -71,7 +59,6 @@ public class PlayerServiceImpl implements PlayerService {
     // If the player exists, delete them
     players.deleteById(id);
     }
-<<<<<<< HEAD
 
     @Override
     public Player registerForTournament(Long playerId, Tournament tournament) {
@@ -100,10 +87,3 @@ public class PlayerServiceImpl implements PlayerService {
         }
     }
 }
-
-
-
-
-=======
-}
->>>>>>> 4de22c8975a822eef95aef27a91cb5f4b2b102a0

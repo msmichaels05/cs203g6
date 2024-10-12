@@ -2,6 +2,8 @@ package com.amateuraces.player;
 
 import java.util.List;
 
+import com.amateuraces.tournament.Tournament;
+
 public interface PlayerService {
     List<Player> listPlayers();
 
@@ -26,4 +28,6 @@ public interface PlayerService {
      * @param id
      */
     void deletePlayer(Long id);
+
+    public Player registerForTournament(Long playerId, Tournament tournament);
 }
