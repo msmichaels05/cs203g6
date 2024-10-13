@@ -100,5 +100,13 @@ public class Player {
     public void addToTournamentHistory(Tournament tournament) {
         tournamentHistory.add(tournament);
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String newname) {
+        this.name = newname;
+    }
 }
 // >>>>>>> 4de22c8975a822eef95aef27a91cb5f4b2b102a0
