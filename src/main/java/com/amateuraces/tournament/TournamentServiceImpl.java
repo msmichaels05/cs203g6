@@ -27,7 +27,7 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     @Override
-    public Tournament getTournament(Long name){
+    public Tournament getTournament(Long name) {
         return tournaments.findByName(name).orElse(null);
     }
 
@@ -52,15 +52,16 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     // @Override
-    // public Tournament setRegistrationPeriod(Long tournamentId, String startDate, String endDate) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+    // public Tournament setRegistrationPeriod(Long tournamentId, String startDate,
+    // String endDate) {
+    // Tournament tournament = tournamentRepository.findById(tournamentId)
+    // .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
 
-    //     tournament.setRegistrationStartDate(startDate);
-    //     tournament.setRegistrationEndDate(endDate);
-        
-    //     // Automatically update registration status in the Tournament class
-    //     return tournamentRepository.save(tournament);
+    // tournament.setRegistrationStartDate(startDate);
+    // tournament.setRegistrationEndDate(endDate);
+
+    // // Automatically update registration status in the Tournament class
+    // return tournamentRepository.save(tournament);
     // }
 
     @Override
@@ -82,11 +83,11 @@ public class TournamentServiceImpl implements TournamentService {
 
     // @Override
     // public Tournament updateTournamentStatus(Long tournamentId, String status) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+    // Tournament tournament = tournamentRepository.findById(tournamentId)
+    // .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
 
-    //     tournament.setStatus(status);
-    //     return tournamentRepository.save(tournament);
+    // tournament.setStatus(status);
+    // return tournamentRepository.save(tournament);
     // }
 
     @Override
@@ -100,10 +101,10 @@ public class TournamentServiceImpl implements TournamentService {
 
     // @Override
     // public boolean validateRegistrationPeriod(Long tournamentId) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+    // Tournament tournament = tournamentRepository.findById(tournamentId)
+    // .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
 
-    //     return tournament.checkRegistrationPeriod();
+    // return tournament.checkRegistrationPeriod();
     // }
 
     /**
@@ -113,14 +114,25 @@ public class TournamentServiceImpl implements TournamentService {
      * @param playerId     the ID of the player to register
      * @return the updated Tournament object after registration
      */
-    // public Tournament registerPlayerForTournament(Long tournamentId, Long playerId) {
-    //     Tournament tournament = getTournamentById(tournamentId);
-    //     if (tournament != null && tournament.isRegistrationOpen()) {
-    //         // Assuming you have a Player class and a way to find a Player by ID
-    //         Player player = new Player(); // Retrieve player based on playerId
-    //         tournament.addPlayer(player);
-    //         return tournamentRepository.save(tournament);
-    //     }
-    //     return null; // Or throw an exception
+    // public Tournament registerPlayerForTournament(Long tournamentId, Long
+    // playerId) {
+    // Tournament tournament = getTournamentById(tournamentId);
+    // if (tournament != null && tournament.isRegistrationOpen()) {
+    // // Assuming you have a Player class and a way to find a Player by ID
+    // Player player = new Player(); // Retrieve player based on playerId
+    // tournament.addPlayer(player);
+    // return tournamentRepository.save(tournament);
     // }
+    // return null; // Or throw an exception
+    // }
+
+    @Override
+    public void deleteTournament(Long tournamentId) {
+        // Check if the match exists before attempting to delete
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+
+        // If the match exists, delete them
+        tournamentRepository.deleteById(tournamentId);
+    }
 }

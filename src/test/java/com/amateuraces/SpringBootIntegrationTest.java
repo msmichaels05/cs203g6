@@ -1,170 +1,185 @@
-// package csd.week6.book;
+package com.amateuraces.tournament;
 
-// import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-// import java.net.URI;
-// import java.util.Optional;
+import java.net.URI;
+import java.util.Optional;
 
-// import org.junit.jupiter.api.AfterEach;
-// import org.junit.jupiter.api.Test;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-// import org.springframework.boot.test.web.client.TestRestTemplate;
-// import org.springframework.boot.test.web.server.LocalServerPort;
-// import org.springframework.http.HttpEntity;
-// import org.springframework.http.HttpMethod;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.apache.catalina.connector.Response;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-// import csd.week6.user.User;
-// import csd.week6.user.UserRepository;
+import com.amateuraces.match.MatchRepository;
+import com.amateuraces.player.PlayerRepository;
+import com.amateuraces.tournament.Tournament;
+import com.amateuraces.tournament.TournamentRepository;
+import com.amateuraces.user.User;
+import com.amateuraces.user.UserRepository;
 
-// /** Start an actual HTTP server listening at a random port */
-// @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-// class SpringBootIntegrationTest {
+/** Start an actual HTTP server listening at a random port */
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+class SpringBootIntegrationTest {
 
-// 	@LocalServerPort
-// 	private int port;
+	@LocalServerPort
+	private int port;
 
-// 	private final String baseUrl = "http://localhost:";
+	private final String baseUrl = "http://localhost:";
 
-// 	@Autowired
-// 	/**
-// 	 * Use TestRestTemplate for testing a real instance of your application as an
-// 	 * external actor.
-// 	 * TestRestTemplate is just a convenient subclass of RestTemplate that is
-// 	 * suitable for integration tests.
-// 	 * It is fault tolerant, and optionally can carry Basic authentication headers.
-// 	 */
-// 	private TestRestTemplate restTemplate;
+	@Autowired
+	/**
+	 * Use TestRestTemplate for testing a real instance of your application as an
+	 * external actor.
+	 * TestRestTemplate is just a convenient subclass of RestTemplate that is
+	 * suitable for integration tests.
+	 * It is fault tolerant, and optionally can carry Basic authentication headers.
+	 */
+	private TestRestTemplate restTemplate;
 
-// 	@Autowired
-// 	private BookRepository books;
+	@Autowired
+	private PlayerRepository players;
 
-// 	@Autowired
-// 	private UserRepository users;
+	@Autowired
+	private TournamentRepository tournaments;
 
-// 	@Autowired
-// 	private BCryptPasswordEncoder encoder;
+	@Autowired
+	private MatchRepository matches;
 
-// 	@AfterEach
-// 	void tearDown() {
-// 		// clear the database after each test
-// 		books.deleteAll();
-// 		users.deleteAll();
-// 	}
+	@Autowired
+	private UserRepository users;
 
-// 	@Test
-// 	public void getBooks_Success() throws Exception {
-// 		URI uri = new URI(baseUrl + port + "/books");
-// 		books.save(new Book("Gone With The Wind"));
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 
-// 		// Need to use array with a ReponseEntity here
-// 		ResponseEntity<Book[]> result = restTemplate.getForEntity(uri, Book[].class);
-// 		Book[] books = result.getBody();
+	@AfterEach
+	void tearDown() {
+		// clear the database after each test
+		players.deleteAll();
+		users.deleteAll();
+		tournaments.deleteAll();
+		matches.deleteAll();
+	}
 
-// 		assertEquals(200, result.getStatusCode().value());
-// 		assertEquals(1, books.length);
-// 	}
+	@Test
+	public void getTournaments_Success() throws Exception {
+		URI uri = new URI(baseUrl + port + "/tournaments");
+		tournaments.save(new Tournament("US OPEN", 1500)); // Save a tournament to test retrieval
 
-// 	@Test
-// 	public void getBook_ValidBookId_Success() throws Exception {
-// 		Book book = new Book("Gone With The Wind");
-// 		Long id = books.save(book).getId();
-// 		URI uri = new URI(baseUrl + port + "/books/" + id);
+		// Use array with ResponseEntity to retrieve the list of tournaments
+		ResponseEntity<Tournament[]> result = restTemplate.getForEntity(uri, Tournament[].class);
+		Tournament[] tournaments = result.getBody();
 
-// 		ResponseEntity<Book> result = restTemplate.getForEntity(uri, Book.class);
+		// Assertions
+		assertEquals(200, result.getStatusCode().value());
+		assertEquals(1, tournaments.length);
+		assertEquals("US OPEN", tournaments[0].getName());
+	}
 
-// 		assertEquals(200, result.getStatusCode().value());
-// 		assertEquals(book.getTitle(), result.getBody().getTitle());
-// 	}
+	@Test
+	public void getTournament_ValidTournamentId_Success() throws Exception {
+		// Step 1: Create a new tournament
+		Tournament tournament = new Tournament("US OPEN", 1500);
+		Long tournamentId = tournaments.save(tournament).getId();
 
-// 	@Test
-// 	public void getBook_InvalidBookId_Failure() throws Exception {
-// 		URI uri = new URI(baseUrl + port + "/books/1");
+		// Step 2: Construct the URI for fetching the tournament
+		URI uri = new URI(baseUrl + port + "/tournaments/" + tournamentId);
 
-// 		ResponseEntity<Book> result = restTemplate.getForEntity(uri, Book.class);
+		// Step 3: Make the GET request to the tournament endpoint
+		ResponseEntity<Tournament> result = restTemplate.getForEntity(uri, Tournament.class);
 
-// 		assertEquals(404, result.getStatusCode().value());
-// 	}
+		// Step 4: Verify the status code and the retrieved tournament details
+		assertEquals(200, result.getStatusCode().value());
+		assertEquals(tournament.getName(), result.getBody().getName());
+		assertEquals(tournament.getRequirement(), result.getBody().getRequirement());
+	}
 
-// 	@Test
-// 	public void addBook_Success() throws Exception {
-// 		URI uri = new URI(baseUrl + port + "/books");
-// 		Book book = new Book("A New Hope");
-// 		users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+	@Test
+	public void getTournament_InvalidTournamentId_Failure() throws Exception {
+		URI uri = new URI(baseUrl + port + "/tournaments/1");
 
-// 		ResponseEntity<Book> result = restTemplate.withBasicAuth("admin", "goodpassword")
-// 				.postForEntity(uri, book, Book.class);
+		ResponseEntity<Tournament> result = restTemplate.getForEntity(uri, Tournament.class);
 
-// 		assertEquals(201, result.getStatusCode().value());
-// 		assertEquals(book.getTitle(), result.getBody().getTitle());
-// 	}
+		assertEquals(404, result.getStatusCode().value());
+	}
 
-// 	/**
-// 	 * TODO: Activity 2 (Week 6)
-// 	 * Add integration tests for delete/update a book.
-// 	 * For delete operation: there should be two tests for success and failure (book
-// 	 * not found) scenarios.
-// 	 * Similarly, there should be two tests for update operation.
-// 	 * You should assert both the HTTP response code, and the value returned if any
-// 	 * 
-// 	 * For delete and update, you should use restTemplate.exchange method to send
-// 	 * the request
-// 	 * E.g.: ResponseEntity<Void> result = restTemplate.withBasicAuth("admin",
-// 	 * "goodpassword")
-// 	 * .exchange(uri, HttpMethod.DELETE, null, Void.class);
-// 	 */
-// 	// your code here
-// 	@Test
-// 	public void deleteBook_ValidBookId_Success() throws Exception {
-// 		Book book = books.save(new Book("A New Hope"));
-// 		URI uri = new URI(baseUrl + port + "/books/" + book.getId().longValue());
-// 		users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+	@Test
+    public void createTournament_Success() throws Exception {
+        // Create the URI for the POST request
+        URI uri = new URI(baseUrl + port + "/tournaments");
 
-// 		ResponseEntity<Void> result = restTemplate.withBasicAuth("admin", "goodpassword")
-// 				.exchange(uri, HttpMethod.DELETE, null, Void.class);
-// 		assertEquals(200, result.getStatusCode().value());
-// 		// An empty Optional should be returned by "findById" after deletion
-// 		Optional<Book> emptyValue = Optional.empty();
-// 		assertEquals(emptyValue, books.findById(book.getId()));
-// 	}
+        // Create a sample tournament object
+        Tournament tournament = new Tournament("US OPEN", 1500);
 
-// 	@Test
-// 	public void deleteBook_InvalidBookId_Failure() throws Exception {
-// 		URI uri = new URI(baseUrl + port + "/books/1");
-// 		users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+        // Add a user with admin role for authentication
+        users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
 
-// 		ResponseEntity<Void> result = restTemplate.withBasicAuth("admin", "goodpassword")
-// 				.exchange(uri, HttpMethod.DELETE, null, Void.class);
+        // Send a POST request with Basic authentication to create the tournament
+        ResponseEntity<Tournament> result = restTemplate.withBasicAuth("admin", "goodpassword")
+                .postForEntity(uri, tournament, Tournament.class);
 
-// 		assertEquals(404, result.getStatusCode().value());
-// 	}
+        // Check the HTTP response and the returned tournament data
+        assertEquals(201, result.getStatusCode().value()); // Ensure the response is 201 CREATED
+        assertEquals(tournament.getName(), result.getBody().getName()); // Ensure tournament name matches
+        assertEquals(tournament.getRequirement(), result.getBody().getRequirement()); // Ensure the requirement matches
+    }
 
-// 	@Test
-// 	public void updateBook_ValidBookId_Success() throws Exception {
-// 		Book book = books.save(new Book("A New Hope"));
-// 		URI uri = new URI(baseUrl + port + "/books/" + book.getId().longValue());
-// 		Book newBookInfo = new Book("A New Vision");
-// 		users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+	// @Test
+	// public void deletePlayer_ValidPlayerId_Success() throws Exception {
+	// Player player = players.save(new Player("Michael"));
+	// URI uri = new URI(baseUrl + port + "/players/" + player.getId().longValue());
+	// users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
 
-// 		ResponseEntity<Book> result = restTemplate.withBasicAuth("admin", "goodpassword")
-// 				.exchange(uri, HttpMethod.PUT, new HttpEntity<>(newBookInfo), Book.class);
+	// ResponseEntity<Void> result = restTemplate.withBasicAuth("admin",
+	// "goodpassword")
+	// .exchange(uri, HttpMethod.DELETE, null, Void.class);
+	// assertEquals(200, result.getStatusCode().value());
 
-// 		assertEquals(200, result.getStatusCode().value());
-// 		assertEquals(newBookInfo.getTitle(), result.getBody().getTitle());
-// 	}
+	// Optional<Player> emptyValue = Optional.empty();
+	// assertEquals(emptyValue, players.findById(player.getId()));
+	// }
 
-// 	@Test
-// 	public void updateBook_InvalidBookId_Failure() throws Exception {
-// 		URI uri = new URI(baseUrl + port + "/books/1");
-// 		Book newBookInfo = new Book("A New Vision");
-// 		users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+	// @Test
+	// public void deletePlayer_InvalidPlayerId_Failure() throws Exception {
+	// URI uri = new URI(baseUrl + port + "/players/1");
+	// users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+	// ResponseEntity<Void> result = restTemplate.withBasicAuth("admin",
+	// "goodpassword")
+	// .exchange(uri, HttpMethod.DELETE, null, Void.class);
+	// assertEquals(404, result.getStatusCode().value());
+	// }
 
-// 		ResponseEntity<Book> result = restTemplate.withBasicAuth("admin", "goodpassword")
-// 				.exchange(uri, HttpMethod.PUT, new HttpEntity<>(newBookInfo), Book.class);
+	// @Test
+	// public void updatePlayer_ValidPlayerId_Success() throws Exception {
+	// Player player = players.save(new Player("Jay"));
+	// URI uri = new URI(baseUrl + port + "/players/" + player.getId().longValue());
+	// Player newPlayerInfo = new Player("Lee Jay");
+	// users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+	// ResponseEntity<Player> result = restTemplate.withBasicAuth("admin",
+	// "goodpassword")
+	// .exchange(uri, HttpMethod.PUT, new HttpEntity<>(newPlayerInfo),
+	// Player.class);
+	// assertEquals(200, result.getStatusCode().value());
+	// assertEquals(newPlayerInfo.getName(), result.getBody().getName());
+	// }
 
-// 		assertEquals(404, result.getStatusCode().value());
-// 	}
-// }
+	// @Test
+	// public void updatePlayer_InvalidPlayerId_Failure() throws Exception {
+	// URI uri = new URI(baseUrl + port + "/players/1");
+	// Player newPlayerInfo = new Player("Jackie");
+	// users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+	// ResponseEntity<Player> result = restTemplate.withBasicAuth("admin",
+	// "goodpassword")
+	// .exchange(uri, HttpMethod.PUT, new HttpEntity<>(newPlayerInfo),
+	// Player.class);
+	// assertEquals(404, result.getStatusCode().value());
+	// }
+
+}

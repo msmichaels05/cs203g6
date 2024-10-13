@@ -75,4 +75,9 @@ public interface TournamentService {
      */
     // boolean validateRegistrationPeriod(Long tournamentId);
 
+    /**
+     * Change method's signature: do not return a value for delete operation
+     * @param tournamentId The ID of the tournament.
+     */
+    void deleteTournament(Long tournamentId);
 }

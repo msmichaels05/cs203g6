@@ -3,6 +3,7 @@ package com.amateuraces.tournament;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -84,8 +85,8 @@ public class TournamentServiceTest {
     @Test
     void getPlayersInTournament_ValidTournamentId_ReturnPlayerList() {
         // Arrange
-        Player player1 = new Player("player 1", "Male", 20, "player1@example.com", "password", "12345678", 10, 5);
-        Player player2 = new Player("player 2", "Male", 20, "player2@example.com", "password", "12345678", 12, 8);
+        Player player1 = new Player("player 1");
+        Player player2 = new Player("player 2");
         List<Player> playerList = Arrays.asList(player1, player2);
 
         Tournament tournament = new Tournament("Tournament 1", 10L);
@@ -108,8 +109,8 @@ public class TournamentServiceTest {
     void recordMatchResult_ValidMatch_ReturnUpdatedTournament() {
         // Arrange
         Tournament tournament = new Tournament("Test Tournament", 10L);
-        Player player1 = new Player("player 1", "Male", 20, "player1@example.com", "password", "12345678", 10, 5);
-        Player player2 = new Player("player 2", "Male", 20, "player2@example.com", "password", "12345678", 12, 8);
+        Player player1 = new Player("player 1");
+        Player player2 = new Player("player 2");
         Match match = new Match(tournament, player1, player2);
 
         // Mock finding the tournament and match
@@ -124,6 +125,36 @@ public class TournamentServiceTest {
         assertEquals(player1, match.getWinner()); // Ensure the winner was correctly set
         verify(matches).save(match);  // Ensure the match was saved
         verify(tournamentRepository).save(tournament); // Ensure the tournament was updated
+    }
+
+    @Test
+    void performRandomDraw_TournamentWithPlayers_ReturnMatches() {
+        // Create a mock tournament with players
+        Tournament tournament = new Tournament("Test Tournament", 10L);
+
+        Player player1 = new Player("Player 1");
+        Player player2 = new Player("Player 2");
+        Player player3 = new Player("Player 3");
+        Player player4 = new Player("Player 4");
+
+        // Add players to the tournament
+        tournament.addPlayer(player1);
+        tournament.addPlayer(player2);
+        tournament.addPlayer(player3);
+        tournament.addPlayer(player4);
+
+        // Mock the repository call to return the tournament
+        when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
+
+        // Perform the random draw
+        List<Match> matches = tournamentService.performRandomDraw(1L);
+
+        // Check that the draw returned the correct number of matches
+        assertEquals(2, matches.size());  // 4 players -> 2 matches
+        assertTrue(matches.stream().anyMatch(m -> m.getPlayer1().equals(player1) || m.getPlayer2().equals(player1)));
+        assertTrue(matches.stream().anyMatch(m -> m.getPlayer1().equals(player2) || m.getPlayer2().equals(player2)));
+        assertTrue(matches.stream().anyMatch(m -> m.getPlayer1().equals(player3) || m.getPlayer2().equals(player3)));
+        assertTrue(matches.stream().anyMatch(m -> m.getPlayer1().equals(player4) || m.getPlayer2().equals(player4)));
     }
 
     // @Test
