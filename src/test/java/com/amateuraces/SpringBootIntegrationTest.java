@@ -85,17 +85,17 @@ class SpringBootIntegrationTest {
 
 	@Test
 	public void getTournament_ValidTournamentId_Success() throws Exception {
-		// Step 1: Create a new tournament
+		// Create a new tournament
 		Tournament tournament = new Tournament("US OPEN", 1500);
 		Long tournamentId = tournaments.save(tournament).getId();
 
-		// Step 2: Construct the URI for fetching the tournament
+		// Construct the URI for fetching the tournament
 		URI uri = new URI(baseUrl + port + "/tournaments/" + tournamentId);
 
-		// Step 3: Make the GET request to the tournament endpoint
+		// Make the GET request to the tournament endpoint
 		ResponseEntity<Tournament> result = restTemplate.getForEntity(uri, Tournament.class);
 
-		// Step 4: Verify the status code and the retrieved tournament details
+		// Verify the status code and the retrieved tournament details
 		assertEquals(200, result.getStatusCode().value());
 		assertEquals(tournament.getName(), result.getBody().getName());
 		assertEquals(tournament.getRequirement(), result.getBody().getRequirement());
@@ -131,30 +131,44 @@ class SpringBootIntegrationTest {
         assertEquals(tournament.getRequirement(), result.getBody().getRequirement()); // Ensure the requirement matches
     }
 
-	// @Test
-	// public void deletePlayer_ValidPlayerId_Success() throws Exception {
-	// Player player = players.save(new Player("Michael"));
-	// URI uri = new URI(baseUrl + port + "/players/" + player.getId().longValue());
-	// users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+	@Test
+    public void deleteTournament_ValidTournamentId_Success() throws Exception {
+        // Create a tournament to be deleted
+        Tournament tournament = tournaments.save(new Tournament("US OPEN", 1500));
 
-	// ResponseEntity<Void> result = restTemplate.withBasicAuth("admin",
-	// "goodpassword")
-	// .exchange(uri, HttpMethod.DELETE, null, Void.class);
-	// assertEquals(200, result.getStatusCode().value());
+        // Build the URI for the DELETE request
+        URI uri = new URI(baseUrl + port + "/tournaments/" + tournament.getId());
 
-	// Optional<Player> emptyValue = Optional.empty();
-	// assertEquals(emptyValue, players.findById(player.getId()));
-	// }
+        // Save a user with admin privileges
+        users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
 
-	// @Test
-	// public void deletePlayer_InvalidPlayerId_Failure() throws Exception {
-	// URI uri = new URI(baseUrl + port + "/players/1");
-	// users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
-	// ResponseEntity<Void> result = restTemplate.withBasicAuth("admin",
-	// "goodpassword")
-	// .exchange(uri, HttpMethod.DELETE, null, Void.class);
-	// assertEquals(404, result.getStatusCode().value());
-	// }
+        // Make the DELETE request using basic authentication
+        ResponseEntity<Void> result = restTemplate.withBasicAuth("admin", "goodpassword")
+                .exchange(uri, HttpMethod.DELETE, null, Void.class);
+
+        // Assert that the status code is 200 OK (successful deletion)
+        assertEquals(200, result.getStatusCode().value());
+
+        // Assert that the tournament has been deleted
+        Optional<Tournament> emptyValue = Optional.empty();
+        assertEquals(emptyValue, tournaments.findById(tournament.getId()));
+    }
+
+	@Test
+    public void deleteTournament_InvalidTournamentId_Failure() throws Exception {
+        // Create URI for a non-existent tournament
+        URI uri = new URI(baseUrl + port + "/tournaments/1");
+
+        // Create and save a user with admin role
+        users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+
+        // Send DELETE request using Basic Authentication
+        ResponseEntity<Void> result = restTemplate.withBasicAuth("admin", "goodpassword")
+                .exchange(uri, HttpMethod.DELETE, null, Void.class);
+
+        // Assert that the response status code is 404 (Not Found)
+        assertEquals(404, result.getStatusCode().value());
+    }
 
 	// @Test
 	// public void updatePlayer_ValidPlayerId_Success() throws Exception {
