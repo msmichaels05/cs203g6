@@ -1,6 +1,6 @@
 package com.amateuraces.user;
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,8 +25,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(User user) {
+        // Check if username already exists
+        Optional<User> existingUser = users.findByUsername(user.getUsername());
+        
+        if (existingUser.isPresent()) {
+            // User already exists, return null or throw an exception
+            return null;
+        }
+        
+        // Save new user
         return users.save(user);
     }
+    
 
     @Override
     public User updateUser(Long id, User newUserInfo) {

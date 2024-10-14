@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,24 +27,28 @@ public class UserServiceTest {
     @InjectMocks
     private UserServiceImpl userService;
     
-    
     @Test
-    void addUser_NewName_ReturnSavedUser(){
-        // arrange ***
+    void addUser_NewName_ReturnSavedUser() {
+        // Arrange ***
         User user = new User("username", "password");
-        // mock the "findbytitle" operation
-        when(userRepository.findByUsername(any(String.class))).thenReturn(java.util.Optional.empty());
-        // mock the "save" operation 
+        
+        // Mock the findByUsername operation to return empty (no user found)
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
+        
+        // Mock the save operation
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        // act ***
+        // Act ***
         User savedUser = userService.addUser(user);
         
-        // assert ***
+        // Assert ***
         assertNotNull(savedUser);
+        
+        // Verify interactions
         verify(userRepository).findByUsername(user.getUsername());
         verify(userRepository).save(user);
     }
+
     /**
      * TODO: Activity 1 (Week 6)
      * Write a test case: when adding a new book but the title already exists
@@ -53,16 +58,24 @@ public class UserServiceTest {
      * 
      */
     @Test
-    void addUser_SameName_ReturnNull(){
-        // your code here
+    void addUser_SameName_ReturnNull() {
+        // Arrange ***
         User user = new User("username", "password");
-        List<User> sameUsers = new ArrayList<User>();
-        sameUsers.add(new User("username", "password"));
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(java.util.Optional.empty());
+        
+        // Mock the findByUsername operation to return an existing user
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        
+        // Act ***
         User savedUser = userService.addUser(user);
+        
+        // Assert ***
         assertNull(savedUser);
+        
+        // Verify interactions
         verify(userRepository).findByUsername(user.getUsername());
+        verify(userRepository, never()).save(user);  // Ensure save is NOT called
     }
+
 
     @Test
     void updatePlayer_NotFound_ReturnNull() {
