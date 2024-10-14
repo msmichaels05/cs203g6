@@ -43,21 +43,32 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/error").permitAll() // the default error page
+                .requestMatchers("/register", "/login", "/css/**").permitAll()  // Allow access to register and login
                 .requestMatchers(HttpMethod.GET, "/players", "/players/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/players").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/players/*").hasAnyRole("ADMIN","USER")
                 .requestMatchers(HttpMethod.DELETE, "/players/*").authenticated()
                 // note that Spring Security 6 secures all endpoints by default
                 // remove the below line after adding the required rules
-                .anyRequest().permitAll() 
+                .anyRequest().authenticated()  // All other requests require authentication
+                
             )
             // ensure that the application won’t create any session in our stateless REST APIs
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .httpBasic(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable()) // CSRF protection is needed only for browser based attacks
-            .formLogin(form -> form.disable())
+            // .formLogin(form -> form.disable())
             .headers(header -> header.disable()) // disable the security headers, as we do not return HTML in our APIs
-            .authenticationProvider(authenticationProvider());
+            .authenticationProvider(authenticationProvider())
+            .formLogin(form -> form
+                .loginPage("/login")  // Custom login page
+                .defaultSuccessUrl("/home", true)
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .permitAll()
+            );
+
         return http.build();
     }
 

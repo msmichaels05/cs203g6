@@ -1,13 +1,17 @@
 package com.amateuraces.user;
 
+import org.springframework.ui.Model;
+
 import java.util.List;
 
 import jakarta.validation.Valid;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
 
-@RestController
+
+@Controller  // Use @Controller instead of @RestController
 public class UserController {
     private UserRepository users;
     private BCryptPasswordEncoder encoder;
@@ -22,16 +26,31 @@ public class UserController {
         return users.findAll();
     }
 
+    @GetMapping("login")
+    public List<User> getLogin() {
+        return users.findAll();
+    }
+
+    // Display the registration form
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new User());  // Bind a new User object to the form
+        return "register";  // Return the Thymeleaf template for registration
+    }
+
+
     /**
     * Using BCrypt encoder to encrypt the password for storage 
     * @param user
      * @return
      */
-    @PostMapping("/users")
-    public User addUser(@Valid @RequestBody User user){
+
+     @PostMapping("/register")
+    public String addUser(@Valid @ModelAttribute User user){
         user.setPassword(encoder.encode(user.getPassword()));
         user.setAuthorities("ROLE_USER");
-        return users.save(user);
+        users.save(user);
+        return "redirect:/login";
     }
 
 
