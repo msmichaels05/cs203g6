@@ -2,20 +2,10 @@ package com.amateuraces.player;
 
 import com.amateuraces.tournament.Tournament;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
+import com.amateuraces.user.*;
 
 
 @Entity
@@ -27,7 +17,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class Player {
     @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -47,8 +37,13 @@ public class Player {
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name="user_id",nullable = false)
+    private User user;
+
     // Constructor with wins and losses
-    public Player(String name, String gender, int age, String email, String password, String phoneNumber, int matchesPlayed, int matchesWon) {
+    public Player(String name, String gender, int age, String email, String phoneNumber, int matchesPlayed, int matchesWon) {
         this.age = age;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
@@ -57,9 +52,9 @@ public class Player {
         this.name = name;
     }
 
-    public Player(String name) {
-        this.name = name;
-    }
+    // public Player(String name) {
+    //     this.name = name;
+    // }
 
     // Method to update ELO based on match result
     public void updateElo(int opponentElo, boolean hasWon) {

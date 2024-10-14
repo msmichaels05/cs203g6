@@ -44,10 +44,10 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/error").permitAll() // the default error page
-                .requestMatchers(HttpMethod.GET, "/players", "/players/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/players").hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/players/*").hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/players/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/users", "/users/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/users/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/users/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.GET, "/tournaments", "/tournaments/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/tournaments").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")

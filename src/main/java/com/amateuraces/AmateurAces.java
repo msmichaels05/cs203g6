@@ -24,10 +24,6 @@ public class AmateurAces {
         
         ApplicationContext ctx = SpringApplication.run(AmateurAces.class, args);
 
-        // JPA player repository init
-        PlayerRepository players = ctx.getBean(PlayerRepository.class);
-        System.out.println("[Add player]: " + players.save(new Player("Tim")));
-        System.out.println("[Add player]: " + players.save(new Player("Gone With The Wind")));
 
         // JPA user repository init
         UserRepository users = ctx.getBean(UserRepository.class);
@@ -56,11 +52,11 @@ public class AmateurAces {
          * Authentication info has been added int the RestTemplateClient.java
         //  */
         
-        RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
-        System.out.println("[Add player]: " + client.addPlayer("http://localhost:8080/players", new Player("Spring in Actions")).getName());
+        // RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
+        // System.out.println("[Add player]: " + client.addPlayer("http://localhost:8080/players", new Player("Spring in Actions")).getName());
 
-        // Get the 1st book, obtain a HTTP response and print out the title of the book
-        System.out.println("[Get player]: " + client.getPlayerEntity("http://localhost:8080/players", 1L).getBody().getName());
+        // // Get the 1st book, obtain a HTTP response and print out the title of the book
+        // System.out.println("[Get player]: " + client.getPlayerEntity("http://localhost:8080/players", 1L).getBody().getName());
 
         // System.out.println("[Add highlight]: " + client.addHighlight("http://localhost:8080/highlights", new Highlight("US OPEN")).getTournamentOfTheMonth());
 

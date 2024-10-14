@@ -1,3 +1,81 @@
+### GET Players
+GET http://localhost:8080/players
+
+### GET USERS
+
+GET http://localhost:8080/users
+
+### GET SPECIFIC PLAYER 
+GET http://localhost:8080/users/2/players
+
+### DELETE USER 
+
+DELETE http://localhost:8080/users/2
+Authorization: Basic admin goodpassword
+
+### POST NEW USER 
+POST http://localhost:8080/users
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+
+{
+    "username": "username",
+    "password": "password",
+    "authorities":"ROLE_ADMIN"
+    
+}
+
+### UPDATE USER ONLY ALLOWED TO CHANGE PASSWORD
+PUT http://localhost:8080/users/2
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+
+{
+    "username" : "nestimngakfnj",
+    "password": "betatester"
+    
+}
+
+### POST NEW USER SHOWCASE THAT MUST BE AUTHORIZED TO CREATE ADMIN
+
+POST http://localhost:8080/users
+Content-Type: application/json
+Authorization: Basic betatester betatester
+
+
+{
+    "username": "username",
+    "password": "password",
+    "authorities":"ROLE_ADMIN"
+}
+
+### UPDATE PLAYER DETAILS
+PUT http://localhost:8080/users/1/players/1
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "name":"Admin",
+    "phoneNumber" : "123456789",
+    "age" : 200,
+    "gender" : "Male"
+}
+
+### POST PLAYER INFO TO USER AFTER CREATION OF USER
+POST http://localhost:8080/users/1/players
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "name":"Alphabravo",
+    "phoneNumber" : "88888888",
+    "age" : 99,
+    "gender" : "Male"
+}
+
+
 
 ###
 PUT http://localhost:8080/tournaments/2
@@ -15,6 +93,7 @@ DELETE http://localhost:8080/tournaments/1
 Authorization: Basic admin goodpassword
 
 
+
 ### Tournament
 GET http://localhost:8080/tournaments
 
@@ -30,48 +109,8 @@ Authorization: Basic admin goodpassword
     "elorequirement": 100
 }
 
-###Users
-POST http://localhost:8080/users
-Content-Type: application/json
 
-{
-    "username": "username",
-    "password": "password"
-    
-}
 
-###Users
-POST http://localhost:8080/users
-Content-Type: application/json
-
-{
-    "username": "username",
-    "password": "password",
-    "authorities":"ROLE_ADMIN"
-}
-
-###
-
-GET http://localhost:8080/users
-
-###
-
-# Players
-POST http://localhost:8080/players
-Content-Type: application/json
-Authorization: Basic admin goodpassword
-
-{
-    "name" : "player"
-     
-}
-###
-GET http://localhost:8080/players
-
-###
-
-DELETE http://localhost:8080/players/4
-Authorization: Basic admin goodpassword
 
 ###
 POST http://localhost:8080/players
