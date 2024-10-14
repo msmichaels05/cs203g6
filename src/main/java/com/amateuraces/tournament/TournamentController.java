@@ -89,6 +89,38 @@ public class TournamentController {
         
         return Tournament;
     }
+
+
+    @PostMapping("/tournaments/{tournamentId}/players/{playerId}")
+    public ResponseEntity<Tournament> addPlayerToTournament(
+            @PathVariable Long tournamentId, 
+            @PathVariable Long playerId) {
+        
+        Tournament updatedTournament = tournamentService.addPlayerToTournament(tournamentId, playerId);
+        return ResponseEntity.ok(updatedTournament);
+    }
+
+    @GetMapping("/tournaments/{tournamentId}/players")
+    public ResponseEntity<List<Player>> getPlayersInTournament(@PathVariable Long tournamentId) {
+        List<Player> players = tournamentService.getPlayersInTournament(tournamentId);
+        return ResponseEntity.ok(players);
+    }
+
+    @PostMapping("/tournaments/{tournamentId}/draw")
+    public ResponseEntity<List<Match>> performRandomDraw(@PathVariable Long tournamentId) {
+        List<Match> matchPairings = tournamentService.performRandomDraw(tournamentId);
+        return ResponseEntity.ok(matchPairings);
+    }
+
+    @PostMapping("/tournaments/{tournamentId}/matches/{matchId}/result")
+    public ResponseEntity<Tournament> recordMatchResult(
+            @PathVariable Long tournamentId, 
+            @PathVariable Long matchId, 
+            @RequestParam String result) {
+        
+        Tournament updatedTournament = tournamentService.recordMatchResult(tournamentId, matchId, result);
+        return ResponseEntity.ok(updatedTournament);
+    }
     /**
      * Set the registration period for a tournament.
      * 
@@ -114,14 +146,14 @@ public class TournamentController {
      * @param playerId     the ID of the player to be added
      * @return ResponseEntity containing the updated tournament
      */
-    @PostMapping("/tournaments/{tournamentId}/players/{playerId}")
-    public ResponseEntity<Tournament> addPlayerToTournament(
-            @PathVariable Long tournamentId, 
-            @PathVariable Long playerId) {
+    // @PostMapping("/tournaments/{tournamentId}/players/{playerId}")
+    // public ResponseEntity<Tournament> addPlayerToTournament(
+    //         @PathVariable Long tournamentId, 
+    //         @PathVariable Long playerId) {
         
-        Tournament updatedTournament = tournamentService.addPlayerToTournament(tournamentId, playerId);
-        return ResponseEntity.ok(updatedTournament);
-    }
+    //     Tournament updatedTournament = tournamentService.addPlayerToTournament(tournamentId, playerId);
+    //     return ResponseEntity.ok(updatedTournament);
+    // }
 
     /**
      * Get the list of players registered for the tournament.
@@ -129,11 +161,11 @@ public class TournamentController {
      * @param tournamentId the ID of the tournament
      * @return ResponseEntity containing the list of players
      */
-    @GetMapping("/tournaments/{tournamentId}/players")
-    public ResponseEntity<List<Player>> getPlayersInTournament(@PathVariable Long tournamentId) {
-        List<Player> players = tournamentService.getPlayersInTournament(tournamentId);
-        return ResponseEntity.ok(players);
-    }
+    // @GetMapping("/tournaments/{tournamentId}/players")
+    // public ResponseEntity<List<Player>> getPlayersInTournament(@PathVariable Long tournamentId) {
+    //     List<Player> players = tournamentService.getPlayersInTournament(tournamentId);
+    //     return ResponseEntity.ok(players);
+    // }
 
     /**
      * Get all tournaments.
@@ -152,11 +184,11 @@ public class TournamentController {
      * @param tournamentId the ID of the tournament
      * @return ResponseEntity containing the list of match pairings after the draw
      */
-    @PostMapping("/tournaments/{tournamentId}/draw")
-    public ResponseEntity<List<Match>> performRandomDraw(@PathVariable Long tournamentId) {
-        List<Match> matchPairings = tournamentService.performRandomDraw(tournamentId);
-        return ResponseEntity.ok(matchPairings);
-    }
+    // @PostMapping("/tournaments/{tournamentId}/draw")
+    // public ResponseEntity<List<Match>> performRandomDraw(@PathVariable Long tournamentId) {
+    //     List<Match> matchPairings = tournamentService.performRandomDraw(tournamentId);
+    //     return ResponseEntity.ok(matchPairings);
+    // }
 
     /**
      * Update the status of the tournament.
@@ -182,15 +214,15 @@ public class TournamentController {
      * @param result      the result of the match
      * @return ResponseEntity containing the updated tournament
      */
-    @PostMapping("/tournaments/{tournamentId}/matches/{matchId}/result")
-    public ResponseEntity<Tournament> recordMatchResult(
-            @PathVariable Long tournamentId, 
-            @PathVariable Long matchId, 
-            @RequestParam String result) {
+    // @PostMapping("/tournaments/{tournamentId}/matches/{matchId}/result")
+    // public ResponseEntity<Tournament> recordMatchResult(
+    //         @PathVariable Long tournamentId, 
+    //         @PathVariable Long matchId, 
+    //         @RequestParam String result) {
         
-        Tournament updatedTournament = tournamentService.recordMatchResult(tournamentId, matchId, result);
-        return ResponseEntity.ok(updatedTournament);
-    }
+    //     Tournament updatedTournament = tournamentService.recordMatchResult(tournamentId, matchId, result);
+    //     return ResponseEntity.ok(updatedTournament);
+    // }
 
     /**
      * Validate if the registration period is valid.

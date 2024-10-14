@@ -1,4 +1,4 @@
-package com.amateuraces.player;
+package com.amateuraces;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,6 +16,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.amateuraces.player.Player;
+import com.amateuraces.player.PlayerRepository;
+import com.amateuraces.player.PlayerServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class PlayerServiceTest {
@@ -50,16 +54,6 @@ public class PlayerServiceTest {
         verify(players).findById(playerID);
     }
 
-    // @Test
-    // void addPlayer_SameName_ReturnNull(){
-    // // your code here
-    // Player player = new Player("The Same Name Exists");
-    // List<Player> samePlayer = new ArrayList<Player>();
-    // samePlayer.add(new Player("The Same Name Exists"));
-    // when(players.findByName(player.getName())).thenReturn(samePlayer);
-    // Player savedPlayer = playerService.addPlayer(player);
-    // assertNull(savedPlayer);
-    // verify(players).findByName(player.getName());
-    // }
+   
     
     }

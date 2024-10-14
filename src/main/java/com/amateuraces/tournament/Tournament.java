@@ -1,6 +1,6 @@
 package com.amateuraces.tournament;
 
-import java.util.List;
+import java.util.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -29,7 +29,7 @@ public class Tournament {
 
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Player> participants;
+    private List<Player> players = new ArrayList<>();
 
     // Constructor with wins and losses
     public Tournament(String name, int ELOrequirement) {
@@ -37,6 +37,19 @@ public class Tournament {
         this.name = name;
     }
 
+    public boolean addPlayer(Player player){
+        players.add(player);
+        return true;
+    }
 
+    // Get the count of registered players
+    public int getRegisteredPlayerCount() {
+        return players.size();
+    }
+
+    // Clear the list of players
+    public void clearPlayers() {
+        players.clear();
+    }
 }
 

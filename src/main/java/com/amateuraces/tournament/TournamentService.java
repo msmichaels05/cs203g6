@@ -16,11 +16,14 @@ public interface TournamentService {
 
     Tournament addTournament(Tournament tournament);
 
-        /**
+    /**
      * Change method's signature: do not return a value for delete operation
      * @param id
      */
     void deleteTournament(Long id);
+
+
+    Tournament addPlayerToTournament(Long tournamentId, Long playerId);
 
 
         /**
@@ -54,7 +57,7 @@ public interface TournamentService {
     //  * @param tournamentId The ID of the tournament.
     //  * @return List of players in the tournament.
     //  */
-    // List<Player> getPlayersInTournament(Long tournamentId);
+    List<Player> getPlayersInTournament(Long tournamentId);
 
 
 
@@ -64,7 +67,7 @@ public interface TournamentService {
     //  * @param tournamentId The ID of the tournament.
     //  * @return List of match pairings after the draw.
     //  */
-    // List<Match> performRandomDraw(Long tournamentId);
+    List<Match> performRandomDraw(Long tournamentId);
 
     // /**
     //  * Update the status of the tournament (e.g., in-progress, completed).
@@ -81,7 +84,7 @@ public interface TournamentService {
     //  * @param result The result of the match (e.g., playerA wins, playerB wins).
     //  * @return The updated tournament with match results.
     //  */
-    // Tournament recordMatchResult(Long tournamentId, Long matchId, String result);
+    Tournament recordMatchResult(Long tournamentId, Long matchId, String result);
 
     // /**
     //  * Validate if the registration period is valid.
