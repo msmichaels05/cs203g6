@@ -17,32 +17,34 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.amateuraces.player.PlayerRepository;
+
 @ExtendWith(MockitoExtension.class)
-public class BookServiceTest {
+public class UserServiceTest {
     
     @Mock
-    private BookRepository books;
+    private PlayerRepository playerRepository;
 
     @InjectMocks
-    private BookServiceImpl bookService;
+    private PlayerServiceImpl playerService;
     
     
     @Test
-    void addBook_NewTitle_ReturnSavedBook(){
+    void addPlayer_NewName_ReturnSavedPlayer(){
         // arrange ***
-        Book book = new Book("This is a New Title");
+        Player player = new Player("This is a New player");
         // mock the "findbytitle" operation
-        when(books.findByTitle(any(String.class))).thenReturn(new ArrayList<Book>());
+        when(Players.findByTitle(any(String.class))).thenReturn(new ArrayList<Player>());
         // mock the "save" operation 
-        when(books.save(any(Book.class))).thenReturn(book);
+        when(playerRepository.save(any(Player.class))).thenReturn(player);
 
         // act ***
-        Book savedBook = bookService.addBook(book);
+        Player savedPlayer = playerService.addBook(player);
         
         // assert ***
-        assertNotNull(savedBook);
-        verify(books).findByTitle(book.getTitle());
-        verify(books).save(book);
+        assertNotNull(savedPlayer);
+        verify(playerRepository).findByName(Player.getName());
+        verify(playerRepository).save(player);
     }
     /**
      * TODO: Activity 1 (Week 6)
