@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.amateuraces.client.RestTemplateClient;
 import com.amateuraces.highlight.Highlight;
 import com.amateuraces.highlight.HighlightRepository;
 import com.amateuraces.match.MatchRepository;
@@ -43,24 +42,6 @@ public class AmateurAces {
 
         //JPA Tournament repository initialization
         TournamentRepository tournament = ctx.getBean(TournamentRepository.class);
-
-        // // Test the RestTemplate client with authentication-
-        /**
-         * TODO: Activity 3 (after class)
-         * Uncomment the following code and test the changes
-         * Here we use our own Rest client to test the service
-         * Authentication info has been added int the RestTemplateClient.java
-        //  */
-        
-        // RestTemplateClient client = ctx.getBean(RestTemplateClient.class);
-        // System.out.println("[Add player]: " + client.addPlayer("http://localhost:8080/players", new Player("Spring in Actions")).getName());
-
-        // // Get the 1st book, obtain a HTTP response and print out the title of the book
-        // System.out.println("[Get player]: " + client.getPlayerEntity("http://localhost:8080/players", 1L).getBody().getName());
-
-        // System.out.println("[Add highlight]: " + client.addHighlight("http://localhost:8080/highlights", new Highlight("US OPEN")).getTournamentOfTheMonth());
-
-        // System.out.println("[Get highlight]: " + client.getHighlightEntity("http://localhost:8080/highlights", 1L).getBody().getTournamentOfTheMonth());
         
     }
     

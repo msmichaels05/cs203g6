@@ -11,12 +11,10 @@ import org.springframework.security.core.Authentication;
 
 @RestController
 public class UserController {
-    private UserRepository users;
     private BCryptPasswordEncoder encoder;
     private UserService userService;
 
-    public UserController(UserRepository users, BCryptPasswordEncoder encoder, UserService userService) {
-        this.users = users;
+    public UserController(BCryptPasswordEncoder encoder, UserService userService) {
         this.encoder = encoder;
         this.userService = userService;
     }

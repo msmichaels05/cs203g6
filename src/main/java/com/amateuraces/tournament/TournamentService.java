@@ -6,15 +6,15 @@ import com.amateuraces.player.Player;
 
 public interface TournamentService {
 
-    Tournament addTournament(Tournament tournament);
-
-    /**
-     * Create a new tournament.
-     * @param tournament The tournament to be created.
-     * @return The created tournament.
+     /**
+     * Get all tournaments.
+     * @return List of tournaments.
      */
-    Tournament createTournament(Tournament tournament);
+    List<Tournament> listTournaments();
 
+    Tournament getTournament(Long id);
+
+    Tournament addTournament(Tournament tournament);
 
         /**
      * Change method's signature: do not return a value for delete operation
@@ -47,51 +47,47 @@ public interface TournamentService {
      * @param playerId The ID of the player to be added.
      * @return The updated tournament with the player added.
      */
-    Tournament addPlayerToTournament(Long tournamentId, Long playerId);
+    // Tournament addPlayerToTournament(Long tournamentId, Long playerId);
 
-    /**
-     * Get the list of players registered for the tournament.
-     * @param tournamentId The ID of the tournament.
-     * @return List of players in the tournament.
-     */
-    List<Player> getPlayersInTournament(Long tournamentId);
+    // /**
+    //  * Get the list of players registered for the tournament.
+    //  * @param tournamentId The ID of the tournament.
+    //  * @return List of players in the tournament.
+    //  */
+    // List<Player> getPlayersInTournament(Long tournamentId);
 
-      /**
-     * Get all tournaments.
-     * @return List of tournaments.
-     */
-    List<Tournament> listTournaments();
 
-    /**
-     * Perform a randomized draw for the tournament.
-     * This will create match pairings randomly.
-     * @param tournamentId The ID of the tournament.
-     * @return List of match pairings after the draw.
-     */
-    List<Match> performRandomDraw(Long tournamentId);
 
-    /**
-     * Update the status of the tournament (e.g., in-progress, completed).
-     * @param tournamentId The ID of the tournament.
-     * @param status The new status of the tournament.
-     * @return The updated tournament.
-     */
-    // Tournament updateTournamentStatus(Long tournamentId, String status);
+    // /**
+    //  * Perform a randomized draw for the tournament.
+    //  * This will create match pairings randomly.
+    //  * @param tournamentId The ID of the tournament.
+    //  * @return List of match pairings after the draw.
+    //  */
+    // List<Match> performRandomDraw(Long tournamentId);
 
-    /**
-     * Record the result of a match.
-     * @param tournamentId The ID of the tournament.
-     * @param matchId The ID of the match.
-     * @param result The result of the match (e.g., playerA wins, playerB wins).
-     * @return The updated tournament with match results.
-     */
-    Tournament recordMatchResult(Long tournamentId, Long matchId, String result);
+    // /**
+    //  * Update the status of the tournament (e.g., in-progress, completed).
+    //  * @param tournamentId The ID of the tournament.
+    //  * @param status The new status of the tournament.
+    //  * @return The updated tournament.
+    //  */
+    // // Tournament updateTournamentStatus(Long tournamentId, String status);
 
-    /**
-     * Validate if the registration period is valid.
-     * @param tournamentId The ID of the tournament.
-     * @return True if registration is open, false otherwise.
-     */
-    // boolean validateRegistrationPeriod(Long tournamentId);
+    // /**
+    //  * Record the result of a match.
+    //  * @param tournamentId The ID of the tournament.
+    //  * @param matchId The ID of the match.
+    //  * @param result The result of the match (e.g., playerA wins, playerB wins).
+    //  * @return The updated tournament with match results.
+    //  */
+    // Tournament recordMatchResult(Long tournamentId, Long matchId, String result);
+
+    // /**
+    //  * Validate if the registration period is valid.
+    //  * @param tournamentId The ID of the tournament.
+    //  * @return True if registration is open, false otherwise.
+    //  */
+    // // boolean validateRegistrationPeriod(Long tournamentId);
 
 }

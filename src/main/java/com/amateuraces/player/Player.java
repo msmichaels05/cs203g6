@@ -17,7 +17,7 @@ import com.amateuraces.user.*;
 @EqualsAndHashCode
 public class Player {
     @Id 
-    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -27,6 +27,7 @@ public class Player {
     @Size(min = 1, max = 15)
     private String phoneNumber;
 
+    private String email;
     private int age;
     private String gender;
     private int elo = 1500;  // Starting ELO
@@ -52,9 +53,9 @@ public class Player {
         this.name = name;
     }
 
-    // public Player(String name) {
-    //     this.name = name;
-    // }
+    public Player(String name) {
+        this.name = name;
+    }
 
     // Method to update ELO based on match result
     public void updateElo(int opponentElo, boolean hasWon) {

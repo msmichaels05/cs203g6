@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.amateuraces.match.Match;
+import com.amateuraces.match.MatchNotFoundException;
 import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerNotFoundException;
 
@@ -24,12 +25,26 @@ import jakarta.validation.Valid;
 @RestController
 public class TournamentController {
 
-    private final TournamentService tournamentService;
+    private TournamentService tournamentService;
 
     public TournamentController(TournamentService tournamentService) {
         this.tournamentService = tournamentService;
     }
 
+
+
+    @GetMapping("/tournaments/{id}")
+    public Tournament getTournament(@PathVariable Long id){
+        Tournament tournament = tournamentService.getTournament(id);
+
+        // Need to handle "match not found" error using proper HTTP status code
+        // In this case it should be HTTP 404
+        if(tournament == null) throw new TournamentNotFoundException(id);
+        return tournamentService.getTournament(id);
+
+    }
+
+    
     @GetMapping("/tournaments")
         public List<Tournament> getTournaments(){
             return tournamentService.listTournaments();
