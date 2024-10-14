@@ -1,4 +1,4 @@
-package com.amateuraces.player;
+package com.amateuraces.user;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

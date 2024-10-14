@@ -4,17 +4,16 @@ import java.util.Arrays;
 import java.util.Collection;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import org.hibernate.mapping.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.amateuraces.player.Player;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.*;
 
@@ -46,6 +45,10 @@ public class User implements UserDetails{
     // We define two roles/authorities: ROLE_USER or ROLE_ADMIN
     private String authorities = "ROLE_USER";
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Player player;
+
     public User(String username, String password){
         this.username = username;
         this.password = password;
@@ -60,6 +63,9 @@ public class User implements UserDetails{
 
     
 
+    public String getUsername() {
+        return username;
+    }
 
     /* Return a collection of authorities (roles) granted to the user.
     // */
