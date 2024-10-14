@@ -1,4 +1,4 @@
-package csd.week6.book;
+package com.amateuraces.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -17,10 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.amateuraces.player.PlayerRepository;
-
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+public class PlayerServiceTest {
     
     @Mock
     private PlayerRepository playerRepository;
@@ -34,16 +32,16 @@ public class UserServiceTest {
         // arrange ***
         Player player = new Player("This is a New player");
         // mock the "findbytitle" operation
-        when(Players.findByTitle(any(String.class))).thenReturn(new ArrayList<Player>());
+        when(playerRepository.findByName(any(String.class))).thenReturn(player);
         // mock the "save" operation 
         when(playerRepository.save(any(Player.class))).thenReturn(player);
 
         // act ***
-        Player savedPlayer = playerService.addBook(player);
+        Player savedPlayer = playerService.addPlayer(player);
         
         // assert ***
         assertNotNull(savedPlayer);
-        verify(playerRepository).findByName(Player.getName());
+        verify(playerRepository).findByName(player.getName());
         verify(playerRepository).save(player);
     }
     /**
@@ -55,21 +53,27 @@ public class UserServiceTest {
      * 
      */
     @Test
-    void addBook_SameTitle_ReturnNull(){
+    void addPlayer_SameName_ReturnNull(){
         // your code here
-        
+        Player player = new Player("The Same Title Exists");
+        List<Player> sameNames = new ArrayList<Player>();
+        sameNames.add(new Player("The Same Name Exists"));
+        when(playerRepository.findByName(player.getName())).thenReturn(player);
+        Player savedPlayer = playerService.addPlayer(player);
+        assertNull(savedPlayer);
+        verify(playerRepository).findByName(player.getName());
     }
 
     @Test
-    void updateBook_NotFound_ReturnNull(){
-        Book book = new Book("Updated Title of Book");
-        Long bookId = 10L;
-        when(books.findById(bookId)).thenReturn(Optional.empty());
+    void updatePlayer_NotFound_ReturnNull() {
+        Player player = new Player("Updated Name of Player");
+        Long playerId = 10L;
+        when(playerRepository.findById(playerId)).thenReturn(Optional.empty());
         
-        Book updatedBook = bookService.updateBook(bookId, book);
+        Player updatedPlayer = playerService.updatePlayer(playerId, player);
         
-        assertNull(updatedBook);
-        verify(books).findById(bookId);
+        assertNull(updatedPlayer);
+        verify(playerRepository).findById(playerId);
     }
 
 }
