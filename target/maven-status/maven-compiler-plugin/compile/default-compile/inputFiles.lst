@@ -41,4 +41,7 @@
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/user/CustomUserDetailsService.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/user/User.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/user/UserController.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/user/UserNotFoundException.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/user/UserRepository.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/user/UserService.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/user/UserServiceImpl.java
