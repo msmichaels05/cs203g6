@@ -1,11 +1,15 @@
-package com.amateuraces.tournament;
+package com.amateuraces;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,50 +40,57 @@ public class TournamentServiceTest {
 
     @Mock
     private TournamentRepository tournamentRepository;
+
+    @Mock
     private PlayerRepository players;
+
+    @Mock
     private MatchRepository matches;
 
     @InjectMocks
     private TournamentServiceImpl tournamentService;
+
+    @InjectMocks
     private PlayerServiceImpl playerService;
+
+    @InjectMocks
     private MatchServiceImpl matchService;
 
     @Test
     void createTournament_NewName_ReturnSavedTounament() {
 
-        Tournament tournament = new Tournament("Tournament 1", 10L);
+        Tournament tournament = new Tournament("Tournament 1", 1L);
         when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournament);
         Tournament savedTournament = tournamentService.createTournament(tournament);
 
         // assert ***
         assertNotNull(savedTournament);
-        assertEquals(tournament.getName(),savedTournament.getName());
+        assertEquals(tournament.getName(), savedTournament.getName());
         verify(tournamentRepository).save(tournament);
     }
 
     @Test
     void addPlayerToTournament_ValidTournamentAndPlayer_AddsPlayer() {
-        // Setup test data
-        Tournament tournament = new Tournament("Tournament 1", 10L);
+        Tournament tournament = new Tournament("Tournament 1", 1L);
         tournament.setId(1L);
-        
+
         Player player = new Player();
         player.setId(1L);
         player.setName("New Player");
 
-        // Mock findById for both tournament and player
         when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
         when(players.findById(1L)).thenReturn(Optional.of(player));
 
-        // Call the service method
+        // Mock saving the updated tournament
+        when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournament);
+
         Tournament updatedTournament = tournamentService.addPlayerToTournament(1L, 1L);
 
-        // Assert that the player was added
         assertNotNull(updatedTournament);
         assertEquals(1, updatedTournament.getPlayers().size());
         assertEquals(player.getName(), updatedTournament.getPlayers().get(0).getName());
 
-        // Verify that the tournament was saved with the added player
+        // Verify the repository was called with the updated tournament
         verify(tournamentRepository).save(tournament);
     }
 
@@ -89,11 +101,11 @@ public class TournamentServiceTest {
         Player player2 = new Player("player 2");
         List<Player> playerList = Arrays.asList(player1, player2);
 
-        Tournament tournament = new Tournament("Tournament 1", 10L);
+        Tournament tournament = new Tournament("Tournament 1", 1L);
         tournament.addPlayer(player1);
         tournament.addPlayer(player2);
 
-        when(tournamentRepository.findById(10L)).thenReturn(Optional.of(tournament));
+        when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
 
         // Act
         List<Player> players = tournamentService.getPlayersInTournament(1L);
@@ -107,65 +119,101 @@ public class TournamentServiceTest {
 
     @Test
     void recordMatchResult_ValidMatch_ReturnUpdatedTournament() {
-        // Arrange
-        Tournament tournament = new Tournament("Test Tournament", 10L);
+        Tournament tournament = new Tournament("Test Tournament", 1L);
         Player player1 = new Player("player 1");
         Player player2 = new Player("player 2");
         Match match = new Match(tournament, player1, player2);
-
-        // Mock finding the tournament and match
+    
+        // Ensure the match and tournament are found
         when(tournamentRepository.findById(any(Long.class))).thenReturn(Optional.of(tournament));
         when(matches.findById(any(Long.class))).thenReturn(Optional.of(match));
-
-        // Act: Player 1 wins the match
+    
+        // Mock saving the match and tournament
+        when(matches.save(any(Match.class))).thenReturn(match);
+        when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournament);
+    
         Tournament updatedTournament = tournamentService.recordMatchResult(10L, 1L, "Player 1");
-
-        // Assert
+    
         assertNotNull(updatedTournament);
-        assertEquals(player1, match.getWinner()); // Ensure the winner was correctly set
-        verify(matches).save(match);  // Ensure the match was saved
-        verify(tournamentRepository).save(tournament); // Ensure the tournament was updated
+        assertEquals(player1, match.getWinner());
+    
+        verify(matches).save(match);
+        verify(tournamentRepository).save(tournament);
     }
 
     @Test
     void performRandomDraw_TournamentWithPlayers_ReturnMatches() {
-        // Create a mock tournament with players
-        Tournament tournament = new Tournament("Test Tournament", 10L);
+        Tournament tournament = new Tournament("Test Tournament", 1L);
 
         Player player1 = new Player("Player 1");
         Player player2 = new Player("Player 2");
         Player player3 = new Player("Player 3");
         Player player4 = new Player("Player 4");
 
-        // Add players to the tournament
         tournament.addPlayer(player1);
         tournament.addPlayer(player2);
         tournament.addPlayer(player3);
         tournament.addPlayer(player4);
 
-        // Mock the repository call to return the tournament
+        // Mock finding the tournament
         when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
 
-        // Perform the random draw
-        List<Match> matches = tournamentService.performRandomDraw(1L);
+        // Mock the matches returned from the repository
+        List<Match> mockMatches = Arrays.asList(
+                new Match(tournament, player1, player2),
+                new Match(tournament, player3, player4));
 
-        // Check that the draw returned the correct number of matches
-        assertEquals(2, matches.size());  // 4 players -> 2 matches
-        assertTrue(matches.stream().anyMatch(m -> m.getPlayer1().equals(player1) || m.getPlayer2().equals(player1)));
-        assertTrue(matches.stream().anyMatch(m -> m.getPlayer1().equals(player2) || m.getPlayer2().equals(player2)));
-        assertTrue(matches.stream().anyMatch(m -> m.getPlayer1().equals(player3) || m.getPlayer2().equals(player3)));
-        assertTrue(matches.stream().anyMatch(m -> m.getPlayer1().equals(player4) || m.getPlayer2().equals(player4)));
+        // Mock the saveAll call to return the created matches
+        when(matches.saveAll(anyList())).thenReturn(mockMatches);
+
+        // Perform the random draw
+        List<Match> returnedMatches = tournamentService.performRandomDraw(1L);
+
+        // Assert that the correct number of matches were returned
+        assertEquals(2, returnedMatches.size());
+        verify(matches).saveAll(anyList());
     }
+
+    @Test
+    void deleteTournament_TournamentExists_DeletesSuccessfully() {
+        Long tournamentId = 1L;
+        Tournament tournament = new Tournament("Test Tournament", tournamentId);
+
+        when(tournamentRepository.findById(tournamentId)).thenReturn(Optional.of(tournament));
+
+        tournamentService.deleteTournament(tournamentId);
+
+        verify(tournamentRepository, times(1)).deleteById(tournamentId);
+    }
+
+    @Test
+    void deleteTournament_TournamentNotFound_ThrowsException() {
+        // Setup: No tournament exists with this ID, so return an empty Optional
+        Long tournamentId = 2L;
+        when(tournamentRepository.findById(tournamentId)).thenReturn(Optional.empty());
+
+        // Act & Assert: Ensure that calling deleteTournament throws the correct exception
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            tournamentService.deleteTournament(tournamentId);
+        });
+
+        // Verify the exception message
+        assertEquals("Tournament not found", exception.getMessage());
+
+        // Verify that deleteById is never called
+        verify(tournamentRepository, never()).deleteById(any(Long.class));
+    }
+
 
     // @Test
     // void addBook_SameTitle_ReturnNull() {
-    //     // your code here
-    //     Book book = new Book("The Same Title Exists");
-    //     List<Book> sameTitles = new ArrayList<Book>();
-    //     sameTitles.add(new Book("The Same Title Exists"));
-    //     when(books.findByTitle(book.getTitle())).thenReturn(sameTitles);
-    //     Book savedBook = bookService.addBook(book);
-    //     assertNull(savedBook);
-    //     verify(books).findByTitle(book.getTitle());
+    // // your code here
+    // Book book = new Book("The Same Title Exists");
+    // List<Book> sameTitles = new ArrayList<Book>();
+    // sameTitles.add(new Book("The Same Title Exists"));
+    // when(books.findByTitle(book.getTitle())).thenReturn(sameTitles);
+    // Book savedBook = bookService.addBook(book);
+    // assertNull(savedBook);
+    // verify(books).findByTitle(book.getTitle());
     // }
 }

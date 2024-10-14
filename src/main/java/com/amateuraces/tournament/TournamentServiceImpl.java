@@ -2,22 +2,27 @@ package com.amateuraces.tournament;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 import org.springframework.stereotype.Service;
 
 import com.amateuraces.match.Match;
+import com.amateuraces.match.MatchRepository;
 import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerRepository;
 
 @Service
 public class TournamentServiceImpl implements TournamentService {
 
-    private final TournamentRepository tournamentRepository;
-    private final PlayerRepository playerRepository;
+    private TournamentRepository tournamentRepository;
+    private PlayerRepository playerRepository;
+    private MatchRepository matchRepository;
 
-    public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository) {
+    public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository,
+            MatchRepository matchRepository) {
         this.tournamentRepository = tournamentRepository;
         this.playerRepository = playerRepository;
+        this.matchRepository = matchRepository;
     }
 
     @Override
@@ -77,8 +82,31 @@ public class TournamentServiceImpl implements TournamentService {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
 
-        // Logic for performing random draw goes here
-        return new ArrayList<>(); // Return matches after drawing
+        // Ensure there are enough players for the tournament
+        List<Player> players = tournament.getPlayers();
+        if (players.size() < 2) {
+            throw new IllegalArgumentException("Not enough players to perform a draw");
+        }
+
+        // Shuffle the players to ensure a random draw
+        Collections.shuffle(players);
+
+        // Create matches for every two players
+        List<Match> matches = new ArrayList<>();
+        for (int i = 0; i < players.size(); i += 2) {
+            if (i + 1 < players.size()) {
+                Player player1 = players.get(i);
+                Player player2 = players.get(i + 1);
+                Match match = new Match(tournament, player1, player2);
+                matches.add(match);
+            }
+        }
+
+        // Save all the matches
+        matchRepository.saveAll(matches);
+
+        // Return the matches
+        return matches;
     }
 
     // @Override
@@ -95,7 +123,23 @@ public class TournamentServiceImpl implements TournamentService {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
 
-        // Logic to find the match and update the result
+        // Find the match by its ID
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("Match not found"));
+
+        // Determine the winner based on the result
+        if (result.equalsIgnoreCase(match.getPlayer1().getName())) {
+            match.setWinner(match.getPlayer1());
+        } else if (result.equalsIgnoreCase(match.getPlayer2().getName())) {
+            match.setWinner(match.getPlayer2());
+        } else {
+            throw new IllegalArgumentException("Invalid result: winner not found");
+        }
+
+        // Update the match and save it
+        matchRepository.save(match);
+
+        // Return the updated tournament
         return tournamentRepository.save(tournament);
     }
 
