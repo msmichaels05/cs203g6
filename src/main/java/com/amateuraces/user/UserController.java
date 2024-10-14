@@ -30,7 +30,9 @@ public class UserController {
     @PostMapping("/users")
     public User addUser(@Valid @RequestBody User user){
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setAuthorities("ROLE_USER");
         return users.save(user);
     }
-   
+
+
 }

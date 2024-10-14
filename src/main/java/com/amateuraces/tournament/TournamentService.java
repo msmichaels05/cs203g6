@@ -6,12 +6,31 @@ import com.amateuraces.player.Player;
 
 public interface TournamentService {
 
+    Tournament addTournament(Tournament tournament);
+
     /**
      * Create a new tournament.
      * @param tournament The tournament to be created.
      * @return The created tournament.
      */
     Tournament createTournament(Tournament tournament);
+
+
+        /**
+     * Change method's signature: do not return a value for delete operation
+     * @param id
+     */
+    void deleteTournament(Long id);
+
+
+        /**
+     * Return the updated player
+     * 
+     * @param id
+     * @param player
+     * @return
+     */
+    Tournament updateTournament(Long id, Tournament tournament);
 
     /**
      * Set the registration period for a tournament.

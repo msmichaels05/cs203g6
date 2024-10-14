@@ -3,7 +3,6 @@ package com.amateuraces.player;
 import com.amateuraces.tournament.Tournament;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 
 @Entity
 @Getter
@@ -43,7 +43,7 @@ public class Player {
     private int matchesPlayed;
     private int matchesWon;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
 

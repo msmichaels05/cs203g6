@@ -1,12 +1,49 @@
 
-# Users
+###
+PUT http://localhost:8080/tournaments/2
+Content-Type: application/json
+Authorization: Basic betatester betatester
+
+
+{
+    "name": "jon",
+    "requirement": 9999
+}
+### 
+
+DELETE http://localhost:8080/tournaments/1
+
+### Tournament
+GET http://localhost:8080/tournaments
+
+
+### Tournament
+POST http://localhost:8080/tournaments
+Content-Type: application/json
+
+{
+    "name": "test",
+    "requirement": 100
+}
+
+###Users
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+    "username": "username",
+    "password": "password"
+    
+}
+
+###Users
 POST http://localhost:8080/users
 Content-Type: application/json
 
 {
     "username": "username",
     "password": "password",
-    "authorities":"ROLE_USER"
+    "authorities":"ROLE_ADMIN"
     
 }
 
@@ -50,6 +87,16 @@ Authorization: Basic betatester betatester
 
 {
     "name": "jon"
+}
+
+###
+PUT http://localhost:8080/highlights/2
+Content-Type: application/json
+Authorization: Basic betatester betatester
+
+
+{
+    "tournamentOfTheMonth": "jon"
 }
 
 ### Highlights
@@ -101,7 +148,8 @@ Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 {
-    
+    "Tournament"
+    "Player1"
 }
 
 ###
