@@ -20,16 +20,25 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Size(min = 1, max = 100)
+    @NotNull(message = "Name cannot be empty")
+    @Size(min = 1, max = 100 , message = "Name must be 1 to 100 characters")
     private String name;
 
-    @Size(min = 1, max = 15)
+    @NotNull(message = "Phone number cannot be empty")
+    @Size(min=8,max = 8, message = "Phone number must be a valid number")
     private String phoneNumber;
 
+    @NotNull(message="Email cannot be empty")
+    @Size(max = 30, message= "Email cannot be more than 30 characters")
     private String email;
+
+    @NotNull(message = "Age cannot be empty")
     private int age;
+
+    @NotNull(message = "Gender cannot be empty")
+    @Size(max=10,message = "Gender cannot be more than 10 characters")
     private String gender;
+
     private int elo = 1500;  // Starting ELO
     private int matchesPlayed;
     private int matchesWon;
@@ -47,6 +56,7 @@ public class Player {
     public Player(String name, String gender, int age, String email, String phoneNumber, int matchesPlayed, int matchesWon) {
         this.age = age;
         this.gender = gender;
+        this.email = email;
         this.phoneNumber = phoneNumber;
         this.matchesPlayed = matchesPlayed;
         this.matchesWon = matchesWon;

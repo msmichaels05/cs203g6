@@ -45,7 +45,10 @@ public class SecurityConfig {
             .authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/error").permitAll() // the default error page
                 .requestMatchers(HttpMethod.GET, "/users", "/users/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/*/players").hasRole("USER")  
+                .requestMatchers(HttpMethod.POST, "/users/*/admins").hasRole("ADMIN")  
                 .requestMatchers(HttpMethod.GET, "/players").permitAll()
+                .requestMatchers(HttpMethod.GET, "/admins").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/users/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/users/*").hasAuthority("ROLE_ADMIN")
