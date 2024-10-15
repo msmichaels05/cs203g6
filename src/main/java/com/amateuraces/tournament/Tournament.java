@@ -27,14 +27,30 @@ public class Tournament {
 
     private int ELOrequirement;
 
+    private int playerCount=0 ;
+
     @ManyToMany
     @JoinTable(
-        name = "tournament_player",
+        name = "tournament_players",
         joinColumns = @JoinColumn(name = "tournament_id"),
         inverseJoinColumns = @JoinColumn(name = "player_id")
     )
     @JsonIgnore
-    private List<Player> players = new ArrayList<>();
+    private Set<Player> players = new HashSet<>();
+
+        // Implement equals and hashCode
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Tournament)) return false;
+            Tournament tournament = (Tournament) o;
+            return Objects.equals(id, tournament.id); // Compare based on 'id'
+        }
+    
+        @Override
+        public int hashCode() {
+            return Objects.hash(id); // Hash based on 'id'
+        }
 
     // Constructor with wins and losses
     public Tournament(String name, int ELOrequirement) {
@@ -42,19 +58,27 @@ public class Tournament {
         this.name = name;
     }
 
-    public boolean addPlayer(Player player){
-        players.add(player);
-        return true;
+    public boolean addPlayer(Player player) {
+        boolean added = players.add(player);
+        if (added) {
+            playerCount++;
+            player.getTournaments().add(this); // Ensure the bi-directional relationship is maintained
+        }
+        return added;
     }
+    // public boolean addPlayer(Player player){
+    //     players.add(player);
+    //     return true;
+    // }
 
-    // Get the count of registered players
-    public int getRegisteredPlayerCount() {
-        return players.size();
-    }
+    // // Get the count of registered players
+    // public int getRegisteredPlayerCount() {
+    //     return players.size();
+    // }
 
-    // Clear the list of players
-    public void clearPlayers() {
-        players.clear();
-    }
+    // // Clear the list of players
+    // public void clearPlayers() {
+    //     players.clear();
+    // }
 }
 

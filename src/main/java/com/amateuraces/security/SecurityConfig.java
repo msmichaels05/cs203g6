@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/users", "/users/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users/*/players").hasRole("USER")  
                 .requestMatchers(HttpMethod.POST, "/users/*/admins").hasRole("ADMIN")  
-                .requestMatchers(HttpMethod.GET, "/players").permitAll()
+                .requestMatchers(HttpMethod.GET, "/players", "/api/players").permitAll()
                 .requestMatchers(HttpMethod.GET, "/admins").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/users/*").hasAuthority("ROLE_ADMIN")
@@ -56,6 +56,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/tournaments").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/tournaments/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/tournaments/*/players/*").permitAll()
+
+
 
                 .requestMatchers("/register", "/login", "/player/register/**").permitAll()
                 .requestMatchers("/home").permitAll()  // home is accessible to those with registered accounts

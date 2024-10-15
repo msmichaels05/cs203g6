@@ -1,5 +1,5 @@
 package com.amateuraces.tournament;
-import java.util.List;
+import java.util.*;
 
 import com.amateuraces.match.Match;
 import com.amateuraces.player.Player;
@@ -23,7 +23,7 @@ public interface TournamentService {
     void deleteTournament(Long id);
 
 
-    Tournament addPlayerToTournament(Long tournamentId, Long playerId);
+    void joinTournament(Long id);
 
 
         /**
@@ -57,7 +57,7 @@ public interface TournamentService {
     //  * @param tournamentId The ID of the tournament.
     //  * @return List of players in the tournament.
     //  */
-    List<Player> getPlayersInTournament(Long tournamentId);
+    Set<Player> getPlayersInTournament(Long tournamentId);
 
 
 
@@ -67,7 +67,7 @@ public interface TournamentService {
     //  * @param tournamentId The ID of the tournament.
     //  * @return List of match pairings after the draw.
     //  */
-    List<Match> performRandomDraw(Long tournamentId);
+    // Set<Match> performRandomDraw(Long tournamentId);
 
     // /**
     //  * Update the status of the tournament (e.g., in-progress, completed).
@@ -84,7 +84,7 @@ public interface TournamentService {
     //  * @param result The result of the match (e.g., playerA wins, playerB wins).
     //  * @return The updated tournament with match results.
     //  */
-    Tournament recordMatchResult(Long tournamentId, Long matchId, String result);
+    // Tournament recordMatchResult(Long tournamentId, Long matchId, String result);
 
     // /**
     //  * Validate if the registration period is valid.

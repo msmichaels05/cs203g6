@@ -2,7 +2,10 @@
 GET http://localhost:8080/tournaments/1/players
 
 ### POST Player to tournament
-POST http://localhost:8080/tournaments/1/players/2
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username password
+
+
 
 ### GET ADMIN
 GET http://localhost:8080/admins
@@ -26,7 +29,6 @@ Authorization: Basic admin goodpassword
 ### POST NEW USER 
 POST http://localhost:8080/users
 Content-Type: application/json
-Authorization: Basic admin goodpassword
 
 
 {
@@ -56,8 +58,8 @@ Authorization: Basic betatester betatester
 
 
 {
-    "username": "username",
-    "password": "password",
+    "username": "betatester",
+    "password": "betatester",
     "authorities":"ROLE_ADMIN"
 }
 
@@ -69,18 +71,19 @@ Authorization: Basic admin goodpassword
 {
     "name":"Admin",
     "phoneNumber" : "123456789",
+    "email" : "johnny@gmail.com",
     "age" : 200,
     "gender" : "Male"
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
-POST http://localhost:8080/users/1/players
+POST http://localhost:8080/users/2/players
 Content-Type: application/json
-Authorization: Basic admin goodpassword
+Authorization: Basic username password
 
 {
     "name":"Alphabravo",
-    "phoneNumber" : "88888888",
+    "phoneNumber" :88888888,
     "email" : "alphabravo@gmail.com",
     "age" : 18,
     "gender" : "Female"
@@ -193,7 +196,7 @@ Authorization: Basic admin goodpassword
 
 {
     "name" : "US OPEN",
-    "requirement" : 1500
+    "elorequirement" : 1500
      
 }
 
@@ -209,7 +212,7 @@ Authorization: Basic admin goodpassword
 
 ###
 
-DELETE http://localhost:8080/tournaments/4
+DELETE http://localhost:8080/tournaments/1
 Authorization: Basic admin goodpassword
 
 ### Match

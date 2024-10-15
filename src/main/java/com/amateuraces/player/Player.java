@@ -1,6 +1,6 @@
 package com.amateuraces.player;
 
-import java.util.List;
+import java.util.*;
 
 import com.amateuraces.tournament.Tournament;
 import com.amateuraces.user.User;
@@ -42,8 +42,8 @@ public class Player {
     private String name;
 
     @NotNull(message = "Phone number cannot be empty")
-    @Size(min=8,max = 8, message = "Phone number must be a valid number")
-    private Long phoneNumber;
+    @Size(min=8,max=16, message = "Phone number should be 8-16 numbers")
+    private String phoneNumber;
 
     @NotNull(message="Email cannot be empty")
     @Size(max = 30, message= "Email cannot be more than 30 characters")
@@ -60,17 +60,30 @@ public class Player {
     private int matchesPlayed;
     private int matchesWon;
 
-    @ManyToMany(mappedBy = "players", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "players")
     @JsonIgnore
-    private List<Tournament> tournaments;
+    private Set<Tournament> tournaments = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne
     @MapsId
     @JoinColumn(name="user_id",nullable = false)
     private User user;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player)) return false;
+        Player player = (Player) o;
+        return id != null && id.equals(player.id); // Compare IDs
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Generate hash code based on ID
+    }
+
     // Constructor with wins and losses
-    public Player(String name, String gender, int age, String email, Long phoneNumber, int matchesPlayed, int matchesWon) {
+    public Player(String name, String gender, int age, String email, String phoneNumber, int matchesPlayed, int matchesWon) {
         this.age = age;
         this.gender = gender;
         this.email = email;

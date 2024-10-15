@@ -18,7 +18,7 @@ public interface PlayerRepository extends JpaRepository <Player, Long>{
 Player findByUserId(Long userId);
 Optional<Player> findByIdAndUserId(Long id, Long userId);
 Optional<Player> findByEmail(String email);
-Optional<Player> findByPhoneNumber(Long phoneNumber);
+Optional<Player> findByPhoneNumber(String phoneNumber);
 
 
 }

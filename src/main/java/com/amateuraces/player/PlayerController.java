@@ -124,7 +124,11 @@ public class PlayerController {
     }
 
 
-
+    @ResponseBody
+    @GetMapping("/api/players")
+    public List<Player> listPlayers() {
+        return players.findAll();
+    }
 
 
     /**
