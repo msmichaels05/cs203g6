@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.amateuraces.player.Player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.amateuraces.admin.*;
 
 import lombok.*;
 
@@ -48,6 +49,10 @@ public class User implements UserDetails{
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Player player;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Admin admin;
 
     public User(String username, String password){
         this.username = username;

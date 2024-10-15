@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.amateuraces.user.*;
 import jakarta.validation.Valid;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -90,7 +91,6 @@ public class PlayerController {
     @ResponseBody
     @PostMapping("/users/{userId}/players")
     public Player addPlayer(@PathVariable(value = "userId") Long userId, @Valid @RequestBody Player player) {
-        // using "map" to handle the returned Optional object from "findById(bookId)"
         return users.findById(userId).map(user -> {
             player.setUser(user);
             return players.save(player);
