@@ -28,6 +28,32 @@
             padding: 40px;
         }
 
+        .action-btns {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            color: white;
+            background-color: #28a745;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .btn-add {
+            background-color: #007bff;
+        }
+
+        .btn-add:hover {
+            background-color: #0056b3;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -62,24 +88,6 @@
             cursor: pointer;
         }
 
-        .action-btns {
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            color: white;
-            background-color: #28a745;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .btn:hover {
-            background-color: #218838;
-        }
-
         .btn-delete {
             background-color: #dc3545;
         }
@@ -108,9 +116,6 @@
             color: white;
             border-radius: 4px;
         }
-
-        
-
     </style>
 
     <!-- JavaScript for handling 'Select All' functionality -->
@@ -135,8 +140,11 @@
             <p>Track all registered players and their stats here.</p>
             <div class="divider"></div>
         </div>
-    </div>
-    
+
+        <!-- Button to add a new player -->
+        <div class="action-btns">
+            <a href="/player/add" class="btn btn-add">Add New Player</a>
+        </div>
 
         <table>
             <thead>
@@ -175,8 +183,8 @@
                                 <button type="submit" style="border: none; background: none;" onclick="return confirm('Are you sure you want to delete this player?');">
                                     <img src="/images/delete.png" alt="Delete" title="Delete Player" style="cursor: pointer; width: 20px;">
                                 </button>
-                            </form>
-
+                            </form>                            
+                            
                             <a th:href="@{/player/profile/{id}(id=${player.id})}">View Profile</a>
 
                         </div>

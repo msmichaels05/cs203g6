@@ -5,15 +5,17 @@ import java.util.*;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.amateuraces.match.Match;
 import com.amateuraces.match.MatchNotFoundException;
@@ -22,7 +24,7 @@ import com.amateuraces.player.PlayerNotFoundException;
 
 import jakarta.validation.Valid;
 
-@RestController
+@Controller
 public class TournamentController {
 
     private TournamentService tournamentService;
@@ -30,6 +32,70 @@ public class TournamentController {
     public TournamentController(TournamentService tournamentService) {
         this.tournamentService = tournamentService;
     }
+
+    // Display all tournaments
+    @GetMapping("/tournaments")
+    public String showAllTournaments(Model model) {
+        List<Tournament> allTournaments = tournamentService.listTournaments(); // Retrieve all tournaments from the
+                                                                               // database
+        model.addAttribute("tournaments", allTournaments); // Add the list of tournaments to the model
+        return "all_tournaments"; // Return the Thymeleaf template for displaying tournaments
+    }
+
+    // Display the Add Tournament page
+    @GetMapping("/tournament/add")
+    public String showAddTournamentForm(Model model) {
+        model.addAttribute("tournament", new Tournament()); // Add an empty tournament object for the form
+        return "add_tournament"; // Return the template for adding a tournament
+    }
+
+// Handle form submission to add a tournament
+    @PostMapping("/tournament/add")
+    public String addTournaments(@ModelAttribute Tournament tournament) {
+        tournamentService.addTournament(tournament); // Save the new tournament to the database
+        return "redirect:/tournaments"; // Redirect back to the list of tournaments
+    }
+
+     // View tournament details
+     @GetMapping("/tournament/view/{id}")
+     public String viewTournamentDetails(@PathVariable Long id, Model model) {
+         Tournament tournament = tournamentService.getTournament(id);
+         if (tournament == null) {
+             return "redirect:/tournaments"; // Redirect if tournament not found
+         }
+         model.addAttribute("tournament", tournament);
+         return "view_tournament"; // Thymeleaf template for viewing tournament details
+     }
+ 
+     // Display the Edit Tournament page
+     @GetMapping("/tournament/edit/{id}")
+     public String showEditTournamentForm(@PathVariable Long id, Model model) {
+         Tournament tournament = tournamentService.getTournament(id);
+         if (tournament == null) {
+             return "redirect:/tournaments"; // Redirect if tournament not found
+         }
+         model.addAttribute("tournament", tournament);
+         return "edit_tournament"; // Thymeleaf template for editing a tournament
+     }
+ 
+     // Handle form submission to edit a tournament
+     @PostMapping("/tournament/edit/{id}")
+     public String editTournament(@PathVariable Long id, @ModelAttribute Tournament updatedTournament) {
+         Tournament tournament = tournamentService.getTournament(id);
+         if (tournament != null) {
+             tournament.setName(updatedTournament.getName());
+             tournament.setELOrequirement(updatedTournament.getELOrequirement());
+             tournamentService.updateTournament(id, tournament);
+         }
+         return "redirect:/tournaments";
+     }
+ 
+     // Delete a tournament
+     @PostMapping("/tournament/delete/{id}")
+     public String deleteTournaments(@PathVariable Long id) {
+         tournamentService.deleteTournament(id);
+         return "redirect:/tournaments";
+     }
 
 
 
@@ -44,11 +110,6 @@ public class TournamentController {
 
     }
 
-    
-    @GetMapping("/tournaments")
-        public List<Tournament> getTournaments(){
-            return tournamentService.listTournaments();
-        }    
 
     /**
      * Create a new tournament.
