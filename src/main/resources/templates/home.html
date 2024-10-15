@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,34 +11,62 @@
             background-color: #f0f4f7;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* Navbar styling */
         .navbar {
             background-color: #002855;
-            padding: 10px;
+            padding: 10px 30px;
+            /* Added padding for better alignment */
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: white;
+            flex-wrap: wrap;
+            /* Enable wrapping for smaller screens */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .navbar h1 {
-            font-size: 24px;
-            margin: 0;
+        .navbar img.logo {
+            width: auto;
+            max-width: 200px;
+            /* Reduced logo size for a more balanced look */
+            padding: 3px;
+            border: 2px solid #ffffff;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
         }
 
-        .navbar a {
+        .navbar div a {
             color: white;
-            margin-right: 15px;
+            margin-right: 20px;
             text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 4px;
+            padding: 10px 20px;
+            border-radius: 5px;
             border: 1px solid white;
+            font-weight: bold;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        .navbar a:hover {
+        .navbar div a:hover {
             background-color: #00529b;
+            border-color: #00529b;
+        }
+
+        .navbar div a:last-child {
+            background-color: #dc3545;
+            /* Logout button background */
+            border-color: #dc3545;
+        }
+
+        .navbar div a:last-child:hover {
+            background-color: #c82333;
+            /* Darker red for hover state */
+            border-color: #c82333;
         }
 
         /* Layout and card styling */
@@ -46,6 +75,8 @@
             grid-template-columns: 1fr 2fr 1fr;
             gap: 20px;
             padding: 40px;
+            flex: 1;
+
         }
 
         .card {
@@ -82,28 +113,92 @@
             margin-bottom: 10px;
         }
 
-        /* Footer styling */
         footer {
             background-color: #002855;
             color: white;
             text-align: center;
             padding: 10px;
-            position: fixed;
-            bottom: 0;
             width: 100%;
+            margin-top: auto;
+            /* Push the footer to the bottom */
+        }
+
+
+        /* Media Queries for responsiveness */
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+                /* Stacks cards in one column on medium screens */
+                padding: 20px;
+            }
+
+            .navbar div {
+                display: flex;
+                flex-direction: column;
+                /* Stack navigation links vertically on medium screens */
+                align-items: center;
+            }
+
+            .navbar div a {
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar img.logo {
+                max-width: 120px;
+                /* Reduce logo size on small screens */
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 16px;
+            }
+
+            ul li {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 10px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .navbar img.logo {
+                margin-bottom: 10px;
+            }
+
+            .card {
+                padding: 10px;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Navigation Bar -->
     <div class="navbar">
-        <h1>AmateurAces</h1>
+        <!-- Replace text with logo -->
+        <img src="/images/amateuraces_logo.png" alt="AmateurAces Logo" class="logo">
         <div>
             <a th:href="@{/home}">Home</a>
-            <a th:href="@{/schedule}">Schedule</a>
-            <a th:href="@{/draws}">Draws</a>
+            <a th:href="@{/tournaments}">Tournaments</a>
             <a th:href="@{/players}">Players</a>
+            <!-- <a th:href="@{/player/profile/{id}(id=${player.id})}">Profile</a>  -->
             <a th:href="@{/logout}">Logout</a>
         </div>
     </div>
@@ -145,4 +240,5 @@
     </footer>
 
 </body>
+
 </html>

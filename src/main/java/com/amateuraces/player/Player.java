@@ -1,12 +1,28 @@
 package com.amateuraces.player;
 
-import com.amateuraces.tournament.Tournament;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
-import com.amateuraces.user.*;
 import java.util.List;
+
+import com.amateuraces.tournament.Tournament;
+import com.amateuraces.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
 @Entity
@@ -44,10 +60,11 @@ public class Player {
     private int matchesPlayed;
     private int matchesWon;
 
-    @ManyToMany(mappedBy = "player", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "players", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Tournament> tournaments;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @MapsId
     @JoinColumn(name="user_id",nullable = false)
     private User user;
