@@ -66,9 +66,6 @@ public class User implements UserDetails{
         this.authorities = authorities;
     }
 
-    
-
-
     /* Return a collection of authorities (roles) granted to the user.
     // */
     @Override

@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.amateuraces.tournament.Tournament;
 import com.amateuraces.user.*;
+
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,8 +30,6 @@ public class PlayerController {
         this.players = players;
         this.users = users;
     }
-
-
 
     // Display Player Registration Form
     @ResponseBody
@@ -118,6 +119,39 @@ public class PlayerController {
         }).orElseThrow(() -> new PlayerNotFoundException(playerId));
     }
 
+
+    // @ResponseBody
+    // @PostMapping("/users/{userId}/players")
+    // public Player addPlayer(@PathVariable(value = "userId") Long userId, @Valid @RequestBody Player player) {
+    //     return users.findById(userId).map(user -> {
+    //         player.setUser(user);
+    //         return players.save(player);
+    //     }).orElseThrow(() -> new PlayerNotFoundException(userId));
+    // }
+
+    // @ResponseBody
+    // @PostMapping("/users/{userId}/players/{playerId}/tournaments")
+    // public Tournament registerForTournament(@PathVariable(value = "userId") Long userId,
+    //         @PathVariable(value = "playerId") Long playerId,
+    //         @Valid @RequestBody Tournament tournamentId) {
+    //         return users.findById(userId).map(user -> {
+    //             return players.findById(playerId).map(player -> {
+
+    //             })
+    //         })
+    //     return "";
+    // }
+
+
+    // @ResponseBody
+    // @PostMapping("/users/{userId}/players/{playerId}/tournaments")
+    // public Tournament registerForTournament(@PathVariable(value = "userId") Long userId,
+    //         @PathVariable(value = "playerId") Long playerId,
+    //         @Valid @RequestBody Tournament tournament) {
+    //         return 
+    //     return "";
+    // }
+    
     /**
      * Search for player with the given id
      * If there is no player with the given "id", throw a PlayerNotFoundException
@@ -195,11 +229,7 @@ public class PlayerController {
     // return "";
     // }
 
-    // @PostMapping("/tournaments/register")
-    // public String registerForTournament(@RequestParam String tournamentId) {
-    // // Register player for tournament
-    // return "";
-    // }
+
 
     // @GetMapping("/matches")
     // public String viewMatchSchedule(Model model) {

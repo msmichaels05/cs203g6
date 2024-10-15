@@ -27,6 +27,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(User user) {
+        Optional<User> sameUsernames = users.findByUsername(user.getUsername());
+        if (sameUsernames.isPresent()) {
+            return null; // or throw an exception
+        }
         return users.save(user);
     }
 

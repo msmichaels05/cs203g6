@@ -4,11 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -41,6 +40,65 @@ public class PlayerServiceTest {
         assertEquals(player.getName(),savedPlayer.getName());
         verify(players).save(player);
     }
+    
+    @Test
+    void addPlayer_NewPhoneNumber_ReturnSavedPlayer(){
+        
+        Player player = new Player();
+        player.setPhoneNumber(12345678L);
+        when(players.save(any(Player.class))).thenReturn(player);
+        Player savedPlayer = playerService.addPlayer(player);
+        
+        assertNotNull(savedPlayer);
+        assertEquals(player.getPhoneNumber(),savedPlayer.getPhoneNumber());
+        verify(players).save(player);
+    }
+
+    @Test
+    void addPlayer_NewEmail_ReturnSavedPlayer(){
+        Player player = new Player("test123@gmail.com");
+        when(players.save(any(Player.class))).thenReturn(player);
+        Player savedPlayer = playerService.addPlayer(player);
+        
+        assertNotNull(savedPlayer);
+        assertEquals(player.getEmail(),savedPlayer.getEmail());
+        verify(players).save(player);
+    }
+
+    
+    @Test
+    void addPlayer_SamePhoneNumber_ReturnNull(){
+        Player player = new Player();
+        player.setPhoneNumber(10293848L);
+        Player samePlayerNumber = new Player();
+        samePlayerNumber.setPhoneNumber(10293848L);
+
+
+        Optional<Player> samePhoneNumber = Optional.of(samePlayerNumber);
+        when(players.findByPhoneNumber(player.getPhoneNumber())).thenReturn(samePhoneNumber);
+        Player savedPlayer = playerService.addPlayer(player);
+        assertNull(savedPlayer);
+        
+        verify(players).findByPhoneNumber(player.getPhoneNumber());
+        verify(players, never()).save(any(Player.class));
+    }
+
+    @Test
+    void addPlayer_SameEmail_ReturnNull(){
+        Player player = new Player();
+        player.setEmail("test123@gmail.com");
+        Player samePlayerEmail = new Player();
+        samePlayerEmail.setEmail("test123@gmail.com");
+
+        Optional<Player> sameEmail = Optional.of(samePlayerEmail);
+
+        when(players.findByEmail(player.getEmail())).thenReturn(sameEmail);
+        Player savedPlayer = playerService.addPlayer(player);
+        assertNull(savedPlayer);
+
+        verify(players).findByEmail(player.getEmail());
+        verify(players, never()).save(any(Player.class));
+    }
 
     @Test
     void updatePlayer_NotFound_ReturnNull(){
@@ -53,7 +111,4 @@ public class PlayerServiceTest {
         assertNull(updatedPlayer);
         verify(players).findById(playerID);
     }
-
-   
-    
-    }
+}

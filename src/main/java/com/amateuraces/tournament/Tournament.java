@@ -27,7 +27,12 @@ public class Tournament {
 
     private int ELOrequirement;
 
-    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+        name = "tournament_player",
+        joinColumns = @JoinColumn(name = "tournament_id"),
+        inverseJoinColumns = @JoinColumn(name = "player_id")
+    )
     @JsonIgnore
     private List<Player> players = new ArrayList<>();
 

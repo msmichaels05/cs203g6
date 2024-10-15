@@ -43,5 +43,4 @@ public class AdminController {
             return admins.save(admin);
         }).orElseThrow(() -> new AdminNotFoundException(userId));
     }
-
 }

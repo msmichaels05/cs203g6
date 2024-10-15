@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import com.amateuraces.user.*;
+import java.util.List;
 
 
 @Entity
@@ -26,7 +27,7 @@ public class Player {
 
     @NotNull(message = "Phone number cannot be empty")
     @Size(min=8,max = 8, message = "Phone number must be a valid number")
-    private String phoneNumber;
+    private Long phoneNumber;
 
     @NotNull(message="Email cannot be empty")
     @Size(max = 30, message= "Email cannot be more than 30 characters")
@@ -43,9 +44,8 @@ public class Player {
     private int matchesPlayed;
     private int matchesWon;
 
-    @ManyToOne
-    @JoinColumn(name = "tournament_id")
-    private Tournament tournament;
+    @ManyToMany(mappedBy = "player", cascade = CascadeType.ALL)
+    private List<Tournament> tournaments;
 
     @OneToOne
     @MapsId
@@ -53,7 +53,7 @@ public class Player {
     private User user;
 
     // Constructor with wins and losses
-    public Player(String name, String gender, int age, String email, String phoneNumber, int matchesPlayed, int matchesWon) {
+    public Player(String name, String gender, int age, String email, Long phoneNumber, int matchesPlayed, int matchesWon) {
         this.age = age;
         this.gender = gender;
         this.email = email;

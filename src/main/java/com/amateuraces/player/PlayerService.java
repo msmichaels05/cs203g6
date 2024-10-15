@@ -2,6 +2,8 @@ package com.amateuraces.player;
 
 import java.util.List;
 
+import com.amateuraces.tournament.Tournament;
+
 public interface PlayerService {
     List<Player> listPlayers();
 
