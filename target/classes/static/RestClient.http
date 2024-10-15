@@ -4,6 +4,10 @@ GET http://localhost:8080/tournaments/1/players
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players/2
 
+### GET ADMIN
+GET http://localhost:8080/admins
+Authorization: Basic admin goodpassword
+
 ### GET Players
 GET http://localhost:8080/api/players
 
@@ -70,17 +74,28 @@ Authorization: Basic admin goodpassword
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
-POST http://localhost:8080/users/3/players
+POST http://localhost:8080/users/1/players
 Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 {
     "name":"Alphabravo",
     "phoneNumber" : "88888888",
-    "age" : 99,
+    "email" : "alphabravo@gmail.com",
+    "age" : 18,
     "gender" : "Female"
 }
 
+### POST ADMIN INFO TO USER AFTER CREATION OF USER
+POST http://localhost:8080/users/1/admins
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "name":"Alphabravo",
+    "phoneNumber" : "88888888",
+    "email" : 99
+}
 
 
 ###
