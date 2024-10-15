@@ -39,8 +39,8 @@ Authorization: Basic admin goodpassword
 
 
 {
-    "username" : "nestimngakfnj",
-    "password": "betatester"
+    "username" : "betatester",
+    "password": "passwordtest"
     
 }
 
@@ -70,7 +70,7 @@ Authorization: Basic admin goodpassword
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
-POST http://localhost:8080/users/1/players
+POST http://localhost:8080/users/3/players
 Content-Type: application/json
 Authorization: Basic admin goodpassword
 

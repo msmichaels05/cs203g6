@@ -24,7 +24,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-
+@Table(name = "users") 
 /* Implementations of UserDetails to provide user information to Spring Security, 
 e.g., what authorities (roles) are granted to the user and whether the account is enabled or not
 */

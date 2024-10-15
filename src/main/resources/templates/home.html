@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - AmateurAces</title>
+    <style>
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            background-color: #f0f4f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            background-color: #002855;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .navbar a {
+            color: white;
+            margin-right: 15px;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: 1px solid white;
+        }
+
+        .navbar a:hover {
+            background-color: #00529b;
+        }
+
+        /* Layout and card styling */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            padding: 40px;
+        }
+
+        .card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #004b86;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .headline-card {
+            text-align: center;
+        }
+
+        .headline-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: #002855;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <h1>AmateurAces</h1>
+        <div>
+            <a th:href="@{/home}">Home</a>
+            <a th:href="@{/schedule}">Schedule</a>
+            <a th:href="@{/draws}">Draws</a>
+            <a th:href="@{/players}">Players</a>
+            <a th:href="@{/logout}">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Best of AmateurAces Card -->
+        <div class="card">
+            <h2>Best of AmateurAces</h2>
+            <ul>
+                <li>Upcoming Tournaments</li>
+                <li>Top Players</li>
+                <li>Previous Results</li>
+                <li>Top Coaches</li>
+            </ul>
+        </div>
+
+        <!-- Headline Tournament Event Card -->
+        <div class="card headline-card">
+            <img src="https://via.placeholder.com/500x250" alt="Tournament Event">
+            <h2>Headline Tournament Event</h2>
+            <p>Check out the latest highlights from the AmateurAces tournaments. Stay tuned for more updates!</p>
+        </div>
+
+        <!-- Top Headlines Card -->
+        <div class="card">
+            <h2>Top Headlines</h2>
+            <ul>
+                <li>Player X takes the lead</li>
+                <li>Surprising Upset in Finals</li>
+                <li>Top Players to Watch</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 AmateurAces. All rights reserved.
+    </footer>
+
+</body>
+</html>

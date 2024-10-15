@@ -45,6 +45,7 @@ public class SecurityConfig {
             .authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/error").permitAll() // the default error page
                 .requestMatchers(HttpMethod.GET, "/users", "/users/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/players").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/users/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/users/*").hasAuthority("ROLE_ADMIN")
@@ -53,21 +54,34 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/tournaments/*").hasAuthority("ROLE_ADMIN")
 
-
-
-                
-
+                .requestMatchers("/register", "/login", "/player/register/**").permitAll()
+                .requestMatchers("/home").permitAll()  // home is accessible to those with registered accounts
+                .requestMatchers("/h2-console/**").permitAll()  // Allow access to H2 Console
                 // note that Spring Security 6 secures all endpoints by default
                 // remove the below line after adding the required rules
-                .anyRequest().permitAll() 
+                .anyRequest().authenticated()  // All other requests require authentication
             )
             // ensure that the application won’t create any session in our stateless REST APIs
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .httpBasic(Customizer.withDefaults())
+
+            .formLogin(form -> form
+                .loginPage("/login")  // Custom login page
+                .defaultSuccessUrl("/home", true)  // Redirect to home after successful login
+                .failureUrl("/login?error=true")  // Redirect to login page with error=true on failure
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login") // Redirect to login after logout
+                .permitAll()
+
+            )
             .csrf(csrf -> csrf.disable()) // CSRF protection is needed only for browser based attacks
-            .formLogin(form -> form.disable())
+
             .headers(header -> header.disable()) // disable the security headers, as we do not return HTML in our APIs
             .authenticationProvider(authenticationProvider());
+
         return http.build();
     }
 

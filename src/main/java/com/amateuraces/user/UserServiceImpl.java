@@ -1,6 +1,8 @@
 package com.amateuraces.user;
 import java.util.List;
+import java.util.Optional;
 
+// import org.apache.el.stream.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,5 +45,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id){
         users.deleteById(id);
+    }
+
+     @Override
+    public Optional<User> findByUsername(String username) {
+        return users.findByUsername(username);
     }
 }

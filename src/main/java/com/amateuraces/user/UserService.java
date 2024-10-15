@@ -1,5 +1,7 @@
 package com.amateuraces.user;
 import java.util.List;
+import java.util.Optional;
+
 
 public interface UserService {
     List<User> listUsers();
@@ -25,4 +27,12 @@ public interface UserService {
      * @param id
      */
     void deleteUser(Long id);
+
+    /**
+     * Find a user by username
+     * 
+     * @param username
+     * @return Optional<User>
+     */
+    Optional<User> findByUsername(String username);
 } 
