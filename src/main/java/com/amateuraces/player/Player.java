@@ -2,20 +2,10 @@ package com.amateuraces.player;
 
 import com.amateuraces.tournament.Tournament;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
+import com.amateuraces.user.*;
 
 
 @Entity
@@ -30,15 +20,25 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Size(min = 1, max = 100)
+    @NotNull(message = "Name cannot be empty")
+    @Size(min = 1, max = 100 , message = "Name must be 1 to 100 characters")
     private String name;
 
-    @Size(min = 1, max = 15)
+    @NotNull(message = "Phone number cannot be empty")
+    @Size(min=8,max = 8, message = "Phone number must be a valid number")
     private String phoneNumber;
 
+    @NotNull(message="Email cannot be empty")
+    @Size(max = 30, message= "Email cannot be more than 30 characters")
+    private String email;
+
+    @NotNull(message = "Age cannot be empty")
     private int age;
+
+    @NotNull(message = "Gender cannot be empty")
+    @Size(max=10,message = "Gender cannot be more than 10 characters")
     private String gender;
+
     private int elo = 1500;  // Starting ELO
     private int matchesPlayed;
     private int matchesWon;
@@ -47,10 +47,16 @@ public class Player {
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name="user_id",nullable = false)
+    private User user;
+
     // Constructor with wins and losses
-    public Player(String name, String gender, int age, String email, String password, String phoneNumber, int matchesPlayed, int matchesWon) {
+    public Player(String name, String gender, int age, String email, String phoneNumber, int matchesPlayed, int matchesWon) {
         this.age = age;
         this.gender = gender;
+        this.email = email;
         this.phoneNumber = phoneNumber;
         this.matchesPlayed = matchesPlayed;
         this.matchesWon = matchesWon;

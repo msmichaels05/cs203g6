@@ -11,15 +11,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional // Ensure transactions are managed appropriately
 public class AdminServiceImpl implements AdminService {
 
-    private final AdminRepository adminRepository;
-    private final TournamentService tournamentService; // Inject TournamentService for tournament operations
+    private  AdminRepository adminRepository;
 
-    public AdminServiceImpl(AdminRepository adminRepository, TournamentService tournamentService) {
+    public AdminServiceImpl(AdminRepository adminRepository) {
         this.adminRepository = adminRepository;
-        this.tournamentService = tournamentService;
     }
 
     // List all admins
@@ -57,15 +54,5 @@ public class AdminServiceImpl implements AdminService {
     public void deleteAdmin(Long id) {
         adminRepository.deleteById(id);
     }
-    // List all available tournaments (calls TournamentService)
-    // @Override
-    // public List<Tournament> viewTournaments() {
-    //     return tournamentService.getAllTournaments();
-    // }
 
-    // Perform a randomized draw for a tournament
-    @Override
-    public List<Match> performRandomizedDraw(Long tournamentId) {
-        return tournamentService.performRandomDraw(tournamentId);
-    }
 }

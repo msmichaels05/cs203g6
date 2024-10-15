@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #0061a8;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #004b86;
+        }
+        .switch-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .switch-link a {
+            color: #0061a8;
+            text-decoration: none;
+        }
+        .switch-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Create an Account</h2>
+    
+    <form action="#" th:action="@{/register}" th:object="${user}" method="post">
+        <label for="username">Username:</label>
+        <input type="text" th:field="*{username}" placeholder="Enter Username" required/>
+        
+        <label for="password">Password:</label>
+        <input type="password" th:field="*{password}" placeholder="Enter Password" required/>
+        
+        <input type="submit" value="Register">
+    </form>
+    
+    <div class="switch-link">
+        <p>Already have an account? <a th:href="@{/login}">Log in here</a>.</p>
+    </div>
+
+    <div th:if="${error}">
+        <p style="color:red;" th:text="${error}"></p>
+    </div>
+</div>
+
+</body>
+</html>

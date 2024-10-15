@@ -1,8 +1,6 @@
 package com.amateuraces.tournament;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
+import java.util.*;
 
 import org.springframework.stereotype.Service;
 
@@ -16,11 +14,11 @@ import com.amateuraces.player.PlayerRepository;
 public class TournamentServiceImpl implements TournamentService {
 
     private TournamentRepository tournamentRepository;
-    private PlayerRepository playerRepository;
     private MatchRepository matchRepository;
+    private PlayerRepository playerRepository;
+    // private  PlayerRepository playerRepository;
 
-    public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository,
-            MatchRepository matchRepository) {
+    public TournamentServiceImpl(TournamentRepository tournamentRepository,MatchRepository  MatchRepository, PlayerRepository playerRepository) {
         this.tournamentRepository = tournamentRepository;
         this.playerRepository = playerRepository;
         this.matchRepository = matchRepository;
@@ -33,10 +31,41 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     @Override
+    public Tournament getTournament(Long id){
+        return tournamentRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public Tournament addTournament(Tournament tournament) {
+        if (tournament.getName()==null || tournament.getName().isEmpty()){
+            throw new IllegalArgumentException("Tournament name cannot be empty");
+        }
+        Optional<Tournament> existingTournament = tournamentRepository.findByName(tournament.getName());
+        if (existingTournament.isPresent()) {
+            return null; // Prevent creating a tournament with the same name
+        }
         return tournamentRepository.save(tournament);
     }
 
+    @Override
+    public Tournament addPlayerToTournament(Long tournamentId, Long playerId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+        Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+
+        tournament.addPlayer(player); // Add the player
+        return tournamentRepository.save(tournament); // Persist the changes
+    }
+
+    @Override
+    public List<Player> getPlayersInTournament(Long tournamentId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+
+        return tournament.getPlayers(); // Directly return the players
+    }
+    
     /**
      * Remove a Tournament with the given id
      * Spring Data JPA does not return a value for delete operation
@@ -55,44 +84,94 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     public Tournament updateTournament(Long id, Tournament newTournamentInfo) {
-        return tournamentRepository.findById(id).map(tournament -> {tournament.setName(newTournamentInfo.getName());
-            tournament.setRequirement(newTournamentInfo.getRequirement());
+        return tournamentRepository.findById(id).map(tournament -> {
+            tournament.setName(newTournamentInfo.getName());
+            tournament.setELOrequirement(newTournamentInfo.getELOrequirement());
             return tournamentRepository.save(tournament);
         }).orElse(null);
     }
 
     @Override
-    public Tournament createTournament(Tournament tournament) {
-        // Validate tournament before saving
-        if (tournament.getName() == null || tournament.getName().isEmpty()) {
-            throw new IllegalArgumentException("Tournament name cannot be empty");
-        }
-        return tournamentRepository.save(tournament);
-    }
-
-    @Override
-    public Tournament addPlayerToTournament(Long tournamentId, Long playerId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addPlayerToTournament'");
-    }
-
-    @Override
-    public List<Player> getPlayersInTournament(Long tournamentId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPlayersInTournament'");
-    }
-
-    @Override
     public List<Match> performRandomDraw(Long tournamentId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'performRandomDraw'");
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+
+        // Ensure there are enough players for the tournament
+        List<Player> players = tournament.getPlayers();
+        if (players.size() < 2) {
+            throw new IllegalArgumentException("Not enough players to perform a draw");
+        }
+
+        // Shuffle the players to ensure a random draw
+        Collections.shuffle(players);
+
+        // Create matches for every two players
+        List<Match> matches = new ArrayList<>();
+        for (int i = 0; i < players.size(); i += 2) {
+            if (i + 1 < players.size()) {
+                Player player1 = players.get(i);
+                Player player2 = players.get(i + 1);
+                Match match = new Match(tournament, player1, player2);
+                matches.add(match);
+            }
+        }
+
+        // Save all the matches
+        matchRepository.saveAll(matches);
+
+        // Return the matches
+        return matches;
     }
+
+
 
     @Override
     public Tournament recordMatchResult(Long tournamentId, Long matchId, String result) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'recordMatchResult'");
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+
+        // Find the match by its ID
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("Match not found"));
+
+        // Determine the winner based on the result
+        if (result.equalsIgnoreCase(match.getPlayer1().getName())) {
+            match.setWinner(match.getPlayer1());
+        } else if (result.equalsIgnoreCase(match.getPlayer2().getName())) {
+            match.setWinner(match.getPlayer2());
+        } else {
+            throw new IllegalArgumentException("Invalid result: winner not found");
+        }
+
+        // Update the match and save it
+        matchRepository.save(match);
+
+        // Return the updated tournament
+        return tournamentRepository.save(tournament);
     }
+    // @Override
+    // public Tournament addPlayerToTournament(Long tournamentId, Long playerId) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'addPlayerToTournament'");
+    // }
+
+    // @Override
+    // public List<Player> getPlayersInTournament(Long tournamentId) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'getPlayersInTournament'");
+    // }
+
+    // @Override
+    // public List<Match> performRandomDraw(Long tournamentId) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'performRandomDraw'");
+    // }
+
+    // @Override
+    // public Tournament recordMatchResult(Long tournamentId, Long matchId, String result) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'recordMatchResult'");
+    // }
 
     // @Override
     // public Tournament addPlayerToTournament(Long tournamentId, Long playerId) {

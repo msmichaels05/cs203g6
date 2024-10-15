@@ -4,17 +4,17 @@ import java.util.Arrays;
 import java.util.Collection;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import org.hibernate.mapping.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.amateuraces.player.Player;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.amateuraces.admin.*;
 
 import lombok.*;
 
@@ -25,7 +25,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-
+@Table(name = "users") 
 /* Implementations of UserDetails to provide user information to Spring Security, 
 e.g., what authorities (roles) are granted to the user and whether the account is enabled or not
 */
@@ -45,6 +45,14 @@ public class User implements UserDetails{
     @NotNull(message = "Authorities should not be null")
     // We define two roles/authorities: ROLE_USER or ROLE_ADMIN
     private String authorities = "ROLE_USER";
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Player player;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Admin admin;
 
     public User(String username, String password){
         this.username = username;

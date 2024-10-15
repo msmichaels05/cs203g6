@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
 /**
  * We only need this interface declaration
@@ -14,5 +15,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TournamentRepository extends JpaRepository<Tournament, Long> {
-
+    Optional<Tournament> findByName(String name);
 }

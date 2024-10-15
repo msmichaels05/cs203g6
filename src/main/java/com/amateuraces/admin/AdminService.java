@@ -41,16 +41,4 @@ public interface AdminService {
      */
     void deleteAdmin(Long id);
 
-    // /**
-    //  * Retrieve all tournaments available.
-    //  * @return List of tournaments.
-    //  */
-    // List<Tournament> viewTournaments();
-
-    /**
-     * Perform a randomized draw for a tournament.
-     * @param tournamentId the ID of the tournament
-     * @return List of matches resulting from the draw
-     */
-    List<Match> performRandomizedDraw(Long tournamentId);
 }
