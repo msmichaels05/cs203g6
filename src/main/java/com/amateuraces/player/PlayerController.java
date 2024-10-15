@@ -30,7 +30,6 @@ public class PlayerController {
 
 
     // Display Player Registration Form
-    @ResponseBody
     @GetMapping("/player/register")
     public String showPlayerRegistrationForm(@RequestParam("userId") Long userId, Model model) {
         // Fetch the user from the UserRepository by userId
@@ -50,7 +49,6 @@ public class PlayerController {
     }
 
     // Handle Player Registration Form Submission
-    @ResponseBody
     @PostMapping("/player/register")
     public String registerPlayer(@Valid @ModelAttribute Player player, Model model) {
         // Ensure that the player has a linked user before saving
