@@ -27,7 +27,20 @@ public class PlayerController {
         this.users = users;
     }
 
+    // Display all players
+    @GetMapping("/players")
+    public String showAllPlayers(Model model) {
+        List<Player> allPlayers = players.findAll(); // Retrieve all players from the database
+        model.addAttribute("players", allPlayers); // Add the list of players to the model
+        return "all_players"; // Return the Thymeleaf template for displaying players
+    }
 
+    // Get all players as JSON (returns data)
+    @GetMapping("/api/players")
+    @ResponseBody // Indicates the response should be JSON or raw data
+    public List<Player> getAllPlayers() {
+        return players.findAll(); // Return the list of players as JSON
+    }
 
     // Display Player Registration Form
     @GetMapping("/player/register")
@@ -41,11 +54,11 @@ public class PlayerController {
 
         // Create a new Player object and set the user
         Player player = new Player();
-        player.setUser(user);  // Link player to the user
+        player.setUser(user); // Link player to the user
 
         // Add the player object to the model to bind with the form
         model.addAttribute("player", player);
-        return "player_register";  // This should map to the player_register.html template
+        return "player_register"; // This should map to the player_register.html template
     }
 
     // Handle Player Registration Form Submission
@@ -61,18 +74,67 @@ public class PlayerController {
         User managedUser = users.findById(player.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException(player.getUser().getId()));
 
-        player.setUser(managedUser);  // Attach the managed user to the player
+        player.setUser(managedUser); // Attach the managed user to the player
 
         // Save the player to the repository
         players.save(player);
-        return "redirect:/home";  // Redirect to home page after successful player registration
+        return "redirect:/home"; // Redirect to home page after successful player registration
     }
 
-    @ResponseBody
-    @GetMapping("/players")
-    public List<Player> getAllPlayers() {
-        return players.findAll();
+    // Show edit form
+    @GetMapping("/player/edit/{id}")
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
+        Player player = players.findById(id)
+                .orElseThrow(() -> new PlayerNotFoundException(id));
+        model.addAttribute("player", player);
+        return "edit_player"; // You need a Thymeleaf template named edit_player.html
     }
+
+    // Handle edit form submission
+    @PostMapping("/player/edit/{id}")
+    public String editPlayer(@PathVariable("id") Long id, @ModelAttribute Player player) {
+        Player existingPlayer = players.findById(id)
+                .orElseThrow(() -> new PlayerNotFoundException(id));
+
+        existingPlayer.setName(player.getName());
+        existingPlayer.setAge(player.getAge());
+        existingPlayer.setEmail(player.getEmail());
+        existingPlayer.setPhoneNumber(player.getPhoneNumber());
+        existingPlayer.setGender(player.getGender());
+        existingPlayer.setMatchesPlayed(player.getMatchesPlayed());
+        existingPlayer.setMatchesWon(player.getMatchesWon());
+
+        players.save(existingPlayer); // Save updated player details
+
+        return "redirect:/players"; // Redirect back to the list of players
+    }
+
+    // Handle delete action
+    @PostMapping("/player/delete/{id}")
+    public String deletePlayer(@PathVariable("id") Long id) {
+        System.out.println("Deleting player with id: " + id);  // logging
+        Player player = players.findById(id)
+                .orElseThrow(() -> new PlayerNotFoundException(id));
+        players.delete(player); // Delete the player
+        return "redirect:/players"; // Redirect back to the list of players
+    }
+
+    @GetMapping("/player/profile/{id}")
+    public String getPlayerProfile(@PathVariable("id") Long id, Model model) {
+        // Find the player by ID
+        Player player = players.findById(id)
+                .orElseThrow(() -> new PlayerNotFoundException(id));
+    
+        // Add the player to the model
+        model.addAttribute("player", player);
+        
+        // The profile page can access the player's associated user and other details
+        return "player_profile";  // Return the Thymeleaf template for the player's profile
+    }
+
+
+
+
 
     /**
      * List all players in the system
@@ -87,6 +149,7 @@ public class PlayerController {
         }
         return players.findByUserId(userId);
     }
+
     @ResponseBody
     @PostMapping("/users/{userId}/players")
     public Player addPlayer(@PathVariable(value = "userId") Long userId, @Valid @RequestBody Player player) {
@@ -96,6 +159,7 @@ public class PlayerController {
             return players.save(player);
         }).orElseThrow(() -> new PlayerNotFoundException(userId));
     }
+
     @ResponseBody
     @PutMapping("/users/{userId}/players/{playerId}")
     public Player updatePlayer(@PathVariable(value = "userId") Long userId,

@@ -34,11 +34,11 @@ public class Player {
     private int matchesPlayed;
     private int matchesWon;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @MapsId
     @JoinColumn(name="user_id",nullable = false)
     private User user;

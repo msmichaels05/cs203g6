@@ -52,4 +52,9 @@ public class PlayerServiceImpl implements PlayerService {
     // If the player exists, delete them
     players.deleteById(id);
     }
+
+    @Override
+    public Player findByUserId(Long userId) {
+        return players.findByUserId(userId);
+    }
 }

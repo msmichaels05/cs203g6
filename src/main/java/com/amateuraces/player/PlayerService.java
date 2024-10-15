@@ -26,4 +26,6 @@ public interface PlayerService {
      * @param id
      */
     void deletePlayer(Long id);
+    Player findByUserId(Long userId);
+
 }
