@@ -37,7 +37,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Player addPlayer(Player player) {
         if (players.findByPhoneNumber(player.getPhoneNumber()).isPresent() ||
-            players.findByEmail(player.getEmail()).isPresent()) {
+            players.findByName(player.getName()).isPresent()) {
             return null;
         }
         return players.save(player);

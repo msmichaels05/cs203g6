@@ -2,7 +2,8 @@ package com.amateuraces.player;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,15 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.amateuraces.tournament.Tournament;
-import com.amateuraces.user.*;
+import com.amateuraces.user.User;
+import com.amateuraces.user.UserNotFoundException;
+import com.amateuraces.user.UserRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 
 @Controller
 public class PlayerController {
@@ -96,7 +93,6 @@ public class PlayerController {
 
         existingPlayer.setName(player.getName());
         existingPlayer.setAge(player.getAge());
-        existingPlayer.setEmail(player.getEmail());
         existingPlayer.setPhoneNumber(player.getPhoneNumber());
         existingPlayer.setGender(player.getGender());
         existingPlayer.setMatchesPlayed(player.getMatchesPlayed());

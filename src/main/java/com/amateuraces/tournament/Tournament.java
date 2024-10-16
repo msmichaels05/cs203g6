@@ -1,13 +1,18 @@
 package com.amateuraces.tournament;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import com.amateuraces.player.Player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import com.amateuraces.player.*;
+
 
 @Entity
 @Getter
@@ -15,7 +20,6 @@ import com.amateuraces.player.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class Tournament {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +31,17 @@ public class Tournament {
 
     private int ELOrequirement;
 
-    private int playerCount=0 ;
+    private int maxPlayers;
+
+    private int playerCount = 0;
+
+    private LocalDate startDate;
+    
+    private LocalDate endDate;
+
+    private String location;
+
+    private String description;
 
     @ManyToMany
     @JoinTable(
@@ -52,9 +66,16 @@ public class Tournament {
             return Objects.hash(id); // Hash based on 'id'
         }
 
-    // Constructor with wins and losses
-    public Tournament(String name, int ELOrequirement) {
+
+    public Tournament(String name, int maxPlayers, String location, int ELOrequirement, String description) {
         this.ELOrequirement = ELOrequirement;
+        this.name = name;
+        this.maxPlayers = maxPlayers;
+        this.location = location;
+        this.description = description;
+    }
+
+    public Tournament(String name) {
         this.name = name;
     }
 

@@ -1,19 +1,18 @@
 package com.amateuraces;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.amateuraces.player.Player;
@@ -54,17 +53,6 @@ public class PlayerServiceTest {
         verify(players).save(player);
     }
 
-    @Test
-    void addPlayer_NewEmail_ReturnSavedPlayer(){
-        Player player = new Player("test123@gmail.com");
-        when(players.save(any(Player.class))).thenReturn(player);
-        Player savedPlayer = playerService.addPlayer(player);
-        
-        assertNotNull(savedPlayer);
-        assertEquals(player.getEmail(),savedPlayer.getEmail());
-        verify(players).save(player);
-    }
-
     
     @Test
     void addPlayer_SamePhoneNumber_ReturnNull(){
@@ -80,23 +68,6 @@ public class PlayerServiceTest {
         assertNull(savedPlayer);
         
         verify(players).findByPhoneNumber(player.getPhoneNumber());
-        verify(players, never()).save(any(Player.class));
-    }
-
-    @Test
-    void addPlayer_SameEmail_ReturnNull(){
-        Player player = new Player();
-        player.setEmail("test123@gmail.com");
-        Player samePlayerEmail = new Player();
-        samePlayerEmail.setEmail("test123@gmail.com");
-
-        Optional<Player> sameEmail = Optional.of(samePlayerEmail);
-
-        when(players.findByEmail(player.getEmail())).thenReturn(sameEmail);
-        Player savedPlayer = playerService.addPlayer(player);
-        assertNull(savedPlayer);
-
-        verify(players).findByEmail(player.getEmail());
         verify(players, never()).save(any(Player.class));
     }
 

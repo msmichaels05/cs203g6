@@ -1,27 +1,15 @@
 package com.amateuraces.tournament;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import com.amateuraces.match.Match;
-import com.amateuraces.match.MatchNotFoundException;
 import com.amateuraces.player.Player;
-import com.amateuraces.player.PlayerNotFoundException;
 
 import jakarta.validation.Valid;
 
@@ -92,6 +80,12 @@ public class TournamentController {
         if (tournament != null) {
             tournament.setName(updatedTournament.getName());
             tournament.setELOrequirement(updatedTournament.getELOrequirement());
+            tournament.setMaxPlayers(updatedTournament.getMaxPlayers());
+            tournament.setStartDate(updatedTournament.getStartDate());
+            tournament.setEndDate(updatedTournament.getEndDate());
+            tournament.setLocation(updatedTournament.getLocation());
+            tournament.setDescription(updatedTournament.getDescription());
+
             tournamentService.updateTournament(id, tournament);
         }
         return "redirect:/tournaments";
@@ -103,8 +97,6 @@ public class TournamentController {
         tournamentService.deleteTournament(id);
         return "redirect:/tournaments";
     }
-
-    
 
     @GetMapping("/tournaments/{id}")
     public Tournament getTournament(@PathVariable Long id) {
