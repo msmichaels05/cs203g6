@@ -86,8 +86,8 @@ public class MatchServiceImpl implements MatchService {
         loser.updateWinsAndLosses(false);
 
         // Update ELO scores (optional, depends on your system)
-        winner.updateElo(loser.getElo(), true);
-        loser.updateElo(winner.getElo(), false);
+        match.updateElo(loser.getElo(), true);
+        match.updateElo(winner.getElo(), false);
 
         // Save the changes
         playerRepository.save(winner);

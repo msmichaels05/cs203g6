@@ -46,23 +46,27 @@ public class SecurityConfig {
                 .requestMatchers("/error").permitAll() // the default error page
                 .requestMatchers(HttpMethod.GET, "/users", "/users/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users/*/players").hasRole("USER")  
-                .requestMatchers(HttpMethod.POST, "/users/*/admins").hasRole("ADMIN")  
-                .requestMatchers(HttpMethod.GET, "/players").permitAll()
-                .requestMatchers(HttpMethod.GET, "/admins").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/users/*/admins").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/player/delete/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/players", "/api/players").permitAll()
+                .requestMatchers(HttpMethod.GET, "/admins").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/users/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyRole("USER","ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/users/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.GET, "/tournaments", "/tournaments/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/tournaments").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/tournaments/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/tournaments/*/players/*").permitAll()
+
+
 
                 .requestMatchers("/register", "/login", "/player/register/**").permitAll()
                 .requestMatchers("/home").permitAll()  // home is accessible to those with registered accounts
                 .requestMatchers("/h2-console/**").permitAll()  // Allow access to H2 Console
                 // note that Spring Security 6 secures all endpoints by default
                 // remove the below line after adding the required rules
-                .anyRequest().authenticated()  // All other requests require authentication
+                .anyRequest().permitAll()  // All other requests require authentication
             )
             // ensure that the application won’t create any session in our stateless REST APIs
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

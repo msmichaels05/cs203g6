@@ -1,58 +1,47 @@
 package com.amateuraces.admin;
 
-import com.amateuraces.match.Match;
-import com.amateuraces.tournament.Tournament;
-import com.amateuraces.tournament.TournamentService;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    private  AdminRepository adminRepository;
+    private  AdminRepository admins;
 
-    public AdminServiceImpl(AdminRepository adminRepository) {
-        this.adminRepository = adminRepository;
+    public AdminServiceImpl(AdminRepository admins) {
+        this.admins = admins;
     }
 
     // List all admins
     @Override
     public List<Admin> listAdmins() {
-        return adminRepository.findAll();
+        return admins.findAll();
     }
 
     // Get a single admin by ID
     @Override
     public Admin getAdmin(Long id) {
-        Optional<Admin> admin = adminRepository.findById(id);
-        return admin.orElseThrow(() -> new AdminNotFoundException(id)); // Throw exception if not found
+        return admins.findById(id).orElse(null);
     }
 
     // Add a new admin
     @Override
     public Admin addAdmin(Admin admin) {
         // Save the admin and return the saved admin object
-        return adminRepository.save(admin); // Assuming save returns Admin
+        return admins.save(admin); // Assuming save returns Admin
     }
 
     // Update an existing admin
     @Override
     public Admin updateAdmin(Long id, Admin newAdminInfo) {
-        return adminRepository.findById(id)
-            .map(existingAdmin -> {
-                existingAdmin.setName(newAdminInfo.getName()); // Update admin info (e.g., name)
-                existingAdmin.setEmail(newAdminInfo.getEmail());
-                return adminRepository.save(existingAdmin); // Save updated admin
-            })
-            .orElseThrow(() -> new AdminNotFoundException(id)); // Throw if not found
+            return admins.findById(id).map(admin -> {admin.setName(newAdminInfo.getName());
+                return admins.save(admin);
+            }).orElse(null);
     }
     @Override
     public void deleteAdmin(Long id) {
-        adminRepository.deleteById(id);
+        admins.deleteById(id);
     }
 
 }

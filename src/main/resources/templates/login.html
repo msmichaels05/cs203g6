@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Helvetica', Arial, sans-serif;
-            background-color: #e6f7ff;
+            background-color: #f0f8ff; /* Lighter background color to differentiate */
             margin: 0;
             display: flex;
             justify-content: center;
@@ -15,20 +15,37 @@
             height: 100vh;
         }
         .login-container {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            max-width: 360px;
+            background-color: #fff;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Slightly larger shadow for depth */
+            max-width: 400px;
             width: 100%;
-            border-left: 5px solid #0061a8;
-            border-right: 5px solid #0061a8;
+            border-top: 5px solid #003366; /* Darker blue on top */
+            border-bottom: 5px solid #003366;
+        }
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            width: 240px;
+            padding: 3px;
+            border: 1px solid #333;
+            /* Dark grey border for a professional look */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow for depth */
+            object-fit: fill;
+            background-color: #000000;
+            /* Keeps a white background behind the logo */
         }
         h2 {
             text-align: center;
-            color: #004b86;
+            color: #002244; /* Darker shade of blue */
             margin-bottom: 30px;
-            font-size: 24px;
+            font-size: 26px; /* Larger font size */
         }
         label {
             font-weight: bold;
@@ -39,41 +56,52 @@
         input[type="text"], input[type="password"] {
             width: 100%;
             padding: 12px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 15px;
+            border-radius: 6px;
+            font-size: 16px;
         }
         input[type="submit"] {
             width: 100%;
             padding: 12px;
-            background-color: #004b86;
+            background-color: #002244; /* Darker button background */
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             color: white;
             font-size: 18px;
             cursor: pointer;
         }
         input[type="submit"]:hover {
-            background-color: #003366;
+            background-color: #001833;
         }
         .login-container .switch-link {
             text-align: center;
-            margin-top: 25px;
+            margin-top: 20px;
         }
         .login-container .switch-link a {
-            color: #0061a8;
+            color: #002244; /* Darker blue for links */
             text-decoration: none;
         }
         .login-container .switch-link a:hover {
             text-decoration: underline;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
 <div class="login-container">
-    <h2>Login to Your Account</h2>
+
+    <div class="logo-container">
+        <!-- Logo -->
+        <img src="/images/amateuraces_logo.png" alt="Logo" class="logo"/>
+    </div>
+
+    <h2>Login</h2>
     
     <!-- Corrected login action URL -->
     <form th:action="@{/login}" method="post">
@@ -87,11 +115,11 @@
     </form>
     
     <div class="switch-link">
-        <p>New to the platform? <a th:href="@{/register}">Create an account</a>.</p>
+        <p>Don't have an account? <a th:href="@{/register}">Register here</a>.</p>
     </div>
 
     <div th:if="${error}">
-        <p style="color:red;" th:text="${error}"></p>
+        <p class="error-message" th:text="${error}"></p>
     </div>
 </div>
 

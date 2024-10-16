@@ -2,6 +2,8 @@ package com.amateuraces.player;
 
 import java.util.List;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,12 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.amateuraces.user.*;
-import jakarta.validation.Valid;
+import com.amateuraces.user.User;
+import com.amateuraces.user.UserNotFoundException;
+import com.amateuraces.user.UserRepository;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import jakarta.validation.Valid;
 
 @Controller
 public class PlayerController {
@@ -28,10 +29,15 @@ public class PlayerController {
         this.users = users;
     }
 
-
+    // Display all players
+    @GetMapping("/players")
+    public String showAllPlayers(Model model) {
+        List<Player> allPlayers = players.findAll(); // Retrieve all players from the database
+        model.addAttribute("players", allPlayers); // Add the list of players to the model
+        return "all_players"; // Return the Thymeleaf template for displaying players
+    }
 
     // Display Player Registration Form
-    @ResponseBody
     @GetMapping("/player/register")
     public String showPlayerRegistrationForm(@RequestParam("userId") Long userId, Model model) {
         // Fetch the user from the UserRepository by userId
@@ -43,15 +49,14 @@ public class PlayerController {
 
         // Create a new Player object and set the user
         Player player = new Player();
-        player.setUser(user);  // Link player to the user
+        player.setUser(user); // Link player to the user
 
         // Add the player object to the model to bind with the form
         model.addAttribute("player", player);
-        return "player_register";  // This should map to the player_register.html template
+        return "player_register"; // This should map to the player_register.html template
     }
 
     // Handle Player Registration Form Submission
-    @ResponseBody
     @PostMapping("/player/register")
     public String registerPlayer(@Valid @ModelAttribute Player player, Model model) {
         // Ensure that the player has a linked user before saving
@@ -64,16 +69,87 @@ public class PlayerController {
         User managedUser = users.findById(player.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException(player.getUser().getId()));
 
-        player.setUser(managedUser);  // Attach the managed user to the player
+        player.setUser(managedUser); // Attach the managed user to the player
 
         // Save the player to the repository
         players.save(player);
-        return "redirect:/home";  // Redirect to home page after successful player registration
+        return "redirect:/home"; // Redirect to home page after successful player registration
     }
 
+    // Show edit form
+    @GetMapping("/player/edit/{id}")
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
+        Player player = players.findById(id)
+                .orElseThrow(() -> new PlayerNotFoundException(id));
+        model.addAttribute("player", player);
+        return "edit_player"; // You need a Thymeleaf template named edit_player.html
+    }
+
+    // Handle edit form submission
+    @PostMapping("/player/edit/{id}")
+    public String editPlayer(@PathVariable("id") Long id, @ModelAttribute Player player) {
+        Player existingPlayer = players.findById(id)
+                .orElseThrow(() -> new PlayerNotFoundException(id));
+
+        existingPlayer.setName(player.getName());
+        existingPlayer.setAge(player.getAge());
+        existingPlayer.setPhoneNumber(player.getPhoneNumber());
+        existingPlayer.setGender(player.getGender());
+        existingPlayer.setMatchesPlayed(player.getMatchesPlayed());
+        existingPlayer.setMatchesWon(player.getMatchesWon());
+
+        players.save(existingPlayer); // Save updated player details
+
+        return "redirect:/players"; // Redirect back to the list of players
+    }
+
+    @PostMapping("/player/delete/{id}")
+    public String deletePlayer(@PathVariable("id") Long id) {
+        System.out.println("Deleting player with id: " + id); // Logging
+        Player player = players.findById(id)
+                .orElseThrow(() -> new PlayerNotFoundException(id));
+        players.delete(player); // Delete the player
+        return "redirect:/players"; // Redirect back to the list of players
+    }
+
+    // Get Player Profile
+    @GetMapping("/player/profile/{id}")
+    public String getPlayerProfile(@PathVariable("id") Long id, Model model) {
+        // Find the player by ID
+        Player player = players.findById(id)
+                .orElseThrow(() -> new PlayerNotFoundException(id));
+
+        // Add the player to the model
+        model.addAttribute("player", player);
+
+        // The profile page can access the player's associated user and other details
+        return "player_profile"; // Return the Thymeleaf template for the player's profile
+    }
+
+    @GetMapping("/player/add")
+    public String showAddPlayerForm(Model model) {
+        model.addAttribute("player", new Player()); // Add an empty Player object to bind with the form
+        return "add_player"; // Return the Thymeleaf template for adding a player
+    }
+
+    @PostMapping("/player/add")
+    public String addPlayer(@Valid @ModelAttribute Player player, Model model) {
+        // Assuming you want to link this new player to an existing user.
+        Long userId = 1L; // Replace with the actual ID of an existing user.
+        User user = users.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+    
+        // Assign the User to the Player
+        player.setUser(user);
+    
+        // Save the player to the repository
+        players.save(player); // Save the new player to the repository
+        return "redirect:/players"; // Redirect to player list after successful submission
+    }
+    
     @ResponseBody
-    @GetMapping("/players")
-    public List<Player> getAllPlayers() {
+    @GetMapping("/api/players")
+    public List<Player> listPlayers() {
         return players.findAll();
     }
 
@@ -90,6 +166,7 @@ public class PlayerController {
         }
         return players.findByUserId(userId);
     }
+
     @ResponseBody
     @PostMapping("/users/{userId}/players")
     public Player addPlayer(@PathVariable(value = "userId") Long userId, @Valid @RequestBody Player player) {
@@ -98,6 +175,7 @@ public class PlayerController {
             return players.save(player);
         }).orElseThrow(() -> new PlayerNotFoundException(userId));
     }
+
     @ResponseBody
     @PutMapping("/users/{userId}/players/{playerId}")
     public Player updatePlayer(@PathVariable(value = "userId") Long userId,
@@ -117,6 +195,40 @@ public class PlayerController {
             return players.save(player);
         }).orElseThrow(() -> new PlayerNotFoundException(playerId));
     }
+
+    // @ResponseBody
+    // @PostMapping("/users/{userId}/players")
+    // public Player addPlayer(@PathVariable(value = "userId") Long userId, @Valid
+    // @RequestBody Player player) {
+    // return users.findById(userId).map(user -> {
+    // player.setUser(user);
+    // return players.save(player);
+    // }).orElseThrow(() -> new PlayerNotFoundException(userId));
+    // }
+
+    // @ResponseBody
+    // @PostMapping("/users/{userId}/players/{playerId}/tournaments")
+    // public Tournament registerForTournament(@PathVariable(value = "userId") Long
+    // userId,
+    // @PathVariable(value = "playerId") Long playerId,
+    // @Valid @RequestBody Tournament tournamentId) {
+    // return users.findById(userId).map(user -> {
+    // return players.findById(playerId).map(player -> {
+
+    // })
+    // })
+    // return "";
+    // }
+
+    // @ResponseBody
+    // @PostMapping("/users/{userId}/players/{playerId}/tournaments")
+    // public Tournament registerForTournament(@PathVariable(value = "userId") Long
+    // userId,
+    // @PathVariable(value = "playerId") Long playerId,
+    // @Valid @RequestBody Tournament tournament) {
+    // return
+    // return "";
+    // }
 
     /**
      * Search for player with the given id
@@ -192,12 +304,6 @@ public class PlayerController {
     // @GetMapping("/tournaments")
     // public String viewTournaments(Model model) {
     // // List available tournaments
-    // return "";
-    // }
-
-    // @PostMapping("/tournaments/register")
-    // public String registerForTournament(@RequestParam String tournamentId) {
-    // // Register player for tournament
     // return "";
     // }
 

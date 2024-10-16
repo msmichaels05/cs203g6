@@ -79,6 +79,8 @@ public class UserController {
             return "redirect:/login"; // Redirect to login if not authenticated
         }
     }
+
+
     @ResponseBody
     @GetMapping("/users")
     public List<User> getUsers() {

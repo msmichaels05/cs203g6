@@ -59,4 +59,20 @@ public class Match {
         this.player1 = player1;
         this.player2 = player2;
     }
+
+    public Tournament getTournament() {
+        return tournament;
+    }
+
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
+    }
+
+     // Method to update ELO based on match result
+     public void updateElo(int opponentElo, boolean hasWon) {
+        int kFactor = 32;  // This could be adjusted based on your ranking system
+        double expectedScore = 1 / (1 + Math.pow(10, (opponentElo - this.elo) / 400.0));
+        int score = hasWon ? 1 : 0;
+        this.elo += kFactor * (score - expectedScore);
+    }
 }
