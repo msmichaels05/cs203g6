@@ -83,7 +83,7 @@ GET http://localhost:8080/users
 GET http://localhost:8080/api/players
 
 ### GET ADMIN
-GET http://localhost:8080/admins
+GET http://localhost:8080/admin
 Authorization: Basic admin goodpassword
 
 ### Tournament
@@ -109,7 +109,7 @@ Authorization: Basic username password
 GET http://localhost:8080/tournaments/1/players
 
 ### Tournament
-GET http://localhost:8080/tournaments
+GET http://localhost:8080/tournament
 
 
 
@@ -124,7 +124,7 @@ Authorization: Basic admin goodpassword
 
 
 ### UPDATE USER ONLY ALLOWED TO CHANGE PASSWORD
-PUT http://localhost:8080/users/2
+PUT http://localhost:8080/users/3
 Content-Type: application/json
 Authorization: Basic admin goodpassword
 
@@ -178,7 +178,7 @@ Authorization: Basic username password
 
 
 ###
-PUT http://localhost:8080/tournaments/2
+PUT http://localhost:8080/tournaments/1
 Content-Type: application/json
 Authorization: Basic admin goodpassword
 

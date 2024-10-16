@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/users/*/admins").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/player/delete/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/players", "/api/players").permitAll()
-                .requestMatchers(HttpMethod.GET, "/admins").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/admins").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyRole("USER","ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/users/*").hasAuthority("ROLE_ADMIN")
