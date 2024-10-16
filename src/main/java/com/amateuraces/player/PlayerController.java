@@ -2,6 +2,7 @@ package com.amateuraces.player;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +32,13 @@ public class PlayerController {
         this.users = users;
     }
 
-
+    // Display all players
+    @GetMapping("/players")
+    public String showAllPlayers(Model model) {
+        List<Player> allPlayers = players.findAll(); // Retrieve all players from the database
+        model.addAttribute("players", allPlayers); // Add the list of players to the model
+        return "all_players"; // Return the Thymeleaf template for displaying players
+    }
 
     // Display Player Registration Form
     @GetMapping("/player/register")
@@ -100,36 +107,55 @@ public class PlayerController {
         return "redirect:/players"; // Redirect back to the list of players
     }
 
-    // Handle delete action
     @PostMapping("/player/delete/{id}")
     public String deletePlayer(@PathVariable("id") Long id) {
-        System.out.println("Deleting player with id: " + id);  // logging
+        System.out.println("Deleting player with id: " + id); // Logging
         Player player = players.findById(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id));
         players.delete(player); // Delete the player
         return "redirect:/players"; // Redirect back to the list of players
     }
 
+    // Get Player Profile
     @GetMapping("/player/profile/{id}")
     public String getPlayerProfile(@PathVariable("id") Long id, Model model) {
         // Find the player by ID
         Player player = players.findById(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id));
-    
+
         // Add the player to the model
         model.addAttribute("player", player);
-        
+
         // The profile page can access the player's associated user and other details
-        return "player_profile";  // Return the Thymeleaf template for the player's profile
+        return "player_profile"; // Return the Thymeleaf template for the player's profile
     }
 
+    @GetMapping("/player/add")
+    public String showAddPlayerForm(Model model) {
+        model.addAttribute("player", new Player()); // Add an empty Player object to bind with the form
+        return "add_player"; // Return the Thymeleaf template for adding a player
+    }
 
+    @PostMapping("/player/add")
+    public String addPlayer(@Valid @ModelAttribute Player player, Model model) {
+        // Assuming you want to link this new player to an existing user.
+        Long userId = 1L; // Replace with the actual ID of an existing user.
+        User user = users.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+    
+        // Assign the User to the Player
+        player.setUser(user);
+    
+        // Save the player to the repository
+        players.save(player); // Save the new player to the repository
+        return "redirect:/players"; // Redirect to player list after successful submission
+    }
+    
     @ResponseBody
     @GetMapping("/api/players")
     public List<Player> listPlayers() {
         return players.findAll();
     }
-
 
     /**
      * List all players in the system
@@ -174,39 +200,40 @@ public class PlayerController {
         }).orElseThrow(() -> new PlayerNotFoundException(playerId));
     }
 
-
     // @ResponseBody
     // @PostMapping("/users/{userId}/players")
-    // public Player addPlayer(@PathVariable(value = "userId") Long userId, @Valid @RequestBody Player player) {
-    //     return users.findById(userId).map(user -> {
-    //         player.setUser(user);
-    //         return players.save(player);
-    //     }).orElseThrow(() -> new PlayerNotFoundException(userId));
+    // public Player addPlayer(@PathVariable(value = "userId") Long userId, @Valid
+    // @RequestBody Player player) {
+    // return users.findById(userId).map(user -> {
+    // player.setUser(user);
+    // return players.save(player);
+    // }).orElseThrow(() -> new PlayerNotFoundException(userId));
     // }
 
     // @ResponseBody
     // @PostMapping("/users/{userId}/players/{playerId}/tournaments")
-    // public Tournament registerForTournament(@PathVariable(value = "userId") Long userId,
-    //         @PathVariable(value = "playerId") Long playerId,
-    //         @Valid @RequestBody Tournament tournamentId) {
-    //         return users.findById(userId).map(user -> {
-    //             return players.findById(playerId).map(player -> {
+    // public Tournament registerForTournament(@PathVariable(value = "userId") Long
+    // userId,
+    // @PathVariable(value = "playerId") Long playerId,
+    // @Valid @RequestBody Tournament tournamentId) {
+    // return users.findById(userId).map(user -> {
+    // return players.findById(playerId).map(player -> {
 
-    //             })
-    //         })
-    //     return "";
+    // })
+    // })
+    // return "";
     // }
-
 
     // @ResponseBody
     // @PostMapping("/users/{userId}/players/{playerId}/tournaments")
-    // public Tournament registerForTournament(@PathVariable(value = "userId") Long userId,
-    //         @PathVariable(value = "playerId") Long playerId,
-    //         @Valid @RequestBody Tournament tournament) {
-    //         return 
-    //     return "";
+    // public Tournament registerForTournament(@PathVariable(value = "userId") Long
+    // userId,
+    // @PathVariable(value = "playerId") Long playerId,
+    // @Valid @RequestBody Tournament tournament) {
+    // return
+    // return "";
     // }
-    
+
     /**
      * Search for player with the given id
      * If there is no player with the given "id", throw a PlayerNotFoundException
@@ -283,8 +310,6 @@ public class PlayerController {
     // // List available tournaments
     // return "";
     // }
-
-
 
     // @GetMapping("/matches")
     // public String viewMatchSchedule(Model model) {

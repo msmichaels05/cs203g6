@@ -20,20 +20,17 @@
         .navbar {
             background-color: #002855;
             padding: 10px 30px;
-            /* Added padding for better alignment */
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: white;
             flex-wrap: wrap;
-            /* Enable wrapping for smaller screens */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .navbar img.logo {
             width: auto;
-            max-width: 200px;
-            /* Reduced logo size for a more balanced look */
+            max-width: 300px;
             padding: 3px;
             border: 2px solid #ffffff;
             border-radius: 5px;
@@ -59,13 +56,11 @@
 
         .navbar div a:last-child {
             background-color: #dc3545;
-            /* Logout button background */
             border-color: #dc3545;
         }
 
         .navbar div a:last-child:hover {
             background-color: #c82333;
-            /* Darker red for hover state */
             border-color: #c82333;
         }
 
@@ -76,20 +71,21 @@
             gap: 20px;
             padding: 40px;
             flex: 1;
-
         }
 
         .card {
             background-color: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            font-size: 18px;
-            margin-bottom: 10px;
+            font-size: 22px;
+            margin-bottom: 20px;
             color: #004b86;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         ul {
@@ -98,7 +94,7 @@
         }
 
         ul li {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: #333;
         }
 
@@ -109,33 +105,35 @@
         .headline-card img {
             max-width: 100%;
             height: auto;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            border-radius: 15px;
+            margin: 20px 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .headline-card img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         footer {
             background-color: #002855;
             color: white;
             text-align: center;
-            padding: 10px;
+            padding: 20px;
             width: 100%;
             margin-top: auto;
-            /* Push the footer to the bottom */
         }
-
 
         /* Media Queries for responsiveness */
         @media (max-width: 992px) {
             .container {
                 grid-template-columns: 1fr;
-                /* Stacks cards in one column on medium screens */
                 padding: 20px;
             }
 
             .navbar div {
                 display: flex;
                 flex-direction: column;
-                /* Stack navigation links vertically on medium screens */
                 align-items: center;
             }
 
@@ -147,7 +145,6 @@
         @media (max-width: 768px) {
             .navbar img.logo {
                 max-width: 120px;
-                /* Reduce logo size on small screens */
             }
 
             .container {
@@ -155,11 +152,11 @@
             }
 
             .card {
-                padding: 15px;
+                padding: 20px;
             }
 
             h2 {
-                font-size: 16px;
+                font-size: 18px;
             }
 
             ul li {
@@ -182,7 +179,7 @@
             }
 
             .card {
-                padding: 10px;
+                padding: 15px;
             }
         }
     </style>
@@ -192,13 +189,11 @@
 
     <!-- Navigation Bar -->
     <div class="navbar">
-        <!-- Replace text with logo -->
         <img src="/images/amateuraces_logo.png" alt="AmateurAces Logo" class="logo">
         <div>
             <a th:href="@{/home}">Home</a>
             <a th:href="@{/tournaments}">Tournaments</a>
             <a th:href="@{/players}">Players</a>
-            <!-- <a th:href="@{/player/profile/{id}(id=${player.id})}">Profile</a>  -->
             <a th:href="@{/logout}">Logout</a>
         </div>
     </div>
@@ -213,14 +208,23 @@
                 <li>Top Players</li>
                 <li>Previous Results</li>
                 <li>Top Coaches</li>
+                <li>Exclusive Interviews</li>
+                <li>Training Tips from Pros</li>
             </ul>
         </div>
 
         <!-- Headline Tournament Event Card -->
         <div class="card headline-card">
-            <img src="https://via.placeholder.com/500x250" alt="Tournament Event">
             <h2>Headline Tournament Event</h2>
             <p>Check out the latest highlights from the AmateurAces tournaments. Stay tuned for more updates!</p>
+            <div class="highlight-section">
+                <h3>Latest Scores and Updates</h3>
+                <img src="/images/tennis_scores.jpg" alt="Latest Scores">
+            </div>
+            <div class="highlight-section">
+                <h3>Top Performances</h3>
+                <img src="/images/top_performances.avif" alt="Top Performances">
+            </div>
         </div>
 
         <!-- Top Headlines Card -->
@@ -230,6 +234,8 @@
                 <li>Player X takes the lead</li>
                 <li>Surprising Upset in Finals</li>
                 <li>Top Players to Watch</li>
+                <li>Exclusive Tournament Insights</li>
+                <li>Upcoming Match Highlights</li>
             </ul>
         </div>
     </div>

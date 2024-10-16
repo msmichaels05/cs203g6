@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Tournament - AmateurAces</title>
+    <style>
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #004b86;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #004b86;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>Add Tournament - AmateurAces</h1>
+    </div>
+
+    <div class="container">
+        <h2>Add Tournament</h2>
+        <form th:action="@{/tournament/add}" method="post">
+            <div class="form-group">
+                <label for="name">Tournament Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter tournament name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="eloRequirement">ELO Requirement:</label>
+                <input type="number" id="eloRequirement" name="ELOrequirement" placeholder="Enter ELO requirement" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Add Tournament</button>
+        </form>
+    </div>
+
+</body>
+</html>
