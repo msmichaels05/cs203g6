@@ -2,16 +2,16 @@ package com.amateuraces.user;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
-// import org.apache.el.stream.Optional;
 import org.springframework.stereotype.Service;
 
 import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerRepository;
-import com.amateuraces.tournament.*;
+import com.amateuraces.tournament.Tournament;
+import com.amateuraces.tournament.TournamentRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,7 +41,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(User user) {
         Optional<User> sameUsernames = users.findByUsername(user.getUsername());
-        if (sameUsernames.isPresent()) {
+        Optional<User> sameEmail = users.findByEmail(user.getEmail());
+        if (sameUsernames.isPresent() || sameEmail.isPresent()) {
             return null; // or throw an exception
         }
         return users.save(user);

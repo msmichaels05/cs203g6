@@ -45,10 +45,6 @@ public class Player {
     @Size(min=8,max=16, message = "Phone number should be 8-16 numbers")
     private String phoneNumber;
 
-    @NotNull(message="Email cannot be empty")
-    @Size(max = 30, message= "Email cannot be more than 30 characters")
-    private String email;
-
     @NotNull(message = "Age cannot be empty")
     private int age;
 
@@ -83,10 +79,9 @@ public class Player {
     }
 
     // Constructor with wins and losses
-    public Player(String name, String gender, int age, String email, String phoneNumber, int matchesPlayed, int matchesWon) {
+    public Player(String name, String gender, int age, String phoneNumber, int matchesPlayed, int matchesWon) {
         this.age = age;
         this.gender = gender;
-        this.email = email;
         this.phoneNumber = phoneNumber;
         this.matchesPlayed = matchesPlayed;
         this.matchesWon = matchesWon;

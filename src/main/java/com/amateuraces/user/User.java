@@ -1,20 +1,31 @@
 package com.amateuraces.user;
 
-import java.util.*;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.amateuraces.admin.Admin;
 import com.amateuraces.player.Player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.amateuraces.admin.*;
 
-import lombok.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -35,6 +46,10 @@ public class User implements UserDetails {
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
+    @NotNull(message="Email cannot be empty")
+    @Size(max = 30, message= "Email cannot be more than 30 characters")
+    private String email;
+    
     @NotNull(message = "Username should not be null")
     @Size(min = 5, max = 20, message = "Username should be between 5 and 20 characters")
     private String username;
@@ -70,13 +85,25 @@ public class User implements UserDetails {
     //     return Objects.hash(id); // Generate hash code based on ID
     // }
 
+    public User(String email) {
+        this.email = email;
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
 
     }
 
-    public User(String username, String password, String authorities) {
+    public User(String email, String username, String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
+    public User(String email, String username, String password, String authorities) {
+        this.email = email;
         this.username = username;
         this.password = password;
         this.authorities = authorities;

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 public interface PlayerRepository extends JpaRepository <Player, Long>{
 Player findByUserId(Long userId);
 Optional<Player> findByIdAndUserId(Long id, Long userId);
-Optional<Player> findByEmail(String email);
+Optional<Player> findByName(String name);
 Optional<Player> findByPhoneNumber(String phoneNumber);
 
 

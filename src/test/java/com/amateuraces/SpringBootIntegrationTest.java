@@ -11,13 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.amateuraces.player.Player;
-import com.amateuraces.player.PlayerRepository;
 import com.amateuraces.user.User;
 import com.amateuraces.user.UserRepository;
 
@@ -62,9 +59,9 @@ class SpringBootIntegrationTest {
 
     @Test
 	public void deleteUser_ValidUserId_Success() throws Exception {
-		User user = users.save(new User("Timothy", "password"));
-		URI uri = new URI(baseUrl + port + "/users/" + user.getId().longValue());
-		users.save(new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+		User user = users.save(new User("timothy@gmail.com", "Timothy", "password"));
+		URI uri = new URI(baseUrl + port + "/users/" + user.getId());
+		users.save(new User("admin@gmail.com", "admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
 
 		ResponseEntity<Void> result = restTemplate.withBasicAuth("admin", "goodpassword")
 				.exchange(uri, HttpMethod.DELETE, null, Void.class);
