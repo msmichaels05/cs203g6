@@ -60,7 +60,7 @@ public class Player {
     private int matchesPlayed;
     private int matchesWon;
 
-    @ManyToMany(mappedBy = "players")
+    @ManyToMany(mappedBy = "players",cascade = CascadeType.PERSIST)
     @JsonIgnore
     private Set<Tournament> tournaments = new HashSet<>();
 

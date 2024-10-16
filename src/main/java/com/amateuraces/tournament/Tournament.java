@@ -66,6 +66,11 @@ public class Tournament {
         }
         return added;
     }
+
+    public void removePlayer(Player player) {
+        players.remove(player);
+        player.getTournaments().remove(this); // Also remove this tournament from the player's list
+    }
     // public boolean addPlayer(Player player){
     //     players.add(player);
     //     return true;

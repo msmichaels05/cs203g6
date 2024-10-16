@@ -1,32 +1,5 @@
-###
-GET http://localhost:8080/tournaments/1/players
-
-### POST Player to tournament
-POST http://localhost:8080/tournaments/1/players
-Authorization: Basic username password
-
-
-
-### GET ADMIN
-GET http://localhost:8080/admins
-Authorization: Basic admin goodpassword
-
-### GET Players
-GET http://localhost:8080/api/players
-
-### GET USERS
-
-GET http://localhost:8080/users
-
-### GET SPECIFIC PLAYER 
-GET http://localhost:8080/users/2/players
-
-### DELETE USER 
-
-DELETE http://localhost:8080/users/2
-Authorization: Basic admin goodpassword
-
-### POST NEW USER 
+### POST NEW USER IF NOT AUTHORIZED AUTHORIIES FIXED ROLE_USER
+# By right users would only key in username and password but in the event they try to change authority it will fail
 POST http://localhost:8080/users
 Content-Type: application/json
 
@@ -37,6 +10,118 @@ Content-Type: application/json
     "authorities":"ROLE_ADMIN"
     
 }
+
+### POST PLAYER INFO TO USER AFTER CREATION OF USER
+# Show that cannot create player for admin
+POST http://localhost:8080/users/1/players
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "name":"Alphabravo",
+    "phoneNumber" :"88888888",
+    "email" : "alphabravo@gmail.com",
+    "age" : 18,
+    "gender" : "Female"
+}
+
+### POST PLAYER INFO TO USER AFTER CREATION OF USER
+# Show that player can create 
+POST http://localhost:8080/users/2/players
+Content-Type: application/json
+Authorization: Basic betatester betatester
+
+{
+    "name":"Alphabravo",
+    "phoneNumber" :"88888888",
+    "email" : "alphabravo@gmail.com",
+    "age" : 18,
+    "gender" : "Female"
+}
+
+### POST PLAYER INFO TO USER AFTER CREATION OF USER
+# Show that player can create 
+POST http://localhost:8080/users/3/players
+Content-Type: application/json
+Authorization: Basic username password
+
+{
+    "name":"Alphabravo",
+    "phoneNumber" :"88888888",
+    "email" : "alphabravo@gmail.com",
+    "age" : 18,
+    "gender" : "Male"
+}
+
+### Showcase user cannot post in admin
+POST http://localhost:8080/users/1/admins
+Content-Type: application/json
+Authorization: Basic betatester betatester
+
+{
+    "name":"Alphabravo",
+    "phoneNumber" : "88888888",
+    "email" : 99
+}
+
+### POST ADMIN INFO TO USER AFTER CREATION OF USER
+POST http://localhost:8080/users/1/admins
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "name":"Alphabravo",
+    "phoneNumber" : "88888888",
+    "email" : 99
+}
+
+### GET USERS
+
+GET http://localhost:8080/users
+
+### GET Players
+GET http://localhost:8080/api/players
+
+### GET ADMIN
+GET http://localhost:8080/admins
+Authorization: Basic admin goodpassword
+
+### Tournament
+POST http://localhost:8080/tournaments
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+
+{
+    "name": "test",
+    "elorequirement": 100
+}
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic betatester betatester 
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username password 
+
+###
+GET http://localhost:8080/tournaments/1/players
+
+### Tournament
+GET http://localhost:8080/tournaments
+
+
+
+### GET SPECIFIC PLAYER 
+GET http://localhost:8080/users/2/players
+
+### DELETE USER 
+
+DELETE http://localhost:8080/users/2
+Authorization: Basic admin goodpassword
+
+
 
 ### UPDATE USER ONLY ALLOWED TO CHANGE PASSWORD
 PUT http://localhost:8080/users/2
@@ -77,7 +162,7 @@ Authorization: Basic admin goodpassword
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
-POST http://localhost:8080/users/2/players
+POST http://localhost:8080/users/3/players
 Content-Type: application/json
 Authorization: Basic username password
 
@@ -89,16 +174,7 @@ Authorization: Basic username password
     "gender" : "Female"
 }
 
-### POST ADMIN INFO TO USER AFTER CREATION OF USER
-POST http://localhost:8080/users/1/admins
-Content-Type: application/json
-Authorization: Basic admin goodpassword
 
-{
-    "name":"Alphabravo",
-    "phoneNumber" : "88888888",
-    "email" : 99
-}
 
 
 ###
@@ -115,26 +191,6 @@ Authorization: Basic admin goodpassword
 
 DELETE http://localhost:8080/tournaments/1
 Authorization: Basic admin goodpassword
-
-
-
-### Tournament
-GET http://localhost:8080/tournaments
-
-
-### Tournament
-POST http://localhost:8080/tournaments
-Content-Type: application/json
-Authorization: Basic admin goodpassword
-
-
-{
-    "name": "test",
-    "elorequirement": 100
-}
-
-
-
 
 ###
 POST http://localhost:8080/players

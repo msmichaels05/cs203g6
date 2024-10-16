@@ -17,14 +17,13 @@ public class TournamentServiceImpl implements TournamentService {
 
     private  TournamentRepository tournamentRepository;
     private PlayerRepository playerRepository;
-    private CustomUserDetailsService userDetailsService;
+    // private CustomUserDetailsService userDetailsService;
     // private  PlayerRepository playerRepository;
 
-    public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository,
-    CustomUserDetailsService userDetailsService) {
+    public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository) {
         this.tournamentRepository = tournamentRepository;
         this.playerRepository = playerRepository;
-        this.userDetailsService = userDetailsService;
+        // this.userDetailsService = userDetailsService;
     }
 
     @Override
