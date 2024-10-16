@@ -16,10 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)  // Defined port instead of random port
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class UserIntegrationTest {
 
-    private String baseUrl = "http://localhost:8080";  // Hardcoded base URL for local server
+    private String baseUrl = "http://localhost:8080";  // Ensure this matches your server port
 
     @Autowired
     private UserRepository userRepository;
@@ -91,11 +91,10 @@ public class UserIntegrationTest {
 
     @Test
     public void updateUser_InvalidUserId_Failure() throws Exception {
-        // Arrange: Prepare user data for a non-existing user (ID 9999)
+        // Act: Try to update a non-existing user (ID 9999)
         URI uri = new URI(baseUrl + "/users/9999");
         User updatedUserInfo = new User("updatedUser1", encoder.encode("newpassword"), "ROLE_USER");
 
-        // Act: Try to update a non-existing user
         ResponseEntity<User> result = testRestTemplate.withBasicAuth("admin", "goodpassword")
                 .exchange(uri, HttpMethod.PUT, new HttpEntity<>(updatedUserInfo), User.class);
 

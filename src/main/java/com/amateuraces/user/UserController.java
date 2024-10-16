@@ -3,7 +3,10 @@ package com.amateuraces.user;
 import java.util.List;
 
 import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +55,7 @@ public class UserController {
         return userService.addUser(user);
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @Valid @RequestBody User newUserInfo){
         User user = userService.updateUser(id, newUserInfo);
         if(user == null) throw new UserNotFoundException(id);
@@ -60,10 +63,16 @@ public class UserController {
         return user;
     }
 
-    @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable Long id){
-        if (userService.getUser(id) == null) throw new UserNotFoundException(id);
-        userService.deleteUser(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.ok().build();
+        }
+
+        catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
     /**
      * Using BCrypt encoder to encrypt the password for storage
