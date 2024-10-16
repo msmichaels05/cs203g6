@@ -128,9 +128,7 @@ import com.amateuraces.match.MatchRepository;
 import com.amateuraces.match.MatchServiceImpl;
 import com.amateuraces.player.PlayerRepository;
 import com.amateuraces.player.PlayerServiceImpl;
-import com.amateuraces.tournament.Tournament;
-import com.amateuraces.tournament.TournamentRepository;
-import com.amateuraces.tournament.TournamentServiceImpl;
+import com.amateuraces.tournament.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TournamentServiceTest {
