@@ -3,6 +3,7 @@ package com.amateuraces.admin;
 import java.util.List;
 
 import com.amateuraces.match.Match;
+import com.amateuraces.player.Player;
 import com.amateuraces.tournament.Tournament;
 
 public interface AdminService {
@@ -40,5 +41,8 @@ public interface AdminService {
      * @return status of the delete operation (1 for success, 0 for failure)
      */
     void deleteAdmin(Long id);
+
+    Admin findByUserId(Long userId);
+
 
 }

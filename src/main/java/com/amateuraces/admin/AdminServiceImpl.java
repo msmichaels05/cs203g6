@@ -1,6 +1,7 @@
 package com.amateuraces.admin;
 
 import com.amateuraces.match.Match;
+import com.amateuraces.player.Player;
 import com.amateuraces.tournament.Tournament;
 import com.amateuraces.tournament.TournamentService;
 
@@ -53,6 +54,11 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void deleteAdmin(Long id) {
         adminRepository.deleteById(id);
+    }
+
+    @Override
+    public Admin findByUserId(Long userId) {
+        return adminRepository.findByUserId(userId);
     }
 
 }

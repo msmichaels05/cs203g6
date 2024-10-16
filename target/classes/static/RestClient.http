@@ -92,7 +92,7 @@ Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 {
-    "name":"Alphabravo",
+    "name":"betabravo",
     "phoneNumber" : "88888888",
     "email" : 99
 }
