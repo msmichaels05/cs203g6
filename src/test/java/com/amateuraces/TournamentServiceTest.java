@@ -160,7 +160,7 @@ public class TournamentServiceTest {
 
     @Test
     void createTournament_NewName_ReturnSavedTournament() {
-        Tournament tournament = new Tournament("New Tournament", 1500);
+        Tournament tournament = new Tournament("New Tournament");
         when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournament);
         Tournament savedTournament = tournamentService.addTournament(tournament);
 
