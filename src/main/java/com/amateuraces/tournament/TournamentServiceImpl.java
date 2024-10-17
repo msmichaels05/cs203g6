@@ -7,20 +7,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.*;
 
+import com.amateuraces.match.*;
 import com.amateuraces.player.*;
 import com.amateuraces.user.*;
 
 @Service
 public class TournamentServiceImpl implements TournamentService {
 
-    private  TournamentRepository tournamentRepository;
+    private TournamentRepository tournamentRepository;
     private PlayerRepository playerRepository;
+    private MatchRepository matchRepository;
     // private CustomUserDetailsService userDetailsService;
     // private  PlayerRepository playerRepository;
 
-    public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository) {
+    public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository, MatchRepository matchRepository) {
         this.tournamentRepository = tournamentRepository;
         this.playerRepository = playerRepository;
+        this.matchRepository = matchRepository;
         // this.userDetailsService = userDetailsService;
     }
 
@@ -103,6 +106,24 @@ public class TournamentServiceImpl implements TournamentService {
             tournament.setELOrequirement(newTournamentInfo.getELOrequirement());
             return tournamentRepository.save(tournament);
         }).orElse(null);
+    }
+
+    @Transactional
+    @Override
+    public Tournament addMatchToTournament(Long tournamentId, Match match) {
+        // Retrieve the tournament by ID
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
+
+        // Set the tournament reference in the match
+        match.setTournament(tournament);
+    
+        // Add the match to the tournament's matches list
+        tournament.addMatch(match);
+
+        // Save both the match and the updated tournament
+        matchRepository.save(match); // Save the match first
+        return tournamentRepository.save(tournament); // Save the tournament after updating the match list
     }
 
     // @Override
@@ -274,14 +295,4 @@ public class TournamentServiceImpl implements TournamentService {
     // }
     // return null; // Or throw an exception
     // }
-
-    @Override
-    public void deleteTournament(Long tournamentId) {
-        // Check if the match exists before attempting to delete
-        Tournament tournament = tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
-
-        // If the match exists, delete them
-        tournamentRepository.deleteById(tournamentId);
-    }
 }

@@ -59,6 +59,13 @@ public interface TournamentService {
     //  */
     Set<Player> getPlayersInTournament(Long tournamentId);
 
+    /**
+     * Add a match to the tournament.
+     * @param tournamentId The ID of the tournament.
+     * @param match The match to be added.
+     * @return The updated tournament with the match added.
+     */
+    Tournament addMatchToTournament(Long tournamentId, Match match);
 
 
     // /**

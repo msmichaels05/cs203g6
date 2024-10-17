@@ -30,20 +30,20 @@
 //         Player player1 = new Player("player 1");
 //         Player player2 = new Player("player 2");
 //         Match match = new Match(tournament, player1, player2);
-    
+
 //         // Ensure the match and tournament are found
 //         when(tournamentRepository.findById(any(Long.class))).thenReturn(Optional.of(tournament));
 //         when(matches.findById(any(Long.class))).thenReturn(Optional.of(match));
-    
+
 //         // Mock saving the match and tournament
 //         when(matches.save(any(Match.class))).thenReturn(match);
 //         when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournament);
-    
+
 //         Tournament updatedTournament = tournamentService.recordMatchResult(10L, 1L, "Player 1");
-    
+
 //         assertNotNull(updatedTournament);
 //         assertEquals(player1, match.getWinner());
-    
+
 //         verify(matches).save(match);
 //         verify(tournamentRepository).save(tournament);
 //     }
@@ -124,10 +124,8 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.amateuraces.match.MatchRepository;
-import com.amateuraces.match.MatchServiceImpl;
-import com.amateuraces.player.PlayerRepository;
-import com.amateuraces.player.PlayerServiceImpl;
+import com.amateuraces.match.*;
+import com.amateuraces.player.*;
 import com.amateuraces.tournament.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -171,26 +169,27 @@ public class TournamentServiceTest {
 
     // @Test
     // void addPlayerToTournament_ValidTournamentAndPlayer_ReturnPlayerList() {
-    //     Player player1 = new Player("player 1");
-    //     Player player2 = new Player("player 2");
-    //     Tournament tournament = new Tournament("Tournament 1", 1500);
+    // Player player1 = new Player("player 1");
+    // Player player2 = new Player("player 2");
+    // Tournament tournament = new Tournament("Tournament 1", 1500);
 
-    //     when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
-    //     when(players.findById(1L)).thenReturn(Optional.of(player1));
-    //     when(players.findById(2L)).thenReturn(Optional.of(player2));
+    // when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
+    // when(players.findById(1L)).thenReturn(Optional.of(player1));
+    // when(players.findById(2L)).thenReturn(Optional.of(player2));
 
-    //     tournamentService.addPlayerToTournament(1L, 1L); // Add player 1
-    //     tournamentService.addPlayerToTournament(1L, 2L); // Add player 2
-    //     List<Player> playersInTournament = tournament.getPlayers(); // Get players in tournament
+    // tournamentService.addPlayerToTournament(1L, 1L); // Add player 1
+    // tournamentService.addPlayerToTournament(1L, 2L); // Add player 2
+    // List<Player> playersInTournament = tournament.getPlayers(); // Get players in
+    // tournament
 
-    //     assertNotNull(playersInTournament);
-    //     assertEquals(2, playersInTournament.size());
-    //     assertTrue(playersInTournament.contains(player1));
-    //     assertTrue(playersInTournament.contains(player2));
+    // assertNotNull(playersInTournament);
+    // assertEquals(2, playersInTournament.size());
+    // assertTrue(playersInTournament.contains(player1));
+    // assertTrue(playersInTournament.contains(player2));
 
-    //     verify(tournamentRepository, times(2)).findById(1L);
-    //     verify(players).findById(1L);
-    //     verify(players).findById(2L);
+    // verify(tournamentRepository, times(2)).findById(1L);
+    // verify(players).findById(1L);
+    // verify(players).findById(2L);
     // }
 
     @Test
@@ -216,60 +215,91 @@ public class TournamentServiceTest {
         verify(tournamentRepository).save(existingTournament);
     }
 
-//     @Test
-//     void recordMatchResult_ValidMatch_ReturnUpdatedTournament() {
-//         Tournament tournament = new Tournament("Test Tournament", 1);
-//         Player player1 = new Player("player 1");
-//         Player player2 = new Player("player 2");
-//         Match match = new Match(tournament, player1, player2);
-    
-//         // Ensure the match and tournament are found
-//         when(tournamentRepository.findById(any(Long.class))).thenReturn(Optional.of(tournament));
-//         when(matches.findById(any(Long.class))).thenReturn(Optional.of(match));
-    
-//         // Mock saving the match and tournament
-//         when(matches.save(any(Match.class))).thenReturn(match);
-//         when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournament);
-    
-//         Tournament updatedTournament = tournamentService.recordMatchResult(10L, 1L, "Player 1");
-    
-//         assertNotNull(updatedTournament);
-//         assertEquals(player1, match.getWinner());
-    
-//         verify(matches).save(match);
-//         verify(tournamentRepository).save(tournament);
-//     }
+    @Test
+    void addMatchToTournament_ValidTournamentAndMatch_ShouldAddMatch() {
+        // Arrange: Create a sample tournament and match
+        Tournament tournament = new Tournament();
+        tournament.setId(1L);
+        tournament.setName("Test Tournament");
 
-//     @Test
-//     void performRandomDraw_TournamentWithPlayers_ReturnMatches() {
-//         Tournament tournament = new Tournament("Test Tournament", 1);
+        Match match = new Match();
+        match.setId(1L);
+        match.setPlayer1(new Player());
+        match.setPlayer2(new Player());
 
-//         Player player1 = new Player("Player 1");
-//         Player player2 = new Player("Player 2");
-//         Player player3 = new Player("Player 3");
-//         Player player4 = new Player("Player 4");
+        // Mocking the behavior of tournamentRepository and matchRepository
+        when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
+        when(matches.save(any(Match.class))).thenReturn(match);
+        when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournament);
 
-//         tournament.addPlayer(player1);
-//         tournament.addPlayer(player2);
-//         tournament.addPlayer(player3);
-//         tournament.addPlayer(player4);
+        // Act: Call the method to add a match to the tournament
+        Tournament updatedTournament = tournamentService.addMatchToTournament(1L, match);
 
-//         // Mock finding the tournament
-//         when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
+        // Assert: Verify the match was added and the repositories were used
+        assertNotNull(updatedTournament);
+        assertEquals(1, updatedTournament.getMatches().size()); // Ensure the match was added
+        assertEquals(tournament.getId(), match.getTournament().getId()); // Ensure match's tournament is set
 
-//         // Mock the matches returned from the repository
-//         List<Match> mockMatches = Arrays.asList(
-//                 new Match(tournament, player1, player2),
-//                 new Match(tournament, player3, player4));
+        verify(tournamentRepository).findById(1L);
+        verify(matches).save(match);
+        verify(tournamentRepository).save(tournament);
+    }
 
-//         // Mock the saveAll call to return the created matches
-//         when(matches.saveAll(anyList())).thenReturn(mockMatches);
+    // @Test
+    // void recordMatchResult_ValidMatch_ReturnUpdatedTournament() {
+    // Tournament tournament = new Tournament("Test Tournament", 1);
+    // Player player1 = new Player("player 1");
+    // Player player2 = new Player("player 2");
+    // Match match = new Match(tournament, player1, player2);
 
-//         // Perform the random draw
-//         List<Match> returnedMatches = tournamentService.performRandomDraw(1L);
+    // // Ensure the match and tournament are found
+    // when(tournamentRepository.findById(any(Long.class))).thenReturn(Optional.of(tournament));
+    // when(matches.findById(any(Long.class))).thenReturn(Optional.of(match));
 
-//         // Assert that the correct number of matches were returned
-//         assertEquals(2, returnedMatches.size());
-//         verify(matches).saveAll(anyList());
-//     }
+    // // Mock saving the match and tournament
+    // when(matches.save(any(Match.class))).thenReturn(match);
+    // when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournament);
+
+    // Tournament updatedTournament = tournamentService.recordMatchResult(10L, 1L,
+    // "Player 1");
+
+    // assertNotNull(updatedTournament);
+    // assertEquals(player1, match.getWinner());
+
+    // verify(matches).save(match);
+    // verify(tournamentRepository).save(tournament);
+    // }
+
+    // @Test
+    // void performRandomDraw_TournamentWithPlayers_ReturnMatches() {
+    // Tournament tournament = new Tournament("Test Tournament", 1);
+
+    // Player player1 = new Player("Player 1");
+    // Player player2 = new Player("Player 2");
+    // Player player3 = new Player("Player 3");
+    // Player player4 = new Player("Player 4");
+
+    // tournament.addPlayer(player1);
+    // tournament.addPlayer(player2);
+    // tournament.addPlayer(player3);
+    // tournament.addPlayer(player4);
+
+    // // Mock finding the tournament
+    // when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
+
+    // // Mock the matches returned from the repository
+    // List<Match> mockMatches = Arrays.asList(
+    // new Match(tournament, player1, player2),
+    // new Match(tournament, player3, player4));
+
+    // // Mock the saveAll call to return the created matches
+    // when(matches.saveAll(anyList())).thenReturn(mockMatches);
+
+    // // Perform the random draw
+    // List<Match> returnedMatches = tournamentService.performRandomDraw(1L);
+
+    // // Assert that the correct number of matches were returned
+    // assertEquals(2, returnedMatches.size());
+    // verify(matches).saveAll(anyList());
+    // }
 }

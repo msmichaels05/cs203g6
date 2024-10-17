@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.amateuraces.match.*;
 import com.amateuraces.player.Player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -42,6 +43,9 @@ public class Tournament {
     private String location;
 
     private String description;
+
+    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Match> matches = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -92,6 +96,17 @@ public class Tournament {
         players.remove(player);
         player.getTournaments().remove(this); // Also remove this tournament from the player's list
     }
+
+    public void addMatch(Match match) {
+        matches.add(match);
+        match.setTournament(this); // Ensure the bidirectional relationship is maintained
+    }
+
+    public void removeMatch(Match match) {
+        matches.remove(match);
+        match.setTournament(null); // Remove the tournament reference from the match
+    }
+
     // public boolean addPlayer(Player player){
     //     players.add(player);
     //     return true;
