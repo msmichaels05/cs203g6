@@ -27,8 +27,8 @@ public class AmateurAces {
         // JPA user repository init
         UserRepository users = ctx.getBean(UserRepository.class);
         BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
-        // System.out.println("[Add user]: " + users.save(
-        //     new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN")).getUsername());
+        System.out.println("[Add user]: " + users.save(
+            new User("admin@helpdesk.com","admin", encoder.encode("goodpassword"), "ROLE_ADMIN")).getUsername());
         // System.out.println("[Add user]: " + users.save(
         //     new User("betatester" , encoder.encode("betatester"), "ROLE_USER")).getUsername());
 

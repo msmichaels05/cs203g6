@@ -1,7 +1,6 @@
 package com.amateuraces.user;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,12 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter
@@ -64,20 +58,20 @@ public class User implements UserDetails {
     @JsonIgnore
     private Admin admin;
 
-    // @Override
-    // public boolean equals(Object o) {
-    //     if (this == o)
-    //         return true;
-    //     if (!(o instanceof User))
-    //         return false;
-    //     User user = (User) o;
-    //     return id != null && id.equals(user.id); // Compare IDs
-    // }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof User))
+            return false;
+        User user = (User) o;
+        return id != null && id.equals(user.id); // Compare IDs
+    }
 
-    // @Override
-    // public int hashCode() {
-    //     return Objects.hash(id); // Generate hash code based on ID
-    // }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Generate hash code based on ID
+    }
 
     public User(String email) {
         this.email = email;
@@ -93,7 +87,6 @@ public class User implements UserDetails {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.authorities = authorities;
     }
 
     public User(String email, String username, String password, String authorities) {

@@ -52,19 +52,19 @@ public class Tournament {
     @JsonIgnore
     private Set<Player> players = new HashSet<>();
 
-        // Implement equals and hashCode
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Tournament)) return false;
-            Tournament tournament = (Tournament) o;
-            return Objects.equals(id, tournament.id); // Compare based on 'id'
-        }
+        // // Implement equals and hashCode
+        // @Override
+        // public boolean equals(Object o) {
+        //     if (this == o) return true;
+        //     if (!(o instanceof Tournament)) return false;
+        //     Tournament tournament = (Tournament) o;
+        //     return Objects.equals(id, tournament.id); // Compare based on 'id'
+        // }
     
-        @Override
-        public int hashCode() {
-            return Objects.hash(id); // Hash based on 'id'
-        }
+        // @Override
+        // public int hashCode() {
+        //     return Objects.hash(id); // Hash based on 'id'
+        // }
 
 
     public Tournament(String name, int maxPlayers, String location, int ELOrequirement, String description) {

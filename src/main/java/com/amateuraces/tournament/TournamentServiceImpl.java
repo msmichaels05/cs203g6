@@ -40,6 +40,11 @@ public class TournamentServiceImpl implements TournamentService {
         if (tournament.getName()==null || tournament.getName().isEmpty()){
             throw new TournamentNotFoundException(tournament.getId());
         }
+
+        // Check if a tournament with the same name already exists
+        if (tournamentRepository.findByName(tournament.getName()).isPresent()) {
+            throw new ExistingTournamentException("Tournament with this name already exists");
+        }
         return tournamentRepository.save(tournament);
     }
 
@@ -70,16 +75,16 @@ public class TournamentServiceImpl implements TournamentService {
     
             // Now you can find the player by userId
             Player player = playerRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("Player not found for User ID: " + userId));
+                    .orElseThrow(() -> new PlayerNotFoundException("Player not registered"));
     
             // Continue with your logic to join the tournament...
             Tournament tournament = tournamentRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Tournament not found for ID: " + id));
+                    .orElseThrow(() -> new TournamentNotFoundException(id));
     
             tournament.getPlayers().add(player);
             tournamentRepository.save(tournament);
         } else {
-            throw new RuntimeException("User not authenticated or not of type User");
+            throw new UserAuthenticationException();
         }
     }
     

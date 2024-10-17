@@ -12,6 +12,7 @@ import com.amateuraces.tournament.Tournament;
 import com.amateuraces.user.*;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 /*This implementation is meant for business logic,which could be added later*Currently,it does not have much in terms of the business logic yet*/
 
@@ -34,15 +35,12 @@ public class PlayerServiceImpl implements PlayerService {
         return players.findById(id).orElse(null);
     }
 
+    @Transactional
     @Override
     public Player addPlayer(Player player) {
-        if (players.findByPhoneNumber(player.getPhoneNumber()).isPresent() ||
-            players.findByName(player.getName()).isPresent()) {
-            return null;
-        }
         return players.save(player);
     }
-    
+
     @Override
     public Player updatePlayer(Long id, Player newPlayerInfo) {
         return players.findById(id).map(player -> {player.setName(newPlayerInfo.getName());

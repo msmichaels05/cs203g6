@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.amateuraces.user.ExistingUserException;
 import com.amateuraces.user.User;
 import com.amateuraces.user.UserNotFoundException;
 import com.amateuraces.user.UserRepository;
@@ -170,11 +171,26 @@ public class PlayerController {
     @ResponseBody
     @PostMapping("/users/{userId}/players")
     public Player addPlayer(@PathVariable(value = "userId") Long userId, @Valid @RequestBody Player player) {
-        return users.findById(userId).map(user -> {
-            player.setUser(user);
-            return players.save(player);
-        }).orElseThrow(() -> new PlayerNotFoundException(userId));
+        // Retrieve the user and check for existence
+        User user = users.findById(userId)
+                .orElseThrow(() -> new PlayerNotFoundException(userId));
+    
+        player.setUser(user);
+    
+        // Check for duplicates based on user association
+        if (players.findOptionalByUserId(userId).isPresent()) {
+                throw new ExistingUserException("Player already exists for this user");
+        }
+        // Check for duplicates by phone number or name
+        if (players.findByPhoneNumber(player.getPhoneNumber()).isPresent() || 
+            players.findByName(player.getName()).isPresent()) {
+            throw new ExistingUserException("Player with this phone number or name already exists");
+        }
+    
+        // Save and return the new player
+        return players.save(player);
     }
+    
 
     @ResponseBody
     @PutMapping("/users/{userId}/players/{playerId}")

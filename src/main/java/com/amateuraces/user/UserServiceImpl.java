@@ -42,8 +42,12 @@ public class UserServiceImpl implements UserService {
     public User addUser(User user) {
         Optional<User> sameUsernames = users.findByUsername(user.getUsername());
         Optional<User> sameEmail = users.findByEmail(user.getEmail());
-        if (sameUsernames.isPresent() || sameEmail.isPresent()) {
-            return null; // or throw an exception
+        if (sameUsernames.isPresent() && sameEmail.isPresent()){
+            throw new ExistingUserException("Username and Email has been used");
+        }if (sameUsernames.isPresent()) {
+            throw new ExistingUserException("Username has been used");
+        } if(sameEmail.isPresent()){
+            throw new ExistingUserException("Email has been used");
         }
         return users.save(user);
     }

@@ -17,9 +17,9 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generate ID
     private Long id;
-    @NotNull()
+    @NotNull(message = "name required")
     private String name;
-    private String email;
+    @NotNull(message = "phone number required")
     private String phoneNumber;
 
     @OneToOne

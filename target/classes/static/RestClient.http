@@ -5,10 +5,22 @@ Content-Type: application/json
 
 
 {
+    "username": "betatester",
+    "email": "betatester@email.com",
+    "password": "betatester"   
+}
+
+
+### POST NEW USER IF NOT AUTHORIZED AUTHORIIES FIXED ROLE_USER
+# By right users would only key in username and password but in the event they try to change authority it will fail
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
     "username": "username",
-    "password": "password",
-    "authorities":"ROLE_ADMIN"
-    
+    "email": "user@email.com",
+    "password": "betatester"   
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -29,12 +41,12 @@ Authorization: Basic admin goodpassword
 # Show that player can create 
 POST http://localhost:8080/users/2/players
 Content-Type: application/json
-Authorization: Basic betatester betatester
+Authorization: Basic username betatester
 
 {
-    "name":"Alphabravo",
-    "phoneNumber" :"88888888",
-    "email" : "alphabravo@gmail.com",
+    "name":"Alpha",
+    "phoneNumber" :"12345678",
+    "email" : "alphabo@gmail.com",
     "age" : 18,
     "gender" : "Female"
 }
@@ -43,7 +55,7 @@ Authorization: Basic betatester betatester
 # Show that player can create 
 POST http://localhost:8080/users/3/players
 Content-Type: application/json
-Authorization: Basic username password
+Authorization: Basic betatester betatester
 
 {
     "name":"Alphabravo",
@@ -60,8 +72,7 @@ Authorization: Basic betatester betatester
 
 {
     "name":"Alphabravo",
-    "phoneNumber" : "88888888",
-    "email" : 99
+    "phoneNumber" : "88888888"
 }
 
 ### POST ADMIN INFO TO USER AFTER CREATION OF USER
@@ -71,8 +82,7 @@ Authorization: Basic admin goodpassword
 
 {
     "name":"Alphabravo",
-    "phoneNumber" : "88888888",
-    "email" : 99
+    "phoneNumber" : "88888888"
 }
 
 ### GET USERS
@@ -99,11 +109,11 @@ Authorization: Basic admin goodpassword
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
-Authorization: Basic betatester betatester 
+Authorization: Basic username betatester 
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
-Authorization: Basic username password 
+Authorization: Basic admin goodpassword 
 
 ###
 GET http://localhost:8080/tournaments/1/players
@@ -118,7 +128,7 @@ GET http://localhost:8080/users/2/players
 
 ### DELETE USER 
 
-DELETE http://localhost:8080/users/2
+DELETE http://localhost:8080/users/3
 Authorization: Basic admin goodpassword
 
 

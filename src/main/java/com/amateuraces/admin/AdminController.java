@@ -76,7 +76,6 @@ public String updateAdmin(@PathVariable Long id, @Valid @ModelAttribute Admin ad
     }
 
     existingAdmin.setName(admin.getName());
-    existingAdmin.setEmail(admin.getEmail());
     existingAdmin.setPhoneNumber(admin.getPhoneNumber());      
     admins.save(existingAdmin); // Save updated admin details
     
@@ -130,9 +129,20 @@ public String updateAdmin(@PathVariable Long id, @Valid @ModelAttribute Admin ad
     @ResponseBody
     @PostMapping("/users/{userId}/admins")
     public Admin addAdmin(@PathVariable(value = "userId") Long userId, @Valid @RequestBody Admin admin) {
-        return users.findById(userId).map(user -> {
-            admin.setUser(user);
-            return admins.save(admin);
-        }).orElseThrow(() -> new AdminNotFoundException(userId));
-    }
+        User user = users.findById(userId)
+                    .orElseThrow(() -> new AdminNotFoundException(userId));
+        
+        admin.setUser(user);
+
+        if(admins.findOptionalByUserId(userId).isPresent()){
+            throw new ExistingUserException("Admin already exists");
+        }
+            // Check for duplicates by phone number or name
+        if (admins.findByPhoneNumber(admin.getPhoneNumber()).isPresent() || 
+            admins.findByName(admin.getName()).isPresent()) {
+                throw new ExistingUserException("Admin with this phone number or name already exists");
+        }
+        return admins.save(admin);
+        }
 }
+
