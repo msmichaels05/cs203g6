@@ -1,0 +1,13 @@
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/Week4Application.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/book/Book.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/book/BookClient.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/book/BookController.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/book/BookNotFoundException.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/book/BookRepository.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/book/BookService.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/book/BookServiceImpl.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/book/JdbcBookRepository.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/player/JdbcPlayerRepository.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/player/Player.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/player/PlayerController.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/player/PlayerRepository.java
