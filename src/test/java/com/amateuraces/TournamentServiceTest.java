@@ -140,7 +140,10 @@ public class TournamentServiceTest {
     private PlayerRepository players;
 
     @Mock
-    private MatchRepository matches;
+    private MatchRepositoryIncomplete incompleteMatches;
+
+    @Mock
+    private MatchRepositoryCompleted completedMatches;
 
     @InjectMocks
     private TournamentServiceImpl tournamentService;
@@ -232,13 +235,13 @@ public class TournamentServiceTest {
 
         // Mocking the behavior of tournamentRepository and matchRepository
         when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
-        when(matches.save(any(Match.class))).thenReturn(match);
+        when(incompleteMatches.save(any(Match.class))).thenReturn(match);
 
         // Act: Call the method to add the match to the tournament
         tournamentService.addMatchToTournament(1L, match);
 
         // Assert: Check that the match has been saved and added to the tournament
-        verify(matches).save(match);
+        verify(incompleteMatches).save(match);
         verify(tournamentRepository).save(tournament);
     }
 
