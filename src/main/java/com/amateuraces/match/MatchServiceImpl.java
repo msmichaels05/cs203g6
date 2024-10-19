@@ -17,7 +17,8 @@ public class MatchServiceImpl implements MatchService {
     private final MatchRepositoryIncomplete incompleteMatches;
     private final PlayerRepository players;
 
-    public MatchServiceImpl(MatchRepositoryCompleted completedMatches, MatchRepositoryIncomplete incompleteMatches ,PlayerRepository players) {
+    public MatchServiceImpl(MatchRepositoryCompleted completedMatches, MatchRepositoryIncomplete incompleteMatches,
+            PlayerRepository players) {
         this.completedMatches = completedMatches;
         this.incompleteMatches = incompleteMatches;
         this.players = players;
@@ -50,10 +51,10 @@ public class MatchServiceImpl implements MatchService {
 
     // @Override
     // public Match updateMatch(Long id, Match newMatchInfo) {
-    //     return incompleteMatches.findById(id).map(match -> {
-    //         match.setWinner(newMatchInfo.getWinner());
-    //         return completedMatches.save(match);
-    //     }).orElse(null);
+    // return incompleteMatches.findById(id).map(match -> {
+    // match.setWinner(newMatchInfo.getWinner());
+    // return completedMatches.save(match);
+    // }).orElse(null);
     // }
 
     @Override
@@ -78,8 +79,19 @@ public class MatchServiceImpl implements MatchService {
         Player loser = players.findById(loserId)
                 .orElseThrow(() -> new PlayerNotFoundException(loserId));
 
+        if (!match.isPlayerInvolved(winner)) {
+            throw new PlayerNotPartOfMatchException(winnerId, matchId); // If either player is not part of the match
+        }
+
+        if (!match.isPlayerInvolved(loser)) {
+            throw new PlayerNotPartOfMatchException(loserId, matchId); // If either player is not part of the match
+        }
+
         // Update the match result
         match.setMatchResult(winner, loser, score);
+
+        // Update the match status to completed
+        match.setCompleted(true);
 
         // Update both players' statistics
         winner.updateWinsAndLosses(true);
@@ -94,5 +106,54 @@ public class MatchServiceImpl implements MatchService {
         players.save(loser);
 
         return completedMatches.save(match); // Persist the match result
+    }
+
+    @Override
+    public Match updateRecordMatchScore(Long matchId, String newScore) {
+        Match match = completedMatches.findById(matchId)
+                .orElseThrow(() -> new MatchNotFoundException(matchId));
+
+        match.setScore(newScore); // Assuming there's a setScore method in the Match class
+
+        return completedMatches.save(match); // Save updated match
+    }
+
+    @Override
+    public Match updateRecordMatchWinner(Long matchId, Long oldWinnerId, Long newWinnerId, String newScore) {
+        // Fetch the match
+        Match match = completedMatches.findById(matchId)
+                .orElseThrow(() -> new MatchNotFoundException(matchId));
+
+        // Fetch the players
+        Player oldWinner = players.findById(oldWinnerId)
+                .orElseThrow(() -> new PlayerNotFoundException(oldWinnerId));
+        Player newWinner = players.findById(newWinnerId)
+                .orElseThrow(() -> new PlayerNotFoundException(newWinnerId));
+
+        if (!match.isPlayerInvolved(oldWinner)) {
+            throw new PlayerNotPartOfMatchException(oldWinnerId, matchId); // If either player is not part of the match
+        }
+
+        if (!match.isPlayerInvolved(newWinner)) {
+            throw new PlayerNotPartOfMatchException(newWinnerId, matchId); // If either player is not part of the match
+        }
+        
+        // Update the match result with new winner and loser
+        match.setMatchResult(newWinner, oldWinner, newScore);
+        match.setCompleted(true);
+        
+        // Revert ELO
+        oldWinner.revertElo(newWinner.getElo(), true);
+        newWinner.revertElo(oldWinner.getElo(), false);
+        newWinner.updateElo(oldWinner.getElo(), true);
+        oldWinner.updateElo(newWinner.getElo(), false);
+
+        // Revert wins and losses
+        oldWinner.revertWinsAndLosses(true); // Revert old winner's win
+        newWinner.revertWinsAndLosses(false); // Revert old loser's loss
+        newWinner.updateWinsAndLosses(true);
+        oldWinner.updateWinsAndLosses(false);
+
+        return completedMatches.save(match);
     }
 }

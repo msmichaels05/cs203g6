@@ -112,4 +112,19 @@ public class Player {
         int score = hasWon ? 1 : 0;
         this.elo += kFactor * (score - expectedScore);
     }
+
+    public void revertElo(int opponentElo, boolean previousWin) {
+        int kFactor = 32;
+        double expectedScore = 1 / (1 + Math.pow(10, (opponentElo - this.elo) / 400.0));
+        int score = previousWin ? 1 : 0;
+        // Reverting the ELO adjustment
+        this.elo -= kFactor * (score - expectedScore);
+    }
+
+    public void revertWinsAndLosses(boolean wasWin) {
+        if (wasWin) {
+            this.matchesWon--;
+        }
+        this.matchesPlayed--;
+    }
 }

@@ -53,6 +53,9 @@ public class Match {
     @Column(name = "matchScore")
     private String score;
 
+    @Column(name = "isCompleted")
+    private boolean isCompleted;
+
     public Match(Tournament tournament, Player player1, Player player2) {
         this.tournament = tournament;
         this.player1 = player1;
