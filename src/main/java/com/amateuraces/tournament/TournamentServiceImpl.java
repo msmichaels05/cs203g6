@@ -1,14 +1,19 @@
 package com.amateuraces.tournament;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import jakarta.transaction.*;
 
-import com.amateuraces.player.*;
-import com.amateuraces.user.*;
+import com.amateuraces.player.Player;
+import com.amateuraces.player.PlayerNotFoundException;
+import com.amateuraces.player.PlayerRepository;
+import com.amateuraces.user.User;
+import com.amateuraces.user.UserAuthenticationException;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class TournamentServiceImpl implements TournamentService {
@@ -87,8 +92,6 @@ public class TournamentServiceImpl implements TournamentService {
             throw new UserAuthenticationException();
         }
     }
-    
-    
     
     
 

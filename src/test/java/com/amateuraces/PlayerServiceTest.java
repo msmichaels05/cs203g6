@@ -40,6 +40,8 @@ public class PlayerServiceTest {
         verify(players).save(player);
     }
     
+    // Doesn't check for same name as some players may have both the same first and last name - their id is the identifier
+
     @Test
     void addPlayer_NewPhoneNumber_ReturnSavedPlayer(){
         
@@ -52,7 +54,6 @@ public class PlayerServiceTest {
         assertEquals(player.getPhoneNumber(),savedPlayer.getPhoneNumber());
         verify(players).save(player);
     }
-
     
     @Test
     void addPlayer_SamePhoneNumber_ReturnNull(){

@@ -5,6 +5,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.amateuraces.user.ExistingUserException;
 import com.amateuraces.user.User;
 import com.amateuraces.user.UserRepository;
 import com.amateuraces.user.UserServiceImpl;
@@ -46,22 +48,11 @@ public class UserServiceTest {
         Optional<User> sameUsernames = Optional.of(new User("The Same Name Exists", "12345"));
         
         when(users.findByUsername(user.getUsername())).thenReturn(sameUsernames);
-        User savedUser = userService.addUser(user);
-        assertNull(savedUser);
+        assertThrows(ExistingUserException.class, () -> {
+            userService.addUser(user);
+        });
         verify(users).findByUsername(user.getUsername());
         verify(users, never()).save(any(User.class));
-    }
-
-    @Test
-    void updateUser_NotFound_ReturnNull(){
-        User user = new User("Updated Name", "12345678");
-        Long userID = 10L;
-        when(users.findById(userID)).thenReturn(Optional.empty());
-        
-        User updatedUser = userService.updateUser(userID, user);
-        
-        assertNull(updatedUser);
-        verify(users).findById(userID);
     }
 
     @Test
@@ -76,7 +67,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void addUser_SameEmail_ReturnNull(){
+    void addUser_SameEmail_ReturnException(){
         User user = new User();
         user.setEmail("test123@gmail.com");
         User sameUserEmail = new User();
@@ -85,10 +76,35 @@ public class UserServiceTest {
         Optional<User> sameEmail = Optional.of(sameUserEmail);
 
         when(users.findByEmail(user.getEmail())).thenReturn(sameEmail);
-        User savedUser = userService.addUser(user);
-        assertNull(savedUser);
+        assertThrows(ExistingUserException.class, () -> {
+            userService.addUser(user);
+        });
 
         verify(users).findByEmail(user.getEmail());
         verify(users, never()).save(any(User.class));
+    }
+
+    @Test
+    void updateUser_NotFound_ReturnNull(){
+        User user = new User("Name", "12345678");
+        Long userID = 10L;
+        when(users.findById(userID)).thenReturn(Optional.empty());
+        
+        User updatedUser = userService.updateUser(userID, user);
+        
+        assertNull(updatedUser);
+        verify(users).findById(userID);
+    }
+
+    @Test
+    void deleteUser_NotFound_ReturnNull(){
+        User user = new User("Name", "12345678");
+        Long userID = 10L;
+        when(users.findById(userID)).thenReturn(Optional.empty());
+        
+        User updatedUser = userService.updateUser(userID, user);
+        
+        assertNull(updatedUser);
+        verify(users).findById(userID);
     }
 }
