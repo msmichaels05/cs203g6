@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface MatchService {
     List<Match> listIncompleteMatches();
-    List<Match> listCompleteMatches();
+    List<Match> listCompletedMatches();
 
     /**
      * Return an incomplete match
@@ -21,7 +21,7 @@ public interface MatchService {
      * @param id
      * @return
      */
-    Match getIncompleteMatch(Long id);
+    Match getCompletedMatch(Long id);
 
     /**
      * Return the newly added match
