@@ -3,23 +3,41 @@ package com.amateuraces.match;
 import java.util.List;
 
 public interface MatchService {
-    List<Match> listMatches();
-
-    Match getMatch(Long id);
-
-    /**
-     * Return the newly added match
-     */
-    Match addMatch(Match match);
+    List<Match> listIncompleteMatches();
+    List<Match> listCompleteMatches();
 
     /**
-     * Return the updated match
+     * Return an incomplete match
      * 
      * @param id
      * @param match
      * @return
      */
-    Match updateMatch(Long id, Match match);
+    Match getIncompleteMatch(Long id);
+
+     /**
+     * Return an completed match
+     * 
+     * @param id
+     * @return
+     */
+    Match getIncompleteMatch(Long id);
+
+    /**
+     * Return the newly added match
+     * @param match
+     * @return
+     */
+    Match addMatch(Match match);
+
+    // /**
+    //  * Return the updated match
+    //  * 
+    //  * @param id
+    //  * @param match
+    //  * @return
+    //  */
+    // Match updateMatch(Long id, Match match);
 
     /**
      * Change method's signature: do not return a value for delete operation

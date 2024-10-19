@@ -13,56 +13,63 @@ import com.amateuraces.player.PlayerRepository;
 @Service
 public class MatchServiceImpl implements MatchService {
 
-    private final MatchRepository matches;
+    private final MatchRepositoryCompleted completedMatches;
+    private final MatchRepositoryIncomplete incompleteMatches;
     private final PlayerRepository players;
 
-    public MatchServiceImpl(MatchRepository matches, PlayerRepository players) {
-        this.matches = matches;
+    public MatchServiceImpl(MatchRepositoryCompleted completedMatches, MatchRepositoryIncomplete incompleteMatches ,PlayerRepository players) {
+        this.completedMatches = completedMatches;
+        this.incompleteMatches = incompleteMatches;
         this.players = players;
     }
 
     @Override
-    public List<Match> listMatches() {
-        return matches.findAll();
+    public List<Match> listIncompleteMatches() {
+        return completedMatches.findAll();
     }
 
     @Override
-    public Match getMatch(Long id) {
-        return matches.findById(id).orElse(null);
+    public List<Match> listCompletedMatches() {
+        return completedMatches.findAll();
+    }
+
+    @Override
+    public Match getIncompleteMatch(Long id) {
+        return incompleteMatches.findById(id).orElse(null);
+    }
+
+    @Override
+    public Match getCompletedMatch(Long id) {
+        return completedMatches.findById(id).orElse(null);
     }
 
     @Override
     public Match addMatch(Match match) {
-        return matches.save(match);
+        return incompleteMatches.save(match);
     }
 
-    @Override
-    public Match updateMatch(Long id, Match newMatchInfo) {
-        return matches.findById(id).map(match -> {
-            match.setWinner(newMatchInfo.getWinner());
-            return matches.save(match);
-        }).orElse(null);
-    }
+    // @Override
+    // public Match updateMatch(Long id, Match newMatchInfo) {
+    //     return incompleteMatches.findById(id).map(match -> {
+    //         match.setWinner(newMatchInfo.getWinner());
+    //         return completedMatches.save(match);
+    //     }).orElse(null);
+    // }
 
-    /**
-     * Remove a match with the given id
-     * Spring Data JPA does not return a value for delete operation
-     * Cascading: removing a match will also remove all its associated reviews
-     */
     @Override
     public void deleteMatch(Long id) {
         // Check if the match exists before attempting to delete
-        if (!matches.existsById(id)) {
+        if (!incompleteMatches.existsById(id)) {
             throw new MatchNotFoundException(id);
         }
 
         // If the match exists, delete them
-        matches.deleteById(id);
+        incompleteMatches.deleteById(id);
     }
 
     @Override
     public Match recordMatchResult(Long matchId, Long winnerId, Long loserId, String score) {
-        Match match = matches.findById(matchId)
+        Match match = incompleteMatches.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId)); // This line should find the match
 
         Player winner = players.findById(winnerId)
@@ -86,6 +93,6 @@ public class MatchServiceImpl implements MatchService {
         players.save(winner);
         players.save(loser);
 
-        return matches.save(match); // Persist the match result
+        return completedMatches.save(match); // Persist the match result
     }
 }

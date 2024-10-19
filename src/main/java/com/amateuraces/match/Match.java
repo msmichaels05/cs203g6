@@ -64,6 +64,13 @@ public class Match {
         this.player2 = player2;
     }
 
+    public Match(Tournament tournament, Player winner, Player loser, String score) {
+        this.tournament = tournament;
+        this.winner = winner;
+        this.loser = loser;
+        this.score = score;
+    }
+
     public void setMatchResult(Player winner, Player loser, String score) {
         this.winner = winner;
         this.loser = loser;

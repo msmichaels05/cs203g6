@@ -7,7 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.amateuraces.highlight.Highlight;
 import com.amateuraces.highlight.HighlightRepository;
-import com.amateuraces.match.MatchRepository;
+import com.amateuraces.match.MatchRepositoryCompleted;
+import com.amateuraces.match.MatchRepositoryIncomplete;
 import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerRepository;
 import com.amateuraces.tournament.Tournament;
@@ -38,7 +39,8 @@ public class AmateurAces {
         System.out.println("[Add highlight]: " + highlights.save(new Highlight("TESTING")));
 
         //JPA Match repository initialization
-        MatchRepository match = ctx.getBean(MatchRepository.class);
+        MatchRepositoryCompleted completedMatches = ctx.getBean(MatchRepositoryCompleted.class);
+        MatchRepositoryIncomplete incompleteMatches = ctx.getBean(MatchRepositoryIncomplete.class);
 
         //JPA Tournament repository initialization
         TournamentRepository tournament = ctx.getBean(TournamentRepository.class);

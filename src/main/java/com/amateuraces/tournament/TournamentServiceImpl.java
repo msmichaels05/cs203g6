@@ -16,15 +16,15 @@ public class TournamentServiceImpl implements TournamentService {
 
     private TournamentRepository tournamentRepository;
     private PlayerRepository playerRepository;
-    private MatchRepository matchRepository;
+    private MatchRepositoryIncomplete matchRepositoryIncomplete;
     // private CustomUserDetailsService userDetailsService;
     // private PlayerRepository playerRepository;
 
     public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository,
-            MatchRepository matchRepository) {
+            MatchRepositoryIncomplete matchRepositoryIncomplete) {
         this.tournamentRepository = tournamentRepository;
         this.playerRepository = playerRepository;
-        this.matchRepository = matchRepository;
+        this.matchRepositoryIncomplete = matchRepositoryIncomplete;
         // this.userDetailsService = userDetailsService;
     }
 
@@ -111,7 +111,7 @@ public class TournamentServiceImpl implements TournamentService {
         match.setTournament(tournament);
         tournament.addMatch(match);
 
-        matchRepository.save(match);
+        matchRepositoryIncomplete.save(match);
         return tournamentRepository.save(tournament);
     }
 

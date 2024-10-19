@@ -109,11 +109,6 @@ public class Tournament {
         return matches;
     }
 
-    // public boolean addPlayer(Player player){
-    //     players.add(player);
-    //     return true;
-    // }
-
     // // Get the count of registered players
     // public int getRegisteredPlayerCount() {
     //     return players.size();

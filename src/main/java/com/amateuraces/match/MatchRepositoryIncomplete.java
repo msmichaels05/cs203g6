@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  * For the purpose of this exercise, CrudRepository would also be sufficient
  */
 @Repository
-public interface MatchRepository extends JpaRepository <Match, Long>{
+public interface MatchRepositoryIncomplete extends JpaRepository <Match, Long>{
 }
