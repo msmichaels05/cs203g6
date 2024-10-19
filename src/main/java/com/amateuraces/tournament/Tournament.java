@@ -105,10 +105,6 @@ public class Tournament {
         match.setTournament(null); // Remove the tournament reference from the match
     }
 
-    public List<Match> getMatches() {
-        return matches;
-    }
-
     // // Get the count of registered players
     // public int getRegisteredPlayerCount() {
     //     return players.size();

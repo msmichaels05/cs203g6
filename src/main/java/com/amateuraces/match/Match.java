@@ -79,4 +79,8 @@ public class Match {
         this.loser = loser;
         this.score = score;
     }
+
+    public boolean isPlayerInvolved(Player player) {
+        return (player1.getId() == player.getId() || player2.getId() == player.getId());
+    }
 }
