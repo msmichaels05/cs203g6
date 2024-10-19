@@ -28,15 +28,6 @@ public interface MatchService {
     void deleteMatch(Long id);
 
     /**
-     * Declares the winner of the match.
-     *
-     * @param matchId
-     * @param winnerId
-     * @return
-     */
-    Match declareWinner(Long matchId, Long winnerId);
-
-    /**
      * Records the match result, updating both players' statistics.
      *
      * @param matchId 

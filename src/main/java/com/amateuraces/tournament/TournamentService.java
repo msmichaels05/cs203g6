@@ -67,7 +67,6 @@ public interface TournamentService {
      */
     Tournament addMatchToTournament(Long tournamentId, Match match);
 
-
     // /**
     //  * Perform a randomized draw for the tournament.
     //  * This will create match pairings randomly.
@@ -99,10 +98,4 @@ public interface TournamentService {
     //  * @return True if registration is open, false otherwise.
     //  */
     // // boolean validateRegistrationPeriod(Long tournamentId);
-
-    /**
-     * Change method's signature: do not return a value for delete operation
-     * @param tournamentId The ID of the tournament.
-     */
-    void deleteTournament(Long tournamentId);
 }

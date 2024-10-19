@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.amateuraces.player.Player;
+import com.amateuraces.player.PlayerNotFoundException;
+import com.amateuraces.player.PlayerRepository;
 
 /*This implementation is meant for business logic,which could be added later*Currently,it does not have much in terms of the business logic yet*/
 
@@ -12,9 +14,11 @@ import com.amateuraces.player.Player;
 public class MatchServiceImpl implements MatchService {
 
     private final MatchRepository matches;
+    private final PlayerRepository players;
 
-    public MatchServiceImpl(MatchRepository matches){
+    public MatchServiceImpl(MatchRepository matches, PlayerRepository players) {
         this.matches = matches;
+        this.players = players;
     }
 
     @Override
@@ -23,7 +27,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match getMatch(Long id){
+    public Match getMatch(Long id) {
         return matches.findById(id).orElse(null);
     }
 
@@ -34,7 +38,8 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public Match updateMatch(Long id, Match newMatchInfo) {
-        return matches.findById(id).map(match -> {match.setWinner(newMatchInfo.getWinner());
+        return matches.findById(id).map(match -> {
+            match.setWinner(newMatchInfo.getWinner());
             return matches.save(match);
         }).orElse(null);
     }
@@ -45,54 +50,42 @@ public class MatchServiceImpl implements MatchService {
      * Cascading: removing a match will also remove all its associated reviews
      */
     @Override
-    public void deleteMatch(Long id){
-    // Check if the match exists before attempting to delete
-    if (!matches.existsById(id)) {
-        throw new MatchNotFoundException(id);
-    }
-    
-    // If the match exists, delete them
-    matches.deleteById(id);
-    }
+    public void deleteMatch(Long id) {
+        // Check if the match exists before attempting to delete
+        if (!matches.existsById(id)) {
+            throw new MatchNotFoundException(id);
+        }
 
-    @Override
-    public Match declareWinner(Long matchId, Long winnerId) {
-        Match match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new IllegalArgumentException("Match not found"));
-        
-        Player winner = playerRepository.findById(winnerId)
-                .orElseThrow(() -> new IllegalArgumentException("Player not found"));
-        
-        match.setWinner(winner); // Set the winner
-        return matchRepository.save(match); // Persist the changes
+        // If the match exists, delete them
+        matches.deleteById(id);
     }
 
     @Override
     public Match recordMatchResult(Long matchId, Long winnerId, Long loserId, String score) {
-        Match match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new IllegalArgumentException("Match not found"));
+        Match match = matches.findById(matchId)
+                .orElseThrow(() -> new MatchNotFoundException(matchId)); // This line should find the match
 
-        Player winner = playerRepository.findById(winnerId)
-                .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+        Player winner = players.findById(winnerId)
+                .orElseThrow(() -> new PlayerNotFoundException(winnerId));
 
-        Player loser = playerRepository.findById(loserId)
-                .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+        Player loser = players.findById(loserId)
+                .orElseThrow(() -> new PlayerNotFoundException(loserId));
 
         // Update the match result
-        match.setWinner(winner);
+        match.setMatchResult(winner, loser, score);
 
         // Update both players' statistics
         winner.updateWinsAndLosses(true);
         loser.updateWinsAndLosses(false);
 
         // Update ELO scores (optional, depends on your system)
-        match.updateElo(loser.getElo(), true);
-        match.updateElo(winner.getElo(), false);
+        winner.updateElo(loser.getElo(), true);
+        loser.updateElo(winner.getElo(), false);
 
         // Save the changes
-        playerRepository.save(winner);
-        playerRepository.save(loser);
+        players.save(winner);
+        players.save(loser);
 
-        return matchRepository.save(match); // Persist the match result
+        return matches.save(match); // Persist the match result
     }
 }

@@ -1,9 +1,7 @@
 package com.amateuraces.tournament;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import com.amateuraces.match.*;
 import com.amateuraces.player.Player;
@@ -101,10 +99,14 @@ public class Tournament {
         matches.add(match);
         match.setTournament(this); // Ensure the bidirectional relationship is maintained
     }
-
+    
     public void removeMatch(Match match) {
         matches.remove(match);
         match.setTournament(null); // Remove the tournament reference from the match
+    }
+
+    public List<Match> getMatches() {
+        return matches;
     }
 
     // public boolean addPlayer(Player player){

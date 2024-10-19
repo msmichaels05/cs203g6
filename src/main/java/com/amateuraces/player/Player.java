@@ -104,4 +104,12 @@ public class Player {
     public int getLosses() {
         return this.matchesPlayed - this.matchesWon;
     }
+
+    // Method to update ELO based on match result
+    public void updateElo(int opponentElo, boolean hasWon) {
+        int kFactor = 32;  // This could be adjusted based on your ranking system
+        double expectedScore = 1 / (1 + Math.pow(10, (opponentElo - this.elo) / 400.0));
+        int score = hasWon ? 1 : 0;
+        this.elo += kFactor * (score - expectedScore);
+    }
 }

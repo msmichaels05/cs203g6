@@ -10,7 +10,7 @@ public class MatchNotFoundException extends RuntimeException{
      */
     private static final long serialVersionUID = 1L;
 
-    MatchNotFoundException(Long id) {
+    public MatchNotFoundException(Long id) {
         super("Could not find match " + id);
     }
     

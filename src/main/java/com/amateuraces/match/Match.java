@@ -46,6 +46,10 @@ public class Match {
     @JoinColumn(name = "matchWinner")
     private Player winner;
 
+    @OneToOne
+    @JoinColumn(name = "matchLoser")
+    private Player loser;
+
     @Column(name = "matchScore")
     private String score;
 
@@ -60,19 +64,9 @@ public class Match {
         this.player2 = player2;
     }
 
-    public Tournament getTournament() {
-        return tournament;
-    }
-
-    public void setTournament(Tournament tournament) {
-        this.tournament = tournament;
-    }
-
-     // Method to update ELO based on match result
-     public void updateElo(int opponentElo, boolean hasWon) {
-        int kFactor = 32;  // This could be adjusted based on your ranking system
-        double expectedScore = 1 / (1 + Math.pow(10, (opponentElo - this.elo) / 400.0));
-        int score = hasWon ? 1 : 0;
-        this.elo += kFactor * (score - expectedScore);
+    public void setMatchResult(Player winner, Player loser, String score) {
+        this.winner = winner;
+        this.loser = loser;
+        this.score = score;
     }
 }
