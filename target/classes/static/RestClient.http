@@ -113,6 +113,10 @@ Authorization: Basic username betatester
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
+Authorization: Basic betatester betatester 
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
 Authorization: Basic admin goodpassword 
 
 ###

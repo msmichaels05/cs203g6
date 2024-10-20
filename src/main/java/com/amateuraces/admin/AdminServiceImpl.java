@@ -1,6 +1,6 @@
 package com.amateuraces.admin;
 
-import java.util.List;
+import java.util.*;
 
 import org.springframework.stereotype.Service;
 
@@ -29,6 +29,10 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Admin addAdmin(Admin admin) {
         // Save the admin and return the saved admin object
+        Optional<Admin> samePhoneNumber = admins.findByPhoneNumber(admin.getPhoneNumber());
+        if (samePhoneNumber.isPresent()) {
+            return null;
+        }
         return admins.save(admin); // Assuming save returns Admin
     }
 

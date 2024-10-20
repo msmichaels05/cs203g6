@@ -106,6 +106,9 @@ public class TournamentServiceImpl implements TournamentService {
         return tournamentRepository.findById(id).map(tournament -> {
             tournament.setName(newTournamentInfo.getName());
             tournament.setELOrequirement(newTournamentInfo.getELOrequirement());
+            tournament.setLocation(newTournamentInfo.getLocation());
+            tournament.setMaxPlayers(newTournamentInfo.getMaxPlayers());
+            tournament.setDescription(newTournamentInfo.getDescription());
             return tournamentRepository.save(tournament);
         }).orElse(null);
     }

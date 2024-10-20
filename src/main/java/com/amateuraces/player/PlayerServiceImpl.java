@@ -38,12 +38,19 @@ public class PlayerServiceImpl implements PlayerService {
     @Transactional
     @Override
     public Player addPlayer(Player player) {
+        Optional<Player> samePhoneNumber = players.findByPhoneNumber(player.getPhoneNumber());
+        if (samePhoneNumber.isPresent()) {
+            return null;
+        }
         return players.save(player);
     }
 
     @Override
     public Player updatePlayer(Long id, Player newPlayerInfo) {
-        return players.findById(id).map(player -> {player.setName(newPlayerInfo.getName());
+        return players.findById(id).map(player -> {
+            player.setName(newPlayerInfo.getName());
+            player.setGender(newPlayerInfo.getGender());
+            player.setAge(newPlayerInfo.getAge());
             return players.save(player);
         }).orElse(null);
     }
