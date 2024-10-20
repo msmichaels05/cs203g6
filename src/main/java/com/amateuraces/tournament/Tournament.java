@@ -79,7 +79,7 @@ public class Tournament {
         this.name = name;
     }
 
-    public Tournament(String name,String location){
+    public Tournament(String name, String location) {
         this.name = name;
         this.location = location;
     }

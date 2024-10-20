@@ -4,6 +4,8 @@ import java.util.*;
 
 import org.springframework.stereotype.Service;
 
+import com.amateuraces.player.Player;
+
 @Service
 public class AdminServiceImpl implements AdminService {
 
