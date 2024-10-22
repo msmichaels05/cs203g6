@@ -1,5 +1,7 @@
 package com.amateuraces.match;
 
+import java.util.Objects;
+
 import com.amateuraces.player.Player;
 import com.amateuraces.tournament.Tournament;
 
@@ -53,8 +55,8 @@ public class Match {
     @Column(name = "matchScore")
     private String score;
 
-    @Column(name = "isCompleted")
-    private boolean isCompleted;
+    @Column(name = "isCompleted", nullable = false)
+    private boolean isCompleted = false;
 
     public Match(Tournament tournament, Player player1, Player player2) {
         this.tournament = tournament;
@@ -78,9 +80,10 @@ public class Match {
         this.winner = winner;
         this.loser = loser;
         this.score = score;
+        this.isCompleted = true;
     }
 
     public boolean isPlayerInvolved(Player player) {
-        return (player1.getId() == player.getId() || player2.getId() == player.getId());
+        return (Objects.equals(player1.getId(), player.getId()) || Objects.equals(player2.getId(), player.getId()));
     }
 }
