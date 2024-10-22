@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public void deleteUser(Long id){
+    public void deleteUser(Long id){    
         User user = users.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
@@ -86,6 +86,13 @@ public class UserServiceImpl implements UserService {
         // Now delete the user
         users.delete(user); 
     }
+
+    // public void deleteUser(Long id) {
+    //     if (!users.existsById(id)) {
+    //         throw new UserNotFoundException(id);
+    //     }
+    //     users.deleteById(id);
+    // }
 
      @Override
     public Optional<User> findByUsername(String username) {
