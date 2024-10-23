@@ -1,5 +1,7 @@
 package com.amateuraces.match;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +13,6 @@ import org.springframework.stereotype.Repository;
  * For the purpose of this exercise, CrudRepository would also be sufficient
  */
 @Repository
-public interface MatchRepositoryIncomplete extends JpaRepository <Match, Long>{
+public interface MatchRepository extends JpaRepository<Match, Long> {
+    Optional<Match> findByMatchId(Long id);
 }

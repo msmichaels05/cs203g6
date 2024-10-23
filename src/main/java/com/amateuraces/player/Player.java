@@ -2,6 +2,7 @@ package com.amateuraces.player;
 
 import java.util.*;
 
+import com.amateuraces.match.*;
 import com.amateuraces.tournament.Tournament;
 import com.amateuraces.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,7 +24,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 
 @Entity
 @Getter
@@ -52,7 +52,7 @@ public class Player {
     @Size(max=10,message = "Gender cannot be more than 10 characters")
     private String gender;
 
-    private int elo = 1500;  // Starting ELO
+    private double elo = 1500;  // Starting ELO
     private int matchesPlayed;
     private int matchesWon;
 
@@ -106,19 +106,27 @@ public class Player {
     }
 
     // Method to update ELO based on match result
-    public void updateElo(int opponentElo, boolean hasWon) {
+    public void updateElo(double opponentElo, boolean hasWon) {
         int kFactor = 32;  // This could be adjusted based on your ranking system
         double expectedScore = 1 / (1 + Math.pow(10, (opponentElo - this.elo) / 400.0));
         int score = hasWon ? 1 : 0;
         this.elo += kFactor * (score - expectedScore);
     }
 
-    public void revertElo(int opponentElo, boolean previousWin) {
-        int kFactor = 32;
+    public double changedElo(double opponentElo, boolean hasWon) {
+        int kFactor = 32;  // This could be adjusted based on your ranking system
         double expectedScore = 1 / (1 + Math.pow(10, (opponentElo - this.elo) / 400.0));
-        int score = previousWin ? 1 : 0;
-        // Reverting the ELO adjustment
-        this.elo -= kFactor * (score - expectedScore);
+        int score = hasWon ? 1 : 0;
+        double change = kFactor * (score - expectedScore);
+        return change;
+    }
+
+    public void revertElo(Match match, boolean wasWin) {
+        if (wasWin) {
+            this.elo -= match.getElo();
+        } else {
+            this.elo += match.getElo();
+        }
     }
 
     public void revertWinsAndLosses(boolean wasWin) {

@@ -34,18 +34,9 @@ public class MatchController {
      * List all completed matches in the system
      * @return list of all matchs
      */
-    @GetMapping("/matches/completed")
-        public List<Match> getCompletedMatches(){
-            return matchService.listCompletedMatches();
-        }
-
-        /**
-     * List all incomplete matches in the system
-     * @return list of all matchs
-     */
-    @GetMapping("/matches/incomplete")
-        public List<Match> getIncompleteMatches(){
-            return matchService.listInompleteMatches();
+    @GetMapping("/matches")
+        public List<Match> getMatches(){
+            return matchService.listMatches();
         }
 
     /**
@@ -55,31 +46,13 @@ public class MatchController {
      * @return match with the given id
      */
     @GetMapping("/matches/complete/{id}")
-    public Match getCompletedMatch(@PathVariable Long id){
-        Match match = matchService.getCompletedMatch(id);
+    public Match getMatch(@PathVariable Long id){
+        Match match = matchService.getMatch(id);
 
         // Need to handle "match not found" error using proper HTTP status code
         // In this case it should be HTTP 404
         if(match == null) throw new MatchNotFoundException(id);
-        return matchService.getCompletedMatch(id);
-
-    }
-
-    /**
-     * Search for match with the given id
-     * If there is no match with the given "id", throw a MatchNotFoundException
-     * @param id
-     * @return match with the given id
-     */
-    @GetMapping("/matches/incomplete/{id}")
-    public Match getIncompleteMatch(@PathVariable Long id){
-        Match match = matchService.getIncompleteMatch(id);
-
-        // Need to handle "match not found" error using proper HTTP status code
-        // In this case it should be HTTP 404
-        if(match == null) throw new MatchNotFoundException(id);
-        return matchService.getIncompleteMatch(id);
-
+        return match;
     }
 
     /**
@@ -98,7 +71,7 @@ public class MatchController {
     // Handle form submission to add a match
     @PostMapping("/matches/add")
     public String addMatches(@ModelAttribute Match match) {
-        matchService.addTournament(match); // Save the new match to the database
+        matchService.addMatch(match); // Save the new match to the database
         return "redirect:/tournaments"; // Redirect back to the list of tournaments
     }
 
@@ -122,7 +95,7 @@ public class MatchController {
      * If there is no match with the given "id", throw a MatchNotFoundException
      * @param id
      */
-    @response
+    @ResponseBody
     @DeleteMapping("/matches/{id}")
     public void deleteMatch(@PathVariable Long id){
         try{
@@ -157,8 +130,8 @@ public class MatchController {
         }
     }
 
-    @PutMapping("matches/{id}/result/update-score")
-    public updateRecordMatchScore(Long id, String newScore) {
+    @PutMapping("matches/{id}/result/updateScore")
+    public Match updateRecordMatchScore(Long id, String newScore) {
         try {
             Match updatedMatch = matchService.updateRecordMatchScore(id, newScore);
             return updatedMatch;
@@ -168,7 +141,7 @@ public class MatchController {
     }
 
     @PutMapping("matches/{id}/result/update-winner")
-    public updateRecordMatchWinner(Long id, Long oldWinnerId, Long newWinnerId, String newScore) {
+    public Match updateRecordMatchWinner(Long id, Long oldWinnerId, Long newWinnerId, String newScore) {
         try {
             Match updatedMatch = matchService.updateRecordMatchWinner(id, oldWinnerId, newWinnerId, newScore);
             return updatedMatch;

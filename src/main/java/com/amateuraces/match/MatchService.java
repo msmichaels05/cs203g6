@@ -3,25 +3,20 @@ package com.amateuraces.match;
 import java.util.List;
 
 public interface MatchService {
-    List<Match> listIncompleteMatches();
-    List<Match> listCompletedMatches();
+     /**
+     * Get all matches.
+     * @return List of matches.
+     */
+    List<Match> listMatches();
 
     /**
-     * Return an incomplete match
+     * Return a match
      * 
      * @param id
      * @param match
      * @return
      */
-    Match getIncompleteMatch(Long id);
-
-     /**
-     * Return an completed match
-     * 
-     * @param id
-     * @return
-     */
-    Match getCompletedMatch(Long id);
+    Match getMatch(Long id);
 
     /**
      * Return the newly added match

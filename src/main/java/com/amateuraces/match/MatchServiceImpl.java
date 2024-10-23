@@ -13,40 +13,22 @@ import com.amateuraces.player.PlayerRepository;
 @Service
 public class MatchServiceImpl implements MatchService {
 
-    private final MatchRepositoryCompleted completedMatches;
-    private final MatchRepositoryIncomplete incompleteMatches;
+    private final MatchRepository matches;
     private final PlayerRepository players;
 
-    public MatchServiceImpl(MatchRepositoryCompleted completedMatches, MatchRepositoryIncomplete incompleteMatches,
-            PlayerRepository players) {
-        this.completedMatches = completedMatches;
-        this.incompleteMatches = incompleteMatches;
+    public MatchServiceImpl(MatchRepository matches, PlayerRepository players) {
+        this.matches = matches;
         this.players = players;
     }
 
     @Override
-    public List<Match> listIncompleteMatches() {
-        return completedMatches.findAll();
+    public List<Match> listMatches() {
+        return matches.findAll();
     }
 
     @Override
-    public List<Match> listCompletedMatches() {
-        return completedMatches.findAll();
-    }
-
-    @Override
-    public Match getIncompleteMatch(Long id) {
-        return incompleteMatches.findById(id).orElse(null);
-    }
-
-    @Override
-    public Match getCompletedMatch(Long id) {
-        return completedMatches.findById(id).orElse(null);
-    }
-
-    @Override
-    public Match addMatch(Match match) {
-        return incompleteMatches.save(match);
+    public Match getMatch(Long id) {
+        return matches.findById(id).orElse(null);
     }
 
     // @Override
@@ -58,19 +40,24 @@ public class MatchServiceImpl implements MatchService {
     // }
 
     @Override
+    public Match addMatch(Match match) {
+        return matches.save(match);
+    }
+
+    @Override
     public void deleteMatch(Long id) {
         // Check if the match exists before attempting to delete
-        if (!incompleteMatches.existsById(id)) {
+        if (!matches.existsById(id)) {
             throw new MatchNotFoundException(id);
         }
 
         // If the match exists, delete them
-        incompleteMatches.deleteById(id);
+        matches.deleteById(id);
     }
 
     @Override
     public Match recordMatchResult(Long matchId, Long winnerId, Long loserId, String score) {
-        Match match = incompleteMatches.findById(matchId)
+        Match match = matches.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId)); // This line should find the match
 
         Player winner = players.findById(winnerId)
@@ -88,10 +75,7 @@ public class MatchServiceImpl implements MatchService {
         }
 
         // Update the match result
-        match.setMatchResult(winner, loser, score);
-
-        // Update the match status to completed
-        match.setCompleted(true);
+        match.setMatchResult(winnerId, loserId, score);
 
         // Update both players' statistics
         winner.updateWinsAndLosses(true);
@@ -101,27 +85,25 @@ public class MatchServiceImpl implements MatchService {
         winner.updateElo(loser.getElo(), true);
         loser.updateElo(winner.getElo(), false);
 
-        // Save the changes
-        players.save(winner);
-        players.save(loser);
+        match.setElo(winner.changedElo(loser.getElo(), true));
 
-        return completedMatches.save(match); // Persist the match result
+        return matches.save(match); // Persist the match result
     }
 
     @Override
     public Match updateRecordMatchScore(Long matchId, String newScore) {
-        Match match = completedMatches.findById(matchId)
+        Match match = matches.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId));
 
         match.setScore(newScore); // Assuming there's a setScore method in the Match class
 
-        return completedMatches.save(match); // Save updated match
+        return matches.save(match); // Save updated match
     }
 
     @Override
     public Match updateRecordMatchWinner(Long matchId, Long oldWinnerId, Long newWinnerId, String newScore) {
         // Fetch the match
-        Match match = completedMatches.findById(matchId)
+        Match match = matches.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId));
 
         // Fetch the players
@@ -139,12 +121,12 @@ public class MatchServiceImpl implements MatchService {
         }
         
         // Update the match result with new winner and loser
-        match.setMatchResult(newWinner, oldWinner, newScore);
+        match.setMatchResult(newWinnerId, oldWinnerId, newScore);
         match.setCompleted(true);
         
         // Revert ELO
-        oldWinner.revertElo(newWinner.getElo(), true);
-        newWinner.revertElo(oldWinner.getElo(), false);
+        oldWinner.revertElo(match, true);
+        newWinner.revertElo(match, false);
         newWinner.updateElo(oldWinner.getElo(), true);
         oldWinner.updateElo(newWinner.getElo(), false);
 
@@ -154,6 +136,6 @@ public class MatchServiceImpl implements MatchService {
         newWinner.updateWinsAndLosses(true);
         oldWinner.updateWinsAndLosses(false);
 
-        return completedMatches.save(match);
+        return matches.save(match);
     }
 }

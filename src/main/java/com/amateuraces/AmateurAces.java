@@ -39,8 +39,7 @@ public class AmateurAces {
         System.out.println("[Add highlight]: " + highlights.save(new Highlight("TESTING")));
 
         //JPA Match repository initialization
-        MatchRepositoryCompleted completedMatches = ctx.getBean(MatchRepositoryCompleted.class);
-        MatchRepositoryIncomplete incompleteMatches = ctx.getBean(MatchRepositoryIncomplete.class);
+        MatchRepository matches = ctx.getBean(MatchRepository.class);
 
         //JPA Tournament repository initialization
         TournamentRepository tournament = ctx.getBean(TournamentRepository.class);
