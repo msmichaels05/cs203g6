@@ -14,8 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.amateuraces.match.Match;
-import com.amateuraces.match.MatchRepositoryCompleted;
-import com.amateuraces.match.MatchRepositoryIncomplete;
+import com.amateuraces.match.MatchRepository;
 import com.amateuraces.match.MatchServiceImpl;
 import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerRepository;
@@ -33,10 +32,7 @@ public class MatchServiceTest {
     private PlayerRepository players;
 
     @Mock
-    private MatchRepositoryCompleted completedMatches;
-
-    @Mock
-    private MatchRepositoryIncomplete incompleteMatches;
+    private MatchRepository matches;
 
     @InjectMocks
     private TournamentServiceImpl tournamentService;
@@ -60,11 +56,11 @@ public class MatchServiceTest {
         Player player2 = new Player();
         player2.setId(20L);
 
-        Match match = new Match(player1, player2);
+        Match match = new Match(10L, 20L);
         match.setId(1L);
 
         // Mock save operation for incompleteMatches
-        when(incompleteMatches.save(any(Match.class))).thenReturn(match);
+        when(matches.save(any(Match.class))).thenReturn(match);
 
         // Call the service to add the match
         Match savedMatch = matchService.addMatch(match);
@@ -72,7 +68,7 @@ public class MatchServiceTest {
         // Validate the result
         assertNotNull(savedMatch);  // Check if the saved match is not null
         assertEquals(match, savedMatch);  // Check if the returned match is the same as expected
-        verify(incompleteMatches).save(match);  // Verify that the save method was called
+        verify(matches).save(match);  // Verify that the save method was called
     }
 
     // @Test

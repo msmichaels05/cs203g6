@@ -7,8 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.amateuraces.highlight.Highlight;
 import com.amateuraces.highlight.HighlightRepository;
-import com.amateuraces.match.MatchRepositoryCompleted;
-import com.amateuraces.match.MatchRepositoryIncomplete;
+import com.amateuraces.match.MatchRepository;
 import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerRepository;
 import com.amateuraces.tournament.Tournament;
