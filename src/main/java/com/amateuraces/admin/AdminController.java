@@ -23,29 +23,29 @@ import java.util.List;
 @Controller
 public class AdminController {
 
-    private  AdminRepository admins;  
-    private UserRepository users;
+    private  AdminRepository adminRepository;  
+    private UserRepository userRepository;
 
-    public AdminController(AdminRepository admins,UserRepository users) {
-        this.admins = admins;
-        this.users = users;
+    public AdminController(AdminRepository adminRepository,UserRepository userRepository) {
+        this.adminRepository = adminRepository;
+        this.userRepository = userRepository;
     }
 
     @ResponseBody
     @GetMapping("/admin")
     public List<Admin> getAllAdmins() {
-        return admins.findAll();  // This will return the list of admins in JSON format
+        return adminRepository.findAll();  // This will return the list of admins in JSON format
     }
     
     @GetMapping("/admins")
     public String viewAdmins(Model model) {
-        List<Admin> allAdmins = admins.findAll();
+        List<Admin> allAdmins = adminRepository.findAll();
         model.addAttribute("admins", allAdmins);  // Pass admins to the Thymeleaf template
         return "all_admins";  // Return Thymeleaf template name
     }
     @GetMapping("/admin/profile/{id}")
     public String getAdminProfile(@PathVariable("id") Long id, Model model) {
-        Admin admin = admins.findByUserId(id);
+        Admin admin = adminRepository.findByUserId(id);
         if (admin == null) {
             throw new AdminNotFoundException(id); 
         }
@@ -56,7 +56,7 @@ public class AdminController {
         // Show the edit form
     @GetMapping("/admin/edit/{id}")
     public String editAdmin(@PathVariable Long id, Model model) {
-        Admin admin = admins.findByUserId(id);
+        Admin admin = adminRepository.findByUserId(id);
         model.addAttribute("admin", admin);
         return "edit_admin";
     }
@@ -70,14 +70,14 @@ public String updateAdmin(@PathVariable Long id, @Valid @ModelAttribute Admin ad
         return "edit_admin"; // Return to the edit page if there are validation errors
     }
 
-    Admin existingAdmin = admins.findByUserId(id);
+    Admin existingAdmin = adminRepository.findByUserId(id);
     if (existingAdmin == null) {
         throw new AdminNotFoundException(id); 
     }
 
     existingAdmin.setName(admin.getName());
     existingAdmin.setPhoneNumber(admin.getPhoneNumber());      
-    admins.save(existingAdmin); // Save updated admin details
+    adminRepository.save(existingAdmin); // Save updated admin details
     
     return "redirect:/admins"; // redirect back to admin list after update
 }
@@ -86,12 +86,12 @@ public String updateAdmin(@PathVariable Long id, @Valid @ModelAttribute Admin ad
   @PostMapping("/admin/delete/{id}")
   public String deleteAdmin(@PathVariable("id") Long id) {
       System.out.println("Deleting admin with id: " + id);  // logging
-      Admin admin = admins.findByUserId(id);
+      Admin admin = adminRepository.findByUserId(id);
       if (admin == null) {
         throw new AdminNotFoundException(id); 
     }
               
-      admins.delete(admin); // Delete the admin
+      adminRepository.delete(admin); // Delete the admin
       return "redirect:/admins"; // Redirect back to the list of admins
   }
       // Show the create admin form
@@ -129,20 +129,20 @@ public String updateAdmin(@PathVariable Long id, @Valid @ModelAttribute Admin ad
     @ResponseBody
     @PostMapping("/users/{userId}/admins")
     public Admin addAdmin(@PathVariable(value = "userId") Long userId, @Valid @RequestBody Admin admin) {
-        User user = users.findById(userId)
+        User user = userRepository.findById(userId)
                     .orElseThrow(() -> new AdminNotFoundException(userId));
         
         admin.setUser(user);
 
-        if(admins.findOptionalByUserId(userId).isPresent()){
+        if(adminRepository.findOptionalByUserId(userId).isPresent()){
             throw new ExistingUserException("Admin already exists");
         }
             // Check for duplicates by phone number or name
-        if (admins.findByPhoneNumber(admin.getPhoneNumber()).isPresent() || 
-            admins.findByName(admin.getName()).isPresent()) {
+        if (adminRepository.findByPhoneNumber(admin.getPhoneNumber()).isPresent() || 
+            adminRepository.findByName(admin.getName()).isPresent()) {
                 throw new ExistingUserException("Admin with this phone number or name already exists");
         }
-        return admins.save(admin);
+        return adminRepository.save(admin);
         }
 }
 

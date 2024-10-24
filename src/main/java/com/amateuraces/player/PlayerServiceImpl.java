@@ -19,39 +19,39 @@ import jakarta.transaction.Transactional;
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
-    private PlayerRepository players;
+    private PlayerRepository playerRepository;
 
-    public PlayerServiceImpl(PlayerRepository players){
-        this.players = players;
+    public PlayerServiceImpl(PlayerRepository playerRepository){
+        this.playerRepository = playerRepository;
     }
 
     @Override
     public List<Player> listPlayers() {
-        return players.findAll();
+        return playerRepository.findAll();
     }
 
     @Override
     public Player getPlayer(Long id){
-        return players.findById(id).orElse(null);
+        return playerRepository.findById(id).orElse(null);
     }
 
     @Transactional
     @Override
     public Player addPlayer(Player player) {
-        Optional<Player> samePhoneNumber = players.findByPhoneNumber(player.getPhoneNumber());
+        Optional<Player> samePhoneNumber = playerRepository.findByPhoneNumber(player.getPhoneNumber());
         if (samePhoneNumber.isPresent()) {
             return null;
         }
-        return players.save(player);
+        return playerRepository.save(player);
     }
 
     @Override
     public Player updatePlayer(Long id, Player newPlayerInfo) {
-        return players.findById(id).map(player -> {
+        return playerRepository.findById(id).map(player -> {
             player.setName(newPlayerInfo.getName());
             player.setGender(newPlayerInfo.getGender());
             player.setAge(newPlayerInfo.getAge());
-            return players.save(player);
+            return playerRepository.save(player);
         }).orElse(null);
     }
 
@@ -63,16 +63,16 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public void deletePlayer(Long id){
     // Check if the player exists before attempting to delete
-    if (!players.existsById(id)) {
+    if (!playerRepository.existsById(id)) {
         throw new PlayerNotFoundException(id);
     }
     
     // If the player exists, delete them
-    players.deleteById(id);
+    playerRepository.deleteById(id);
     }
 
     @Override
     public Player findByUserId(Long userId) {
-        return players.findByUserId(userId);
+        return playerRepository.findByUserId(userId);
     }
 }

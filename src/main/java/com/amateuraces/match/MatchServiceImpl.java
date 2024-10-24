@@ -11,34 +11,34 @@ import com.amateuraces.player.PlayerRepository;
 @Service
 public class MatchServiceImpl implements MatchService {
 
-    private MatchRepository matches;
-    private PlayerRepository players;
+    private MatchRepository matchRepository;
+    private PlayerRepository playerRepository;
 
-    public MatchServiceImpl(MatchRepository matches, PlayerRepository players) {
-        this.matches = matches;
-        this.players = players;
+    public MatchServiceImpl(MatchRepository matchRepository, PlayerRepository playerRepository) {
+        this.matchRepository = matchRepository;
+        this.playerRepository = playerRepository;
     }
 
     @Override
     public List<Match> listMatches() {
-        return matches.findAll();
+        return matchRepository.findAll();
     }
 
     @Override
     public Match getMatch(Long id) {
-        return matches.findById(id).orElse(null);
+        return matchRepository.findById(id).orElse(null);
     }
 
     @Override
     public Match addMatch(Match match) {
-        return matches.save(match);
+        return matchRepository.save(match);
     }
 
     @Override
     public Match updateMatch(Long id, Match newMatchInfo) {
-        return matches.findById(id).map(match -> {
+        return matchRepository.findById(id).map(match -> {
             match.setWinner(newMatchInfo.getWinner());
-            return matches.save(match);
+            return matchRepository.save(match);
         }).orElse(null);
     }
 
@@ -50,11 +50,11 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public void deleteMatch(Long id) {
         // Check if the match exists before attempting to delete
-        if (!matches.existsById(id)) {
+        if (!matchRepository.existsById(id)) {
             throw new MatchNotFoundException(id);
         }
 
         // If the match exists, delete them
-        matches.deleteById(id);
+        matchRepository.deleteById(id);
     }
 }

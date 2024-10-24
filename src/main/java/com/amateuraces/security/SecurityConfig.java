@@ -18,8 +18,8 @@ public class SecurityConfig {
     
     private UserDetailsService userDetailsService;
 
-    public SecurityConfig(UserDetailsService userSvc){
-        this.userDetailsService = userSvc;
+    public SecurityConfig(UserDetailsService userDetailService){
+        this.userDetailsService = userDetailService;
     }
     
     /**

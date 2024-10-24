@@ -16,24 +16,21 @@ public interface TournamentService {
 
     Tournament addTournament(Tournament tournament);
 
-    /**
-     * Change method's signature: do not return a value for delete operation
-     * @param id
-     */
     void deleteTournament(Long id);
 
 
     void joinTournament(Long id);
 
-
-        /**
-     * Return the updated player
-     * 
-     * @param id
-     * @param player
-     * @return
-     */
     Tournament updateTournament(Long id, Tournament tournament);
+
+    // /**
+    //  * Get the list of players registered for the tournament.
+    //  * @param tournamentId The ID of the tournament.
+    //  * @return List of players in the tournament.
+    //  */
+    Set<Player> getPlayersInTournament(Long tournamentId);
+
+    void removePlayerFromTournament(Long tournamentId, Long playerId);
 
     /**
      * Set the registration period for a tournament.
@@ -51,15 +48,6 @@ public interface TournamentService {
      * @return The updated tournament with the player added.
      */
     // Tournament addPlayerToTournament(Long tournamentId, Long playerId);
-
-    // /**
-    //  * Get the list of players registered for the tournament.
-    //  * @param tournamentId The ID of the tournament.
-    //  * @return List of players in the tournament.
-    //  */
-    Set<Player> getPlayersInTournament(Long tournamentId);
-
-
 
     // /**
     //  * Perform a randomized draw for the tournament.

@@ -22,18 +22,18 @@ import jakarta.validation.Valid;
 
 @Controller
 public class PlayerController {
-    private PlayerRepository players;
-    private UserRepository users;
+    private PlayerRepository playerRepository;
+    private UserRepository userRepository;
 
-    public PlayerController(PlayerRepository players, UserRepository users) {
-        this.players = players;
-        this.users = users;
+    public PlayerController(PlayerRepository playerRepository, UserRepository userRepository) {
+        this.playerRepository = playerRepository;
+        this.userRepository = userRepository;
     }
 
     // Display all players
     @GetMapping("/players")
     public String showAllPlayers(Model model) {
-        List<Player> allPlayers = players.findAll(); // Retrieve all players from the database
+        List<Player> allPlayers = playerRepository.findAll(); // Retrieve all players from the database
         model.addAttribute("players", allPlayers); // Add the list of players to the model
         return "all_players"; // Return the Thymeleaf template for displaying players
     }
@@ -42,11 +42,11 @@ public class PlayerController {
     @GetMapping("/player/register")
     public String showPlayerRegistrationForm(@RequestParam("userId") Long userId, Model model) {
         // Fetch the user from the UserRepository by userId
-        User user = users.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
         // Ensure the User entity is managed by the persistence context
-        user = users.saveAndFlush(user);
+        user = userRepository.saveAndFlush(user);
 
         // Create a new Player object and set the user
         Player player = new Player();
@@ -67,20 +67,20 @@ public class PlayerController {
         }
 
         // Ensure the User entity is managed by the persistence context
-        User managedUser = users.findById(player.getUser().getId())
+        User managedUser = userRepository.findById(player.getUser().getId())
                 .orElseThrow(() -> new UserNotFoundException(player.getUser().getId()));
 
         player.setUser(managedUser); // Attach the managed user to the player
 
         // Save the player to the repository
-        players.save(player);
+        playerRepository.save(player);
         return "redirect:/home"; // Redirect to home page after successful player registration
     }
 
     // Show edit form
     @GetMapping("/player/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
-        Player player = players.findById(id)
+        Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id));
         model.addAttribute("player", player);
         return "edit_player"; // You need a Thymeleaf template named edit_player.html
@@ -89,7 +89,7 @@ public class PlayerController {
     // Handle edit form submission
     @PostMapping("/player/edit/{id}")
     public String editPlayer(@PathVariable("id") Long id, @ModelAttribute Player player) {
-        Player existingPlayer = players.findById(id)
+        Player existingPlayer = playerRepository.findById(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id));
 
         existingPlayer.setName(player.getName());
@@ -99,7 +99,7 @@ public class PlayerController {
         existingPlayer.setMatchesPlayed(player.getMatchesPlayed());
         existingPlayer.setMatchesWon(player.getMatchesWon());
 
-        players.save(existingPlayer); // Save updated player details
+        playerRepository.save(existingPlayer); // Save updated player details
 
         return "redirect:/players"; // Redirect back to the list of players
     }
@@ -107,9 +107,9 @@ public class PlayerController {
     @PostMapping("/player/delete/{id}")
     public String deletePlayer(@PathVariable("id") Long id) {
         System.out.println("Deleting player with id: " + id); // Logging
-        Player player = players.findById(id)
+        Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id));
-        players.delete(player); // Delete the player
+        playerRepository.delete(player); // Delete the player
         return "redirect:/players"; // Redirect back to the list of players
     }
 
@@ -117,7 +117,7 @@ public class PlayerController {
     @GetMapping("/player/profile/{id}")
     public String getPlayerProfile(@PathVariable("id") Long id, Model model) {
         // Find the player by ID
-        Player player = players.findById(id)
+        Player player = playerRepository.findById(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id));
 
         // Add the player to the model
@@ -137,21 +137,21 @@ public class PlayerController {
     public String addPlayer(@Valid @ModelAttribute Player player, Model model) {
         // Assuming you want to link this new player to an existing user.
         Long userId = 1L; // Replace with the actual ID of an existing user.
-        User user = users.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
     
         // Assign the User to the Player
         player.setUser(user);
     
         // Save the player to the repository
-        players.save(player); // Save the new player to the repository
+        playerRepository.save(player); // Save the new player to the repository
         return "redirect:/players"; // Redirect to player list after successful submission
     }
     
     @ResponseBody
     @GetMapping("/api/players")
     public List<Player> listPlayers() {
-        return players.findAll();
+        return playerRepository.findAll();
     }
 
     /**
@@ -162,33 +162,33 @@ public class PlayerController {
     @ResponseBody
     @GetMapping("/users/{userId}/players")
     public Player getPlayerByUserId(@PathVariable(value = "userId") Long userId) {
-        if (!users.existsById(userId)) {
+        if (!userRepository.existsById(userId)) {
             throw new PlayerNotFoundException(userId);
         }
-        return players.findByUserId(userId);
+        return playerRepository.findByUserId(userId);
     }
 
     @ResponseBody
     @PostMapping("/users/{userId}/players")
     public Player addPlayer(@PathVariable(value = "userId") Long userId, @Valid @RequestBody Player player) {
         // Retrieve the user and check for existence
-        User user = users.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new PlayerNotFoundException(userId));
     
         player.setUser(user);
     
         // Check for duplicates based on user association
-        if (players.findOptionalByUserId(userId).isPresent()) {
+        if (playerRepository.findOptionalByUserId(userId).isPresent()) {
                 throw new ExistingUserException("Player already exists for this user");
         }
         // Check for duplicates by phone number or name
-        if (players.findByPhoneNumber(player.getPhoneNumber()).isPresent() || 
-            players.findByName(player.getName()).isPresent()) {
+        if (playerRepository.findByPhoneNumber(player.getPhoneNumber()).isPresent() || 
+            playerRepository.findByName(player.getName()).isPresent()) {
             throw new ExistingUserException("Player with this phone number or name already exists");
         }
     
         // Save and return the new player
-        return players.save(player);
+        return playerRepository.save(player);
     }
     
 
@@ -197,18 +197,18 @@ public class PlayerController {
     public Player updatePlayer(@PathVariable(value = "userId") Long userId,
             @PathVariable(value = "playerId") Long playerId,
             @Valid @RequestBody Player newPlayer) {
-        if (!users.existsById(userId)) {
+        if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(userId);
         }
 
-        return players.findByIdAndUserId(playerId, userId).map(player -> {
+        return playerRepository.findByIdAndUserId(playerId, userId).map(player -> {
             player.setName(newPlayer.getName()); // Update the name
             player.setPhoneNumber(newPlayer.getPhoneNumber()); // Update the phone number
             player.setAge(newPlayer.getAge()); // Update the age
             player.setGender(newPlayer.getGender()); // Update the gender
             player.setElo(newPlayer.getElo()); // Update the ELO
 
-            return players.save(player);
+            return playerRepository.save(player);
         }).orElseThrow(() -> new PlayerNotFoundException(playerId));
     }
 

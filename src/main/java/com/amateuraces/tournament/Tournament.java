@@ -30,14 +30,16 @@ public class Tournament {
     private String name;
 
     private int ELOrequirement;
-
+    @NotNull
     private int maxPlayers;
 
     private int playerCount = 0;
-
+    @NotNull
     private LocalDate startDate;
-    
+    @NotNull
     private LocalDate endDate;
+
+    private LocalDate registrationEndDate;
 
     private String location;
 
@@ -66,13 +68,27 @@ public class Tournament {
         //     return Objects.hash(id); // Hash based on 'id'
         // }
 
+    // Custom setter to enforce even maxPlayers
+    public void setMaxPlayers(int maxPlayers) {
+        if (maxPlayers < 0) {
+            throw new IllegalArgumentException("maxPlayers cannot be negative.");
+        }
+        if (maxPlayers % 2 != 0) {
+            throw new IllegalArgumentException("maxPlayers must be an even number.");
+        }
+        this.maxPlayers = maxPlayers;
+    }
 
-    public Tournament(String name, int maxPlayers, String location, int ELOrequirement, String description) {
+
+    public Tournament(String name, int maxPlayers, String location, int ELOrequirement, String description,
+        LocalDate startDate, LocalDate endDate) {
         this.ELOrequirement = ELOrequirement;
         this.name = name;
         this.maxPlayers = maxPlayers;
         this.location = location;
         this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Tournament(String name) {

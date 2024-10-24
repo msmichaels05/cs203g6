@@ -22,6 +22,16 @@ Content-Type: application/json
     "email": "user@email.com",
     "password": "betatester"   
 }
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernames",
+    "email": "use@email.com",
+    "password": "betatester"   
+}
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
 # Show that cannot create player for admin
@@ -58,13 +68,26 @@ Content-Type: application/json
 Authorization: Basic betatester betatester
 
 {
+    "name":"Alphabravos",
+    "phoneNumber" :"88888882",
+    "email" : "alphabravo@gmail.com",
+    "age" : 18,
+    "gender" : "Male"
+}
+
+### POST PLAYER INFO TO USER AFTER CREATION OF USER
+# Show that player can create 
+POST http://localhost:8080/users/4/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
     "name":"Alphabravo",
     "phoneNumber" :"88888888",
     "email" : "alphabravo@gmail.com",
     "age" : 18,
     "gender" : "Male"
 }
-
 ### Showcase user cannot post in admin
 POST http://localhost:8080/users/1/admins
 Content-Type: application/json
@@ -104,7 +127,12 @@ Authorization: Basic admin goodpassword
 
 {
     "name": "test",
-    "elorequirement": 100
+    "elorequirement": 100,
+    "maxPlayers":2,
+    "location": "Singapore",
+    "description":"newbie training session",
+    "startDate": "2024-11-30",
+    "endDate":"2024-12-24"
 }
 
 ### POST Player to tournament
@@ -117,10 +145,17 @@ Authorization: Basic betatester betatester
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
+Authorization: Basic usernames betatester 
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
 Authorization: Basic admin goodpassword 
 
 ###
 GET http://localhost:8080/tournaments/1/players
+
+###
+DELETE http://localhost:8080/tournaments/1/players/2
 
 ### Tournament
 GET http://localhost:8080/tournament

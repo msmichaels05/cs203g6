@@ -1,5 +1,7 @@
 package com.amateuraces.tournament;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 import org.springframework.security.core.Authentication;
@@ -45,6 +47,22 @@ public class TournamentServiceImpl implements TournamentService {
         if (tournamentRepository.findByName(tournament.getName()).isPresent()) {
             throw new ExistingTournamentException("Tournament with this name already exists");
         }
+
+        LocalDate currentDate = LocalDate.now();
+
+        // Check if the tournament's start date is at least one month in the future
+        if (!tournament.getStartDate().isAfter(currentDate.plusMonths(1))) {
+            throw new IllegalArgumentException("The tournament must be scheduled at least one month in advance from today.");
+        }
+    
+        // Validate that the start date is before the end date
+        if (!tournament.getStartDate().isBefore(tournament.getEndDate())) {
+            throw new IllegalArgumentException("Start date must be before end date.");
+        }
+
+        // Set Registration period : 1 week before start date
+        LocalDate registrationEndDate = tournament.getStartDate().minusWeeks(1);
+        tournament.setRegistrationEndDate(registrationEndDate);
         return tournamentRepository.save(tournament);
     }
 
@@ -72,7 +90,7 @@ public class TournamentServiceImpl implements TournamentService {
         if (authentication != null && authentication.getPrincipal() instanceof User) {
             User userDetails = (User) authentication.getPrincipal();
             Long userId = userDetails.getId(); // This is also the player ID
-    
+
             // Now you can find the player by userId
             Player player = playerRepository.findById(userId)
                     .orElseThrow(() -> new PlayerNotFoundException("Player not registered"));
@@ -80,8 +98,12 @@ public class TournamentServiceImpl implements TournamentService {
             // Continue with your logic to join the tournament...
             Tournament tournament = tournamentRepository.findById(id)
                     .orElseThrow(() -> new TournamentNotFoundException(id));
-    
+            if (tournament.getPlayerCount() >= tournament.getMaxPlayers()) {
+                throw new IllegalArgumentException("Cannot join tournament: it is full.");
+            }
             tournament.getPlayers().add(player);
+            //Increment player count
+            tournament.setPlayerCount(tournament.getPlayerCount()+1);
             tournamentRepository.save(tournament);
         } else {
             throw new UserAuthenticationException();
@@ -109,10 +131,28 @@ public class TournamentServiceImpl implements TournamentService {
             tournament.setLocation(newTournamentInfo.getLocation());
             tournament.setMaxPlayers(newTournamentInfo.getMaxPlayers());
             tournament.setDescription(newTournamentInfo.getDescription());
+            tournament.setStartDate(newTournamentInfo.getStartDate());
+            tournament.setEndDate(newTournamentInfo.getEndDate());
             return tournamentRepository.save(tournament);
         }).orElse(null);
     }
 
+
+    @Override
+    public void removePlayerFromTournament(Long tournamentId, Long playerId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
+        
+        Player playerToRemove = tournament.getPlayers().stream()
+                .filter(player -> player.getId().equals(playerId))
+                .findFirst()
+                .orElseThrow(() -> new PlayerNotFoundException(playerId));
+    
+        tournament.getPlayers().remove(playerToRemove);
+        tournament.setPlayerCount(tournament.getPlayerCount()-1);
+        tournamentRepository.save(tournament);
+    }
+    
     // @Override
     // public Set<Match> performRandomDraw(Long tournamentId) {
     //     Tournament tournament = tournamentRepository.findById(tournamentId)

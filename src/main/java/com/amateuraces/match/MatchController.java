@@ -19,8 +19,8 @@ import jakarta.validation.Valid;
 public class MatchController {
     private final MatchService matchService;
     
-    public MatchController(MatchService ps){
-        this.matchService = ps ; 
+    public MatchController(MatchService matchService){
+        this.matchService = matchService ; 
     }
 
         /**
