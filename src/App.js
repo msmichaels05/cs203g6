@@ -10,6 +10,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* add more routes here */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
       </Routes>
