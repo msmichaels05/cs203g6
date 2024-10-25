@@ -43,7 +43,6 @@ const RegisterPlayers = () => {
       dob,
       nationality,
     });
-    // Perform any further logic, like sending the data to the backend
   };
 
   return (
