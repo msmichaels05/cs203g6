@@ -99,8 +99,12 @@ public class Player {
         return this.matchesPlayed - this.matchesWon;
     }
 
-    public void addToTournamentHistory(Tournament tournament) {
+    public void addToTournamentHistory(Tournament tournament) { //Every player has a tournament history (All tournaments he/she participated in)
         tournamentHistory.add(tournament);
+    }
+
+    public void removeFromTournamentHistory(Tournament tournament) { //Remove tournament from tournament history
+        tournamentHistory.remove(tournament);
     }
 
     public String getName() {

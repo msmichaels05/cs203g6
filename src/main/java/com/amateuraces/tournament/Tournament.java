@@ -100,14 +100,14 @@ public class Tournament {
         boolean added = players.add(player);
         if (added) {
             playerCount++;
-            player.getTournaments().add(this); // Ensure the bi-directional relationship is maintained
+            player.addToTournamentHistory(this);; // Ensure the bi-directional relationship is maintained
         }
         return added;
     }
 
     public void removePlayer(Player player) {
         players.remove(player);
-        player.getTournaments().remove(this); // Also remove this tournament from the player's list
+        player.removeFromTournamentHistory(this);// Also remove this tournament from the player's list
     }
     // public boolean addPlayer(Player player){
     //     players.add(player);
@@ -138,21 +138,18 @@ public class Tournament {
         //ALL PLAYERS players attribute
         Player[] seededPlayers = null;
         Player[] unseededPlayers = null;
+        segregateSeededUnseeded();
+        Player[] slots = new Player[seededPlayers.length + unseededPlayers.length];
         
-        assignSeedsToSlots(seededPlayers, null);
-        for (int r=0; r<round1Matches; r++) {  //1st match 1st seed, last match 2nd seed, n/2 match 3rd seed, n/2 + 1 4th seed
-            Match temp1stRoundMatch = null;
-            if (r==0) {//Assign player of highest elo (highest seed) to first match
-                //temp1stRoundMatch = new Match(seededPlayers[0], getRandomUnseededPlayer) ;
-            }
-            if (r==round1Matches - 1) {
-                //temp1stRoundMatch = new Match(getRandomUnseededPlayer, seededPlayers[seededPlayers.length-1]);
-            }
-            else {
-                //temp1stRoundMatch = new Match(getRandomUnseededPlayer, getRandomUnseededPlayer);
-            }
-            draw.insert(temp1stRoundMatch);
-        }
+        assignSeedsToSlots(seededPlayers, slots); 
+        for (int r=0; r<slots.length; r+=2) {
+            Match temp1stRoundMatch = new Match(slots[r], slots[r+1]);
+            draw.insert(temp1stRoundMatch); //Add every matched up player to draw
+        } //DONE
+    } 
+
+    public void printDraw() {
+        draw.printHeap();
     }
 
     // Method to assign seeded players to specific slots
@@ -203,7 +200,7 @@ public class Tournament {
     }
 
     // Placeholder methods to get seeded and unseeded players
-    private void seededUnseeded() { //Create list of seeded & unseeded players
+    private void segregateSeededUnseeded() { //Create array of seeded & unseeded players
         int no = (int) Math.pow(2, (int) Math.ceil((Math.log(playerCount) / Math.log(2))) -1);
         int numberOfSeeds = no / 4;
         //TOBE IMPLEMENTEDDD
