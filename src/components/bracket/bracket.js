@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SingleEliminationBracket,
   Match,
@@ -27,103 +27,226 @@ const GlootTheme = createTheme({
   svgBackground: "#0F121C",
 });
 
-const exportedSmallBracket = [
+// Initial match data but will be automated based on the max player set in create tournament
+const initialBracket = [
+  // Final Match
   {
-    id: "testEnd",
+    id: "final",
     nextMatchId: null,
     tournamentRoundText: "3",
-    startTime: "2021-05-30",
+    startTime: "2021-06-01",
     state: "SCHEDULED",
     participants: [
       {
-        id: "14754a1a-932c-4992-8dec-f7f94a339960",
+        id: "finalWinner1",
+        resultText: null,
+        isWinner: false,
+        status: null,
+        name: "-",
+      },
+      {
+        id: "finalWinner2",
+        resultText: null,
+        isWinner: false,
+        status: null,
+        name: "-",
+      },
+    ],
+  },
+
+  // Semi-Final Matches
+  {
+    id: "semiFinal1",
+    nextMatchId: "final",
+    tournamentRoundText: "2",
+    startTime: "2021-05-31",
+    state: "SCHEDULED",
+    participants: [
+      {
+        id: "semiFinalWinner1",
         resultText: null,
         isWinner: false,
         status: null,
         name: "Chase",
-        picture: "teamlogos/client_team_default_logo",
+      },
+      {
+        id: "semiFinalLoser1",
+        resultText: null,
+        isWinner: false,
+        status: null,
+        name: "Michael",
       },
     ],
   },
   {
-    id: 19754,
-    nextMatchId: "testEnd",
+    id: "semiFinal2",
+    nextMatchId: "final",
     tournamentRoundText: "2",
-    startTime: "2021-05-30",
+    startTime: "2021-05-31",
     state: "SCHEDULED",
     participants: [
       {
-        id: "14754a1a-932c-4992-8dec-f7f94a339960",
+        id: "semiFinalWinner2",
         resultText: null,
         isWinner: false,
         status: null,
         name: "Jeffrey",
-        picture: "teamlogos/client_team_default_logo",
+      },
+      {
+        id: "semiFinalLoser2",
+        resultText: null,
+        isWinner: false,
+        status: null,
+        name: "Thomas",
       },
     ],
   },
+
+  // Quarter-Final Matches
   {
-    id: 19755,
-    nextMatchId: 19754,
+    id: "quarterFinal1",
+    nextMatchId: "semiFinal1",
     tournamentRoundText: "1",
     startTime: "2021-05-30",
     state: "SCORE_DONE",
     participants: [
       {
-        id: "14754a1a-932c-4992-8dec-f7f94a339960",
+        id: "qWinner1",
         resultText: "Won",
         isWinner: true,
         status: "PLAYED",
-        name: "Michael",
-        picture: "teamlogos/client_team_default_logo",
+        name: "Chase",
       },
       {
-        id: "d16315d4-7f2d-427b-ae75-63a1ae82c0a8",
+        id: "qLoser1",
         resultText: "Lost",
-        name: "Thomas",
+        isWinner: false,
+        status: "PLAYED",
+        name: "Ethan",
       },
     ],
   },
   {
-    id: 19756,
-    nextMatchId: 19754,
+    id: "quarterFinal2",
+    nextMatchId: "semiFinal1",
     tournamentRoundText: "1",
     startTime: "2021-05-30",
-    state: "RUNNING",
+    state: "SCORE_DONE",
     participants: [
       {
-        id: "d8b9f00a-0ffa-4527-8316-da701894768e",
-        resultText: null,
+        id: "qWinner2",
+        resultText: "Won",
+        isWinner: true,
+        status: "PLAYED",
+        name: "Michael",
+      },
+      {
+        id: "qLoser2",
+        resultText: "Lost",
         isWinner: false,
-        status: null,
-        name: "Emily",
-        picture: "teamlogos/client_team_default_logo",
+        status: "PLAYED",
+        name: "Nathan",
+      },
+    ],
+  },
+  {
+    id: "quarterFinal3",
+    nextMatchId: "semiFinal2",
+    tournamentRoundText: "1",
+    startTime: "2021-05-30",
+    state: "SCORE_DONE",
+    participants: [
+      {
+        id: "qWinner3",
+        resultText: "Won",
+        isWinner: true,
+        status: "PLAYED",
+        name: "Jeffrey",
+      },
+      {
+        id: "qLoser3",
+        resultText: "Lost",
+        isWinner: false,
+        status: "PLAYED",
+        name: "David",
+      },
+    ],
+  },
+  {
+    id: "quarterFinal4",
+    nextMatchId: "semiFinal2",
+    tournamentRoundText: "1",
+    startTime: "2021-05-30",
+    state: "SCORE_DONE",
+    participants: [
+      {
+        id: "qWinner4",
+        resultText: "Won",
+        isWinner: true,
+        status: "PLAYED",
+        name: "Thomas",
+      },
+      {
+        id: "qLoser4",
+        resultText: "Lost",
+        isWinner: false,
+        status: "PLAYED",
+        name: "William",
       },
     ],
   },
 ];
 
-export const SingleElimination = () => (
-  <div className="bracket-container">
-    <SingleEliminationBracket
-      theme={GlootTheme}
-      matches={exportedSmallBracket}
-      matchComponent={Match}
-      svgWrapper={({ children, ...props }) => (
-        <SVGViewer
-          width={3000} // You can adjust this value for size
-          height={1000} // Adjust this value as per your need
-          viewBox="0 0 1000 600"
-          {...props}
-        >
-          {children}
-        </SVGViewer>
-      )}
-      onMatchClick={(match) => console.log(match)}
-      onPartyClick={(match) => console.log(match)}
-    />
-  </div>
-);
+export const SingleElimination = () => {
+  const [bracket, setBracket] = useState(initialBracket);
+
+  const handleMatchClick = (match, winner) => {
+    // Update the state of the match and move the winner to the next round
+    const updatedBracket = bracket.map((m) => {
+      if (m.id === match.id) {
+        return {
+          ...m,
+          participants: m.participants.map((p) =>
+            p.name === winner.name
+              ? { ...p, isWinner: true, resultText: "Won" }
+              : { ...p, isWinner: false, resultText: "Lost" }
+          ),
+        };
+      }
+      if (m.id === match.nextMatchId) {
+        return {
+          ...m,
+          participants: [
+            { ...m.participants[0], name: winner.name }, // Move winner to next match
+            m.participants[1],
+          ],
+        };
+      }
+      return m;
+    });
+
+    setBracket(updatedBracket);
+  };
+
+  return (
+    <div className="bracket-container">
+      <SingleEliminationBracket
+        theme={GlootTheme}
+        matches={bracket}
+        matchComponent={Match}
+        svgWrapper={({ children, ...props }) => (
+          <SVGViewer width={3000} height={3000} {...props}>
+            {children}
+          </SVGViewer>
+        )}
+        onMatchClick={(match) =>
+          handleMatchClick(match, match.participants[0]) // For simplicity, assume first player wins
+        }
+        onPartyClick={(match) => console.log(match)}
+      />
+    </div>
+  );
+};
 
 export default function App() {
   return (

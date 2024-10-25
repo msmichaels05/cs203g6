@@ -11,16 +11,35 @@ body {
   
   .bracket-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Full page height */
-    background-color: #000000; /* Light background for better visibility */
+    justify-content: center; /* Center the bracket horizontally */
+    align-items: center; /* Center the bracket vertically */
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Prevent overflow of the bracket */
   }
   
   .svg-viewer {
-    width: 100%; 
-    height: 100%;
-    margin: 100%;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+  }
+  
+  .match {
+    padding: 10px;
+    border: 2px solid #292b43;
+    background-color: #1b1d2d;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .match.highlighted {
+    background-color: #00bfff; /* Light up background */
+    border-color: #00ffff; /* Highlight border */
+    color: #fff; /* Ensure text is readable */
+  }
+  
+  .match:hover {
+    cursor: pointer;
+    background-color: #505773; /* Slight hover effect */
+    border-color: #00ffff;
   }
   
   .team {
