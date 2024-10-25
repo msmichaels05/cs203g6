@@ -76,6 +76,8 @@ public class Player {
         this.name = name;
     }
 
+    public int getElo() {return elo;}
+
     // Method to update ELO based on match result
     public void updateElo(int opponentElo, boolean hasWon) {
         int kFactor = 32;  // This could be adjusted based on your ranking system

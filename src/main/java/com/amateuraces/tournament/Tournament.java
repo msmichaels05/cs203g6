@@ -1,5 +1,6 @@
 package com.amateuraces.tournament;
 
+import com.amateuraces.player.EloComparator;
 import com.amateuraces.player.Player;
 import com.amateuraces.match.Match;
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Arrays;
 
 //import org.hibernate.mapping.List;
 
@@ -133,9 +135,10 @@ public class Tournament {
             }
         } //All matches for subsequent rounds have been created and added to the drawHeap
 
-        List<Player> seededPlayers = new ArrayList<>();
-        List<Player> unseededPlayers = new ArrayList<>();
-        //Player[] slots = tournamentrepo;
+        //ALL PLAYERS players attribute
+        Player[] seededPlayers = null;
+        Player[] unseededPlayers = null;
+        
         assignSeedsToSlots(seededPlayers, null);
         for (int r=0; r<round1Matches; r++) {  //1st match 1st seed, last match 2nd seed, n/2 match 3rd seed, n/2 + 1 4th seed
             Match temp1stRoundMatch = null;
@@ -153,27 +156,27 @@ public class Tournament {
     }
 
     // Method to assign seeded players to specific slots
-    private static void assignSeedsToSlots(List<Player> seededPlayers, Player[] slots) {
+    private static void assignSeedsToSlots(Player[] seededPlayers, Player[] slots) {
         int totalMatches = slots.length / 2;
 
         // Seed 1
-        slots[0] = seededPlayers.get(0);
+        slots[0] = seededPlayers[0];
 
         // Seed 2
-        slots[slots.length - 1] = seededPlayers.get(1);
+        slots[slots.length - 1] = seededPlayers[1];
 
         // Seeds 3 and 4
         int midPoint = totalMatches / 2;
-        slots[midPoint - 1] = seededPlayers.get(2);
-        slots[midPoint] = seededPlayers.get(3);
+        slots[midPoint - 1] = seededPlayers[2];
+        slots[midPoint] = seededPlayers[3];
 
         // Seeds 5 to n
         int seedIndex = 4;
-        int[] predefinedPositions = getSeedPositions(seededPlayers.size(), slots.length);
+        int[] predefinedPositions = getSeedPositions(seededPlayers.length, slots.length);
 
         for (int pos : predefinedPositions) {
-            if (seedIndex >= seededPlayers.size()) break;
-            slots[pos] = seededPlayers.get(seedIndex);
+            if (seedIndex >= seededPlayers.length) break;
+            slots[pos] = seededPlayers[seedIndex];
             seedIndex++;
         }
     }
@@ -204,17 +207,10 @@ public class Tournament {
         int no = (int) Math.pow(2, (int) Math.ceil((Math.log(playerCount) / Math.log(2))) -1);
         int numberOfSeeds = no / 4;
         //TOBE IMPLEMENTEDDD
-        // //List<Player> playersByRank = descendingOrderByELO
-        // List<Player> seededPlayers = new ArrayList<>();
-        // List<Player> unseededPlayers = new ArrayList<>();
-        // //From tournament repo, get all playersInTournament()
-        // int i;
-        // for (i=0; i<numberOfSeeds; i++) {
-        //     seededPlayers.add(playersByRank.get(i));
-        // }
-        // for (int j=i; j<playersByRank.size(); j++) {
-        //     unseededPlayers.add(-playersByRank.get(j));
-        // }
+        Player[] playersByElo = players.toArray(new Player[0]);  //Get all players in the tournament, sorting them by elo desc order
+        Arrays.sort(playersByElo, new EloComparator());
+        Player[] seededPlayers = Arrays.copyOfRange(playersByElo, 0, numberOfSeeds); //All seeded players
+        Player[] unseededPlayers = Arrays.copyOfRange(playersByElo, numberOfSeeds + 1, playersByElo.length); //All unseeded players 
     }
 
 }
