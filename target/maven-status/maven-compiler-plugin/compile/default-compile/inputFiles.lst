@@ -23,6 +23,7 @@
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/match/MatchRepository.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/match/MatchService.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/match/MatchServiceImpl.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/player/EloComparator.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/player/Player.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/player/PlayerClient.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/player/PlayerController.java
@@ -31,6 +32,7 @@
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/player/PlayerService.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/player/PlayerServiceImpl.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/security/SecurityConfig.java
+/Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/tournament/MatchMinHeap.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/tournament/Tournament.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/tournament/TournamentClient.java
 /Users/jadentyh/Desktop/CS203/cs203g6/src/main/java/com/amateuraces/tournament/TournamentController.java

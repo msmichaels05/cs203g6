@@ -200,3 +200,9 @@ Authorization: Basic admin goodpassword
 DELETE http://localhost:8080/matches/3
 Authorization: Basic admin goodpassword
 >>>>>>> 4de22c8975a822eef95aef27a91cb5f4b2b102a0
+
+### Initialise Draw
+POST http://localhost:8080/api/tournament/initialise-draw
+
+### Print Draw
+GET http://localhost:8080/api/tournament/print-draw

@@ -3,6 +3,7 @@ package com.amateuraces.tournament;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.amateuraces.match.Match;
@@ -87,6 +88,21 @@ public class TournamentServiceImpl implements TournamentService {
     public Tournament recordMatchResult(Long tournamentId, Long matchId, String result) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'recordMatchResult'");
+    }
+
+    @Override
+    public void initialiseDraw(Long tournamentId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+            .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
+        tournament.initialiseDraw();
+        tournamentRepository.save(tournament); // Save changes if necessary
+    }
+
+    @Override
+    public String printDraw(Long tournamentId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+            .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
+        return tournament.printDraw(); // Modify printDraw() to return a String
     }
 
     // @Override

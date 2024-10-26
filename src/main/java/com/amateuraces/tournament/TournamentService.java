@@ -94,4 +94,8 @@ public interface TournamentService {
      */
     // boolean validateRegistrationPeriod(Long tournamentId);
 
+    void initialiseDraw(Long tournamentId); 
+
+    String printDraw(Long tournamentId);
+
 }

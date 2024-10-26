@@ -147,10 +147,11 @@ public class MatchMinHeap {
         return nodesAtHeight;
     }
 
-    public void printHeap() { //To print out the draw on console
+    public String printHeap() { //To print out the draw on console
+        String printedDraw = "";
         if (size == 0) {
             System.out.println("The heap is empty.");
-            return;
+            return printedDraw;
         }
     
         int height = getHeight();
@@ -158,17 +159,18 @@ public class MatchMinHeap {
     
         for (int h = 0; h <= height; h++) {
             int levelSize = 1 << h; // Number of nodes at this level: 2^h
-            System.out.println("Level " + h + ":");
+            printedDraw += "Level " + h + ":\n";
     
             for (int i = 0; i < levelSize && index < size; i++) {
                 Match match = heap[index];
                 String player1Name = (match.getPlayer1() != null) ? match.getPlayer1().getName() : "TBD";
                 String player2Name = (match.getPlayer2() != null) ? match.getPlayer2().getName() : "TBD";
-                System.out.println("  Match ID " + index + ": " + player1Name + " vs. " + player2Name);
+                printedDraw += "  Match ID " + index + ": " + player1Name + " vs. " + player2Name + "\n";
                 index++;
             }
-            System.out.println();
+            printedDraw += "\n";
         }
+        return printedDraw;
     }    
 }
 

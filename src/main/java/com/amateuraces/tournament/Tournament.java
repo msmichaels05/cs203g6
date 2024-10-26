@@ -96,6 +96,14 @@ public class Tournament {
         this.location = location;
     }
 
+    public int getRequirement() {
+        return ELOrequirement;
+    }
+
+    public void setRequirement(int newRequirement) {
+        ELOrequirement = newRequirement;
+    }
+
     public boolean addPlayer(Player player) {
         boolean added = players.add(player);
         if (added) {
@@ -148,8 +156,8 @@ public class Tournament {
         } //DONE
     } 
 
-    public void printDraw() {
-        draw.printHeap();
+    public String printDraw() {
+        return draw.printHeap();
     }
 
     // Method to assign seeded players to specific slots

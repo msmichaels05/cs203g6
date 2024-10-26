@@ -177,6 +177,18 @@ public class TournamentController {
         return ResponseEntity.ok(updatedTournament);
     }
 
+    @PostMapping("/initialise-draw")
+    public ResponseEntity<String> initialiseDraw(@PathVariable Long id) {
+        tournamentService.initialiseDraw(id);
+        return ResponseEntity.ok("Tournament draw initialised.");
+    }
+
+    @GetMapping("/print-draw")
+    public ResponseEntity<String> printDraw(@PathVariable Long id) {
+        String drawOutput = tournamentService.printDraw(id);
+        return ResponseEntity.ok(drawOutput);
+    }
+
     /**
      * Validate if the registration period is valid.
      * 
