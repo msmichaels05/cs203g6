@@ -1,0 +1,27 @@
+/* profile.css */
+
+/* Style for the profile card */
+.profile-card {
+    background-color: #f8f9fa; /* Light background for the card */
+    border: 1px solid #e0e0e0; /* Subtle border around the card */
+    border-radius: 10px; /* Rounded corners for the card */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.3s; /* Animation for hover effect */
+  }
+  
+  .profile-card:hover {
+    transform: scale(1.02); /* Scale effect on hover */
+  }
+  
+  /* Style for the statistics list */
+  .stat-list {
+    list-style-type: none; /* Remove default list styling */
+    padding: 0; /* Remove padding */
+  }
+  
+  .stat-list li {
+    margin: 10px 0; /* Spacing between items */
+    color: #003366; /* Dark blue color for text */
+    font-weight: bold; /* Bold text for emphasis */
+  }
+  
