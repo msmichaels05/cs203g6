@@ -5,6 +5,7 @@ import java.util.HashSet;
 //import org.hibernate.mapping.Set;
 
 import com.amateuraces.tournament.Tournament;
+import com.amateuraces.user.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 // import lombok.AllArgsConstructor;
@@ -61,6 +63,10 @@ public class Player {
         inverseJoinColumns = @JoinColumn(name = "tournament_id") // Foreign key for tournament
     )
     private Set<Tournament> tournamentHistory = new HashSet<>();
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     // Constructor with wins and losses
     public Player(String name, String gender, int age, String email, String password, String phoneNumber, int matchesPlayed, int matchesWon) {

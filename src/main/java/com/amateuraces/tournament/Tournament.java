@@ -132,11 +132,12 @@ public class Tournament {
     //     players.clear();
     // }
 
+    //Draw is a min-heap struct, similar to binary tree, but condition is parent is always smaller than child
     public void initialiseDraw() { //Algorithm to create the draw
         //Once there are 17 players, there has to be 16 1st round matches, only 2 unlucky players have to face off in 1st round, everybody else gets BYE in the 1st round
         int round1Matches = (int) Math.pow(2, (int) Math.ceil((Math.log(playerCount) / Math.log(2))) -1); //Get total number of 1st round matches, even matches with BYES
         int totalRounds = (int) Math.log((double)round1Matches); //total number of rounds excluding 1st round
-        for (int i=1; i<totalRounds; i*=2) {
+        for (int i=1; i<totalRounds; i*=2) { //Insert Final Round first, then the rounds below it
             for (int j=0; j<i; j++) { //create match for each round, start from finals -> 2nd round
                 Match tempmatch = new Match(null, null);  //Since subsequent matches outcome not determined yet, players are set to null 
                 draw.insert(tempmatch); //insert match for the particular round
@@ -146,7 +147,15 @@ public class Tournament {
         //ALL PLAYERS players attribute
         Player[] seededPlayers = null;
         Player[] unseededPlayers = null;
-        segregateSeededUnseeded();
+
+        //Segregate seeded & unseeded players
+        int no = (int) Math.pow(2, (int) Math.ceil((Math.log(playerCount) / Math.log(2))) -1);
+        int numberOfSeeds = no / 4;
+        Player[] playersByElo = players.toArray(new Player[0]);  //Get all players in the tournament
+        Arrays.sort(playersByElo, new EloComparator()); //Sort players in desc order of elo
+        seededPlayers = Arrays.copyOfRange(playersByElo, 0, numberOfSeeds); //All seeded players
+        unseededPlayers = Arrays.copyOfRange(playersByElo, numberOfSeeds + 1, playersByElo.length); //All unseeded players 
+  
         Player[] slots = new Player[seededPlayers.length + unseededPlayers.length];
         
         assignSeedsToSlots(seededPlayers, slots); 
@@ -205,17 +214,6 @@ public class Tournament {
                 slots[i] = unseededPlayers.remove(index);
             }
         }
-    }
-
-    // Placeholder methods to get seeded and unseeded players
-    private void segregateSeededUnseeded() { //Create array of seeded & unseeded players
-        int no = (int) Math.pow(2, (int) Math.ceil((Math.log(playerCount) / Math.log(2))) -1);
-        int numberOfSeeds = no / 4;
-        //TOBE IMPLEMENTEDDD
-        Player[] playersByElo = players.toArray(new Player[0]);  //Get all players in the tournament, sorting them by elo desc order
-        Arrays.sort(playersByElo, new EloComparator());
-        Player[] seededPlayers = Arrays.copyOfRange(playersByElo, 0, numberOfSeeds); //All seeded players
-        Player[] unseededPlayers = Arrays.copyOfRange(playersByElo, numberOfSeeds + 1, playersByElo.length); //All unseeded players 
     }
 
 }
