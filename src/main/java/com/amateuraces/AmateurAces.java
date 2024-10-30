@@ -8,9 +8,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.amateuraces.client.RestTemplateClient;
 import com.amateuraces.highlight.Highlight;
 import com.amateuraces.highlight.HighlightRepository;
+<<<<<<< Updated upstream
 import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerRepository;
 import com.amateuraces.user.User;
+=======
+import com.amateuraces.match.MatchRepository;
+import com.amateuraces.tournament.TournamentRepository;
+>>>>>>> Stashed changes
 import com.amateuraces.user.UserRepository;
 
 @SpringBootApplication
@@ -28,10 +33,17 @@ public class AmateurAces {
         // JPA user repository init
         UserRepository users = ctx.getBean(UserRepository.class);
         BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
+<<<<<<< Updated upstream
         System.out.println("[Add user]: " + users.save(
             new User("admin", encoder.encode("goodpassword"), "ROLE_ADMIN")).getUsername());
         System.out.println("[Add user]: " + users.save(
             new User("betatester" , encoder.encode("betatester"), "ROLE_USER")).getUsername());
+=======
+        // System.out.println("[Add user]: " + users.save(
+        //     new User("admin@helpdesk.com","admin", encoder.encode("goodpassword"), "ROLE_ADMIN")).getUsername());
+        // System.out.println("[Add user]: " + users.save(
+        //     new User("betatester" , encoder.encode("betatester"), "ROLE_USER")).getUsername());
+>>>>>>> Stashed changes
 
         // Highlight repository initialization
         HighlightRepository highlights = ctx.getBean(HighlightRepository.class);

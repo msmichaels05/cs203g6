@@ -1,7 +1,26 @@
+<<<<<<< Updated upstream
 
 POST http://localhost:8080/users
 Content-Type: application/json
 
+=======
+### POST NEW USER IF NOT AUTHORIZED AUTHORIIES FIXED ROLE_USER
+# By right users would only key in username and password but in the event they try to change authority it will fail
+GET http://localhost:8080/users/me
+Content-Type: application/json
+
+{
+    "email": "betatester@email.com",
+    "password": "betatester"   
+}
+
+
+### POST NEW USER IF NOT AUTHORIZED AUTHORIIES FIXED ROLE_USER
+# By right users would only key in username and password but in the event they try to change authority it will fail
+POST http://localhost:8080/users
+Content-Type: application/json
+
+>>>>>>> Stashed changes
 {
     "username": "username",
     "password": "password",
