@@ -52,6 +52,7 @@ public class Tournament {
 
     private String description;
 
+    @Transient
     private MatchMinHeap draw = null; //need to determine size eventually
 
     @ManyToMany
