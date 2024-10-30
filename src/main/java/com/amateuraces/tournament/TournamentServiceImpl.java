@@ -98,9 +98,17 @@ public class TournamentServiceImpl implements TournamentService {
             // Continue with your logic to join the tournament...
             Tournament tournament = tournamentRepository.findById(id)
                     .orElseThrow(() -> new TournamentNotFoundException(id));
+
+            //Check if the player is already in the tournament
+            if(tournament.getPlayers().contains(player)){
+                throw new IllegalArgumentException("Player has already joined this tournament.");
+            }
+            
+            //Check if tournament is full
             if (tournament.getPlayerCount() >= tournament.getMaxPlayers()) {
                 throw new IllegalArgumentException("Cannot join tournament: it is full.");
             }
+
             tournament.getPlayers().add(player);
             //Increment player count
             tournament.setPlayerCount(tournament.getPlayerCount()+1);
