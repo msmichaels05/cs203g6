@@ -281,8 +281,9 @@ Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 {
-    "Tournament"
-    "Player1"
+    "Tournament": "test",
+    "Player1": "Player1",
+    "Player2": "Player2"
 }
 
 ###

@@ -58,7 +58,15 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/players/*").permitAll()
-
+                .requestMatchers(HttpMethod.GET, "/matches").permitAll()
+                .requestMatchers(HttpMethod.GET, "/matches/complete/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/matches").permitAll()//hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/matches/add").permitAll()//hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/matches/{id}").permitAll()//hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/matches/delete/{id}").permitAll()//hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/matches/{id}/result").permitAll()//hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/matches/{id}/result/updateScore").permitAll()//hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/matches/{id}/result/update-winner").permitAll()//hasRole("ADMIN")
 
 
                 .requestMatchers("/register", "/login", "/player/register/**").permitAll()

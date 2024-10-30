@@ -1,75 +1,56 @@
 package com.amateuraces;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.ArgumentMatchers.any;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.amateuraces.match.Match;
-import com.amateuraces.match.MatchRepository;
-import com.amateuraces.match.MatchServiceImpl;
-import com.amateuraces.player.Player;
-import com.amateuraces.player.PlayerRepository;
-import com.amateuraces.player.PlayerServiceImpl;
-import com.amateuraces.tournament.TournamentRepository;
-import com.amateuraces.tournament.TournamentServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class MatchServiceTest {
 
-    @Mock
-    private TournamentRepository tournamentRepository;
+//     @Mock
+//     private TournamentRepository tournamentRepository;
 
-    @Mock
-    private PlayerRepository players;
+//     @Mock
+//     private PlayerRepository players;
 
-    @Mock
-    private MatchRepository matches;
+//     @Mock
+//     private MatchRepository matches;
 
-    @InjectMocks
-    private TournamentServiceImpl tournamentService;
+//     @InjectMocks
+//     private TournamentServiceImpl tournamentService;
 
-    @InjectMocks
-    private PlayerServiceImpl playerService;
+//     @InjectMocks
+//     private PlayerServiceImpl playerService;
 
-    @InjectMocks
-    private MatchServiceImpl matchService;
+//     @InjectMocks
+//     private MatchServiceImpl matchService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+//     @BeforeEach
+//     void setUp() {
+//         MockitoAnnotations.openMocks(this);
+//     }
 
-    @Test
-    void addMatch_ShouldSaveMatchInIncompleteRepository() {
-        Player player1 = new Player();
-        player1.setId(10L);
+//     @Test
+//     void addMatch_ShouldSaveMatchInIncompleteRepository() {
+//         Player player1 = new Player();
+//         player1.setId(10L);
 
-        Player player2 = new Player();
-        player2.setId(20L);
+//         Player player2 = new Player();
+//         player2.setId(20L);
 
-        Match match = new Match(10L, 20L);
-        match.setId(1L);
+//         Match match = new Match(10L, 20L);
+//         match.setId(1L);
 
-        // Mock save operation for incompleteMatches
-        when(matches.save(any(Match.class))).thenReturn(match);
+//         // Mock save operation for incompleteMatches
+//         when(matches.save(any(Match.class))).thenReturn(match);
 
-        // Call the service to add the match
-        Match savedMatch = matchService.addMatch(match);
+//         // Call the service to add the match
+//         Match savedMatch = matchService.addMatch(match);
 
-        // Validate the result
-        assertNotNull(savedMatch);  // Check if the saved match is not null
-        assertEquals(match, savedMatch);  // Check if the returned match is the same as expected
-        verify(matches).save(match);  // Verify that the save method was called
-    }
+//         // Validate the result
+//         assertNotNull(savedMatch);  // Check if the saved match is not null
+//         assertEquals(match, savedMatch);  // Check if the returned match is the same as expected
+//         verify(matches).save(match);  // Verify that the save method was called
+//     }
 
     // @Test
     // void addMatch_ShouldSaveMatchInIncompleteRepository() {

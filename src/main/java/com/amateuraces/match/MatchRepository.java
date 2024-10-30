@@ -14,5 +14,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MatchRepository extends JpaRepository<Match, Long> {
-    Optional<Match> findByMatchId(Long id);
+    Optional<Match> findById(Long id);
 }

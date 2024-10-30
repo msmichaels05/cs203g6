@@ -22,7 +22,7 @@ import com.amateuraces.tournament.Tournament;
 
 //import jakarta.validation.Valid;
 
-@RestController
+@Controller
 public class MatchController {
     private final MatchService matchService;
     
@@ -69,11 +69,11 @@ public class MatchController {
     }
 
     // Handle form submission to add a match
-    @PostMapping("/matches/add")
-    public String addMatches(@ModelAttribute Match match) {
-        matchService.addMatch(match); // Save the new match to the database
-        return "redirect:/tournaments"; // Redirect back to the list of tournaments
-    }
+    // @PostMapping("/matches/add")
+    // public String addMatches(@ModelAttribute Match match) {
+    //     matchService.addMatch(match); // Save the new match to the database
+    //     return "redirect:/tournaments"; // Redirect back to the list of tournaments
+    // }
 
     /**
      * If there is no match with the given "id", throw a MatchNotFoundException
@@ -121,12 +121,8 @@ public class MatchController {
             throw new MatchNotFoundException(id);
         } catch (PlayerNotFoundException e) {
             throw new PlayerNotFoundException(winnerId);
-        } catch (PlayerNotFoundException e) {
-            throw new PlayerNotFoundException(loserId);
         } catch (PlayerNotPartOfMatchException e) {
             throw new PlayerNotPartOfMatchException(winnerId, id);
-        } catch (PlayerNotPartOfMatchException e) {
-            throw new PlayerNotPartOfMatchException(loserId, id);
         }
     }
 
@@ -149,12 +145,8 @@ public class MatchController {
             throw new MatchNotFoundException(id);
         } catch (PlayerNotFoundException e) {
             throw new PlayerNotFoundException(newWinnerId);
-        } catch (PlayerNotFoundException e) {
-            throw new PlayerNotFoundException(oldWinnerId);
         } catch (PlayerNotPartOfMatchException e) {
             throw new PlayerNotPartOfMatchException(newWinnerId, id);
-        } catch (PlayerNotPartOfMatchException e) {
-            throw new PlayerNotPartOfMatchException(oldWinnerId, id);
         }
     }
 }

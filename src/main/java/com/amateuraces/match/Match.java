@@ -6,7 +6,6 @@ import com.amateuraces.player.Player;
 import com.amateuraces.tournament.Tournament;
 
 import jakarta.persistence.Column;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,25 +32,15 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "tournamentName")
-    private Tournament tournament;
+    private String tournament;
 
-    @OneToOne
-    @JoinColumn(name = "matchPlayer1")
-    private Long player1Id;
+    private String player1;
 
-    @OneToOne
-    @JoinColumn(name = "matchPlayer2")
-    private Long player2Id;
+    private String player2;
 
-    @OneToOne
-    @JoinColumn(name = "matchWinner")
-    private Long winner;
+    private String winner;
 
-    @OneToOne
-    @JoinColumn(name = "matchLoser")
-    private Long loser;
+    private String loser;
 
     @Column(name = "matchScore")
     private String score;
@@ -62,25 +51,25 @@ public class Match {
     @Column(name = "isCompleted", nullable = false)
     private boolean isCompleted = false;
 
-    public Match(Tournament tournament, Long player1Id, Long player2Id) {
+    public Match(String tournament, String player1, String player2) {
         this.tournament = tournament;
-        this.player1Id = player1Id;
-        this.player2Id = player2Id;
+        this.player1 = player1;
+        this.player2 = player2;
     }
 
-    public Match(Long player1Id, Long player2Id) {
-        this.player1Id = player1Id;
-        this.player2Id = player2Id;
+    public Match(String player1, String player2) {
+        this.player1 = player1;
+        this.player2 = player2;
     }
 
-    public Match(Tournament tournament, Long winner, Long loser, String score) {
+    public Match(String tournament, String winner, String loser, String score) {
         this.tournament = tournament;
         this.winner = winner;
         this.loser = loser;
         this.score = score;
     }
 
-    public void setMatchResult(Long winner, Long loser, String score) {
+    public void setMatchResult(String winner, String loser, String score) {
         this.winner = winner;
         this.loser = loser;
         this.score = score;
@@ -88,6 +77,6 @@ public class Match {
     }
 
     public boolean isPlayerInvolved(Player player) {
-        return (Objects.equals(player1Id, player.getId()) || Objects.equals(player2Id, player.getId()));
+        return Objects.equals(player1, player.getId()) || Objects.equals(player2, player.getId());
     }
 }

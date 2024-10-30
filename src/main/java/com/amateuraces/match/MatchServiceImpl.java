@@ -75,7 +75,7 @@ public class MatchServiceImpl implements MatchService {
         }
 
         // Update the match result
-        match.setMatchResult(winnerId, loserId, score);
+        match.setMatchResult(winner.getName(), loser.getName(), score);
 
         // Update both players' statistics
         winner.updateWinsAndLosses(true);
@@ -121,7 +121,7 @@ public class MatchServiceImpl implements MatchService {
         }
         
         // Update the match result with new winner and loser
-        match.setMatchResult(newWinnerId, oldWinnerId, newScore);
+        match.setMatchResult(newWinner.getName(), oldWinner.getName(), newScore);
         match.setCompleted(true);
         
         // Revert ELO

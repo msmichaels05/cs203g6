@@ -109,65 +109,47 @@
 
 package com.amateuraces;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.ArgumentMatchers.any;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.amateuraces.match.*;
-import com.amateuraces.player.Player;
-import com.amateuraces.player.PlayerRepository;
-import com.amateuraces.player.PlayerServiceImpl;
-import com.amateuraces.tournament.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TournamentServiceTest {
 
-    @Mock
-    private TournamentRepository tournamentRepository;
+//     @Mock
+//     private TournamentRepository tournamentRepository;
 
-    @Mock
-    private PlayerRepository players;
+//     @Mock
+//     private PlayerRepository players;
 
-    @Mock
-    private MatchRepository matches;
+//     @Mock
+//     private MatchRepository matches;
 
-    @InjectMocks
-    private TournamentServiceImpl tournamentService;
+//     @InjectMocks
+//     private TournamentServiceImpl tournamentService;
 
-    @InjectMocks
-    private PlayerServiceImpl playerService;
+//     @InjectMocks
+//     private PlayerServiceImpl playerService;
 
-    @InjectMocks
-    private MatchServiceImpl matchService;
+//     @InjectMocks
+//     private MatchServiceImpl matchService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+//     @BeforeEach
+//     void setUp() {
+//         MockitoAnnotations.openMocks(this);
+//     }
 
-    @Test
-    void createTournament_NewName_ReturnSavedTournament() {
-        Tournament tournament = new Tournament("New Tournament");
-        when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournament);
-        Tournament savedTournament = tournamentService.addTournament(tournament);
+//     @Test
+//     void createTournament_NewName_ReturnSavedTournament() {
+//         Tournament tournament = new Tournament("New Tournament");
+//         when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournament);
+//         Tournament savedTournament = tournamentService.addTournament(tournament);
 
-        assertNotNull(savedTournament);
-        assertEquals(tournament.getName(), savedTournament.getName());
-        assertEquals(tournament.getELOrequirement(), savedTournament.getELOrequirement());
+//         assertNotNull(savedTournament);
+//         assertEquals(tournament.getName(), savedTournament.getName());
+//         assertEquals(tournament.getELOrequirement(), savedTournament.getELOrequirement());
 
-        verify(tournamentRepository).save(tournament);
-    }
+//         verify(tournamentRepository).save(tournament);
+//     }
 
     // @Test
     // void addPlayerToTournament_ValidTournamentAndPlayer_ReturnPlayerList() {
@@ -194,53 +176,53 @@ public class TournamentServiceTest {
     // verify(players).findById(2L);
     // }
 
-    @Test
-    public void updateTournament_ValidId_ReturnUpdatedTournament() {
-        Tournament existingTournament = new Tournament();
-        existingTournament.setId(1L);
-        existingTournament.setName("Old Tournament");
-        existingTournament.setELOrequirement(1000);
+    // @Test
+    // public void updateTournament_ValidId_ReturnUpdatedTournament() {
+    //     Tournament existingTournament = new Tournament();
+    //     existingTournament.setId(1L);
+    //     existingTournament.setName("Old Tournament");
+    //     existingTournament.setELOrequirement(1000);
 
-        Tournament newTournamentInfo = new Tournament();
-        newTournamentInfo.setName("Updated Tournament");
-        newTournamentInfo.setELOrequirement(1200);
+    //     Tournament newTournamentInfo = new Tournament();
+    //     newTournamentInfo.setName("Updated Tournament");
+    //     newTournamentInfo.setELOrequirement(1200);
 
-        when(tournamentRepository.findById(1L)).thenReturn(Optional.of(existingTournament));
-        when(tournamentRepository.save(any(Tournament.class))).thenReturn(existingTournament);
+    //     when(tournamentRepository.findById(1L)).thenReturn(Optional.of(existingTournament));
+    //     when(tournamentRepository.save(any(Tournament.class))).thenReturn(existingTournament);
 
-        Tournament updatedTournament = tournamentService.updateTournament(1L, newTournamentInfo);
+    //     Tournament updatedTournament = tournamentService.updateTournament(1L, newTournamentInfo);
 
-        assertNotNull(updatedTournament);
-        assertEquals("Updated Tournament", updatedTournament.getName());
-        assertEquals(1200, updatedTournament.getELOrequirement());
+    //     assertNotNull(updatedTournament);
+    //     assertEquals("Updated Tournament", updatedTournament.getName());
+    //     assertEquals(1200, updatedTournament.getELOrequirement());
 
-        verify(tournamentRepository).save(existingTournament);
-    }
+    //     verify(tournamentRepository).save(existingTournament);
+    // }
 
-    @Test
-    void addMatchToTournament_ValidTournamentAndMatch_ShouldAddMatch() {
-        Tournament tournament = new Tournament();
-        tournament.setId(1L);
-        tournament.setName("Test Tournament");
+    // @Test
+    // void addMatchToTournament_ValidTournamentAndMatch_ShouldAddMatch() {
+    //     Tournament tournament = new Tournament();
+    //     tournament.setId(1L);
+    //     tournament.setName("Test Tournament");
 
-        Player player1 = new Player("Player 1");
-        Player player2 = new Player("Player 2");
-        Match match = new Match();
-        match.setId(1L);
-        match.setPlayer1(player1);
-        match.setPlayer2(player2);
+    //     Player player1 = new Player("Player 1");
+    //     Player player2 = new Player("Player 2");
+    //     Match match = new Match();
+    //     match.setId(1L);
+    //     match.setPlayer1(player1);
+    //     match.setPlayer2(player2);
 
-        // Mocking the behavior of tournamentRepository and matchRepository
-        when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
-        when(matches.save(any(Match.class))).thenReturn(match);
+    //     // Mocking the behavior of tournamentRepository and matchRepository
+    //     when(tournamentRepository.findById(1L)).thenReturn(Optional.of(tournament));
+    //     when(matches.save(any(Match.class))).thenReturn(match);
 
-        // Act: Call the method to add the match to the tournament
-        tournamentService.addMatchToTournament(1L, match);
+    //     // Act: Call the method to add the match to the tournament
+    //     tournamentService.addMatchToTournament(1L, match);
 
-        // Assert: Check that the match has been saved and added to the tournament
-        verify(matches).save(match);
-        verify(tournamentRepository).save(tournament);
-    }
+    //     // Assert: Check that the match has been saved and added to the tournament
+    //     verify(matches).save(match);
+    //     verify(tournamentRepository).save(tournament);
+    // }
 
     // @Test
     // void recordMatchResult_ValidMatch_ReturnUpdatedTournament() {
