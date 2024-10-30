@@ -18,7 +18,6 @@ public class TournamentServiceImpl implements TournamentService {
     private  TournamentRepository tournamentRepository;
     private PlayerRepository playerRepository;
     // private CustomUserDetailsService userDetailsService;
-    // private  PlayerRepository playerRepository;
 
     public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository) {
         this.tournamentRepository = tournamentRepository;
@@ -98,6 +97,16 @@ public class TournamentServiceImpl implements TournamentService {
             // Continue with your logic to join the tournament...
             Tournament tournament = tournamentRepository.findById(id)
                     .orElseThrow(() -> new TournamentNotFoundException(id));
+            
+            //Check gender of the tournament
+            if (!(tournament.getGender().equals(player.getGender()))){
+                throw new IllegalArgumentException("Only "+ tournament.getGender()+" allowed");
+            }
+
+            //Check Elo requirement to join tournament
+            if(tournament.getELOrequirement() > player.getElo()){
+                throw new IllegalArgumentException("Min elo requirement: "+ tournament.getELOrequirement());
+            }
 
             //Check if the player is already in the tournament
             if(tournament.getPlayers().contains(player)){
@@ -141,6 +150,7 @@ public class TournamentServiceImpl implements TournamentService {
             tournament.setDescription(newTournamentInfo.getDescription());
             tournament.setStartDate(newTournamentInfo.getStartDate());
             tournament.setEndDate(newTournamentInfo.getEndDate());
+            tournament.setGender(newTournamentInfo.getGender());
             return tournamentRepository.save(tournament);
         }).orElse(null);
     }
@@ -148,17 +158,25 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     public void removePlayerFromTournament(Long tournamentId, Long playerId) {
-        Tournament tournament = tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
-        
-        Player playerToRemove = tournament.getPlayers().stream()
-                .filter(player -> player.getId().equals(playerId))
-                .findFirst()
-                .orElseThrow(() -> new PlayerNotFoundException(playerId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     
-        tournament.getPlayers().remove(playerToRemove);
-        tournament.setPlayerCount(tournament.getPlayerCount()-1);
-        tournamentRepository.save(tournament);
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            User userDetails = (User) authentication.getPrincipal();
+            Long userId = userDetails.getId(); // This is also the player ID
+
+            // Now you can find the player by userId
+            Player player = playerRepository.findById(userId)
+                    .orElseThrow(() -> new PlayerNotFoundException("Player not registered"));
+
+            Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
+    
+            tournament.getPlayers().remove(player);
+            tournament.setPlayerCount(tournament.getPlayerCount()-1);
+            tournamentRepository.save(tournament);
+        } else {
+            throw new UserAuthenticationException();
+        }
     }
     
     // @Override

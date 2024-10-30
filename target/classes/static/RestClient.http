@@ -126,12 +126,13 @@ Authorization: Basic admin goodpassword
 
 
 {
-    "name": "test",
+    "name": "test1",
+    "gender": "Female",
     "elorequirement": 100,
     "maxPlayers":2,
     "location": "Singapore",
     "description":"newbie training session",
-    "startDate": "2024-11-30",
+    "startDate": "2024-12-01",
     "endDate":"2024-12-24"
 }
 
@@ -156,6 +157,7 @@ GET http://localhost:8080/tournaments/1/players
 
 ###
 DELETE http://localhost:8080/tournaments/1/players/2
+Authorization: Basic betatester betatester
 
 ### Tournament
 GET http://localhost:8080/tournament

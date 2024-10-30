@@ -38,6 +38,8 @@ public class Tournament {
     private LocalDate startDate;
     @NotNull
     private LocalDate endDate;
+    @NotNull
+    private String gender;
 
     private LocalDate registrationEndDate;
 
@@ -71,18 +73,31 @@ public class Tournament {
     // Custom setter to enforce even maxPlayers
     public void setMaxPlayers(int maxPlayers) {
         if (maxPlayers < 0) {
-            throw new IllegalArgumentException("maxPlayers cannot be negative.");
+            throw new IllegalArgumentException("max players cannot be negative.");
         }
-        if (maxPlayers % 2 != 0) {
-            throw new IllegalArgumentException("maxPlayers must be an even number.");
+        if (maxPlayers >64){
+            throw new IllegalArgumentException("max players cannot be more than 64");
+        }
+        if (!(isPowerOfTwo(maxPlayers))) {
+            throw new IllegalArgumentException("max players must be a power of 2.");
         }
         this.maxPlayers = maxPlayers;
     }
 
+    private boolean isPowerOfTwo(int maxPlayers) {
+        double temp = (double) maxPlayers;
+        while (temp >= 4) {
+            temp /= 2;
+        }
+        if (temp % 2 != 0) return false;
+        return true;
+    }
 
-    public Tournament(String name, int maxPlayers, String location, int ELOrequirement, String description,
+
+    public Tournament(String name,String gender, int maxPlayers, String location, int ELOrequirement, String description,
         LocalDate startDate, LocalDate endDate) {
         this.ELOrequirement = ELOrequirement;
+        this.gender = gender;
         this.name = name;
         this.maxPlayers = maxPlayers;
         this.location = location;
