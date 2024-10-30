@@ -1,23 +1,28 @@
 import React, { useState } from 'react';
 import { login } from '../../services/authService';
-import './login.css';
+import './register.css';
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  
-  const handleLogin = async (event) => {
+
+  const handleRegister = async (event) => {
     event.preventDefault();
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     try {
-      // Call the login function from the authService
       const response = await login(email, password);
       if (response.success) {
-        // On successful login, redirect or perform any action
-        console.log('Login successful');
-        window.location.href = '/dashboard'; // Change to dashboard route
+        console.log('Registration successful');
+        window.location.href = '/home';
       } else {
-        setError('Invalid credentials. Please try again.');
+        setError('Registration failed. Please try again.');
       }
     } catch (error) {
       setError('An error occurred. Please try again later.');
@@ -25,9 +30,9 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
+    <div className="register-container">
+      <h2>Create an Account</h2>
+      <form onSubmit={handleRegister}>
         <div className="form-group">
           <label>Email:</label>
           <input
@@ -46,11 +51,21 @@ const Login = () => {
             required
           />
         </div>
+        <div className="form-group">
+          <label>Confirm Password:</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </div>
+
         {error && <div className="error">{error}</div>}
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;

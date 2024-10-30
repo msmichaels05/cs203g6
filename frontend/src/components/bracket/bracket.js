@@ -6,6 +6,8 @@ import {
   createTheme,
 } from "@g-loot/react-tournament-brackets";
 import "./bracket.css";
+import { useLocation } from "react-router-dom";
+
 
 const GlootTheme = createTheme({
   textColor: { main: "#000000", highlighted: "#F4F2FE", dark: "#707582" },
@@ -198,7 +200,11 @@ const initialBracket = [
 ];
 
 export const SingleElimination = () => {
+  const location = useLocation();
+  const { tournamentId } = location.state || {}; // Retrieve passed state
   const [bracket, setBracket] = useState(initialBracket);
+  console.log("Tournament ID for bracket:", tournamentId);
+
 
   const handleMatchClick = (match, winner) => {
     // Update the state of the match and move the winner to the next round
