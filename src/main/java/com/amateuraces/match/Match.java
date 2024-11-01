@@ -60,6 +60,10 @@ public class Match {
         this.player1 = player1;
         this.player2 = player2;
         this.startTime = startTime;
+
+        if (!tournament.isDateWithinTournament(startTime)) {
+            throw new IllegalArgumentException("Match date must be within the tournament's start and end dates.");
+        }
     }
 
     public Match(String player1, String player2) {

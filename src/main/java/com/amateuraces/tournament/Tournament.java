@@ -131,7 +131,15 @@ public class Tournament {
         player.getTournaments().remove(this); // Also remove this tournament from the player's list
     }
 
+    public boolean isDateWithinTournament(LocalDate date) {
+        return (date.isEqual(startDate) || date.isAfter(startDate)) &&
+               (date.isEqual(endDate) || date.isBefore(endDate));
+    }
+
     public void addMatch(Match match) {
+        if (!isDateWithinTournament(match.getStartTime())) {
+            throw new IllegalArgumentException("Match date must be within the tournament's start and end dates.");
+        }
         matches.add(match);
         match.setTournament(this.name); // Ensure the bidirectional relationship is maintained
     }
