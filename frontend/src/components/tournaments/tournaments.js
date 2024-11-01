@@ -1,45 +1,66 @@
-import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import './tournaments.css'; // Importing CSS for styling
+import React, { useState, useEffect } from 'react';
+import { Modal, Button, Form, Card } from 'react-bootstrap';
+import './tournaments.css';
 import CustomNavbar from '../navbar/CustomNavbar';
 import { Link } from "react-router-dom";
 
-let initialTournaments = [
-  { id: 1, name: "Champions Cup", ELOrequirement: 1500, maxPlayers: 16, location: "New York", startDate: "2024-06-01", endDate: "2024-06-07", registrationEndDate: "2024-05-30" },
-  { id: 2, name: "Elite Tournament", ELOrequirement: 1600, maxPlayers: 32, location: "Los Angeles", startDate: "2024-07-10", endDate: "2024-07-17", registrationEndDate: "2024-07-05" },
-  { id: 3, name: "Amateur Showdown", ELOrequirement: 1400, maxPlayers: 8, location: "Chicago", startDate: "2024-08-01", endDate: "2024-08-07", registrationEndDate: "2024-07-28" },
-];
+// Import API functions
+import { fetchTournaments, addTournament, editTournament, deleteTournament } from '../../api/tournamentApi';
+
 
 const isAdmin = true; // Change this flag to false for player view
 
 const Tournament = () => {
-  const [tournaments, setTournaments] = useState(initialTournaments);
+  const [tournaments, setTournaments] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState(''); // 'add', 'view', 'edit', or 'delete'
+  const [modalType, setModalType] = useState('');
   const [selectedTournament, setSelectedTournament] = useState(null);
-  const [coverImage, setCoverImage] = useState(null); // State for the cover image
+  const [coverImage, setCoverImage] = useState(null);
 
-  const isPowerOfTwo = (num) => {
-    return Math.log2(num) % 1 === 0;
-  };
+  const isPowerOfTwo = (num) => Math.log2(num) % 1 === 0;
 
-  const handleAddTournament = (newTournament) => {
-    // Assign a unique ID for the new tournament and add the cover image
-    const tournamentWithId = {
-      ...newTournament,
-      id: Date.now(),
-      coverImage: coverImage ? URL.createObjectURL(coverImage) : null, // Store cover image URL
+  // Fetch tournaments from the backend on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchTournaments();
+      setTournaments(data);
     };
-    setTournaments([...tournaments, tournamentWithId]);
-    setCoverImage(null); // Clear the cover image after saving
-    setShowModal(false); // Close the modal after adding
+    fetchData();
+  }, []);
+
+  // Handle adding a new tournament
+  const handleAddTournament = async () => {
+    try {
+      const newTournament = {
+        ...selectedTournament,
+        coverImage: coverImage ? URL.createObjectURL(coverImage) : null,
+      };
+      const addedTournament = await addTournament(newTournament);
+      setTournaments([...tournaments, addedTournament]);
+      setCoverImage(null);
+      setShowModal(false);
+    } catch (error) {
+      console.error('Failed to add tournament:', error);
+    }
   };
 
-
-  // Open modal with correct type and tournament data
+  // Open modal with specific type and tournament data
   const handleOpenModal = (type, tournament = null) => {
     setModalType(type);
-    setSelectedTournament(tournament || { name: '', ELOrequirement: '', maxPlayers: '', location: '', startDate: '', endDate: '', registrationEndDate: '' });
+    setSelectedTournament(
+      tournament || {
+        name: '',
+        ELOrequirement: '',
+        maxPlayers: '',
+        playerCount: 0,
+        startDate: '',
+        endDate: '',
+        gender: '',
+        registrationEndDate: '',
+        location: '',
+        description: '',
+      }
+    );
     setShowModal(true);
   };
 
@@ -48,121 +69,87 @@ const Tournament = () => {
     setSelectedTournament(null);
   };
 
-  // Save changes for editing or adding
-  const handleSaveChanges = () => {
-    if (modalType === 'edit') {
-      if (!isPowerOfTwo(selectedTournament.maxPlayers)) {
-        alert('Max players must be a power of 2 (e.g., 2, 4, 8, 16, etc.)');
-        return;
+  // Save changes in add/edit mode
+  const handleSaveChanges = async () => {
+    try {
+      if (modalType === 'edit') {
+        if (!isPowerOfTwo(selectedTournament.maxPlayers)) {
+          alert('Max players must be a power of 2 (e.g., 2, 4, 8, 16, etc.)');
+          return;
+        }
+        const updatedTournament = await editTournament(selectedTournament.id, selectedTournament);
+        setTournaments(
+          tournaments.map((t) => (t.id === updatedTournament.id ? updatedTournament : t))
+        );
+      } else if (modalType === 'add') {
+        await handleAddTournament();
       }
-      setTournaments(tournaments.map(t => t.id === selectedTournament.id ? selectedTournament : t));
-      console.log("Tournament updated:", selectedTournament);
-    } else if (modalType === 'add') {
-      const newTournament = { ...selectedTournament, id: Date.now() };
-      setTournaments([...tournaments, newTournament]);
-      console.log("Tournament added:", newTournament);
+      handleCloseModal();
+    } catch (error) {
+      console.error('Failed to save changes:', error);
     }
-    handleCloseModal();
   };
 
-  // Delete selected tournament
-  const handleDeleteTournament = () => {
-    setTournaments(tournaments.filter(t => t.id !== selectedTournament.id));
-    console.log("Tournament deleted:", selectedTournament);
-    handleCloseModal();
+  // Handle deleting a tournament
+  const handleDeleteTournament = async () => {
+    try {
+      await deleteTournament(selectedTournament.id);
+      setTournaments(tournaments.filter((t) => t.id !== selectedTournament.id));
+      handleCloseModal();
+    } catch (error) {
+      console.error('Failed to delete tournament:', error);
+    }
   };
 
   return (
     <div>
       <CustomNavbar />
-      <div className="container">
+      <div className="container mt-4">
         {isAdmin && (
-          <Button variant="success" onClick={() => handleOpenModal('add')} className="add-tournament-btn">
+          <Button variant="success" onClick={() => handleOpenModal('add')} className="add-tournament-btn mb-4">
             Add New Tournament
           </Button>
         )}
 
         <div className="tournament-grid">
           {tournaments.map((tournament) => (
-            <div key={tournament.id} className="tournament-card">
-              <img src={tournament.coverImage || "https://via.placeholder.com/300x200"} alt="Tournament Cover" />
-              <h3>{tournament.name}</h3>
-              <p><strong>ELO Requirement:</strong> {tournament.ELOrequirement}</p>
-              <p><strong>Location:</strong> {tournament.location}</p>
-              <p><strong>Max Players:</strong> {tournament.maxPlayers}</p>
+            <Card key={tournament.id} className="tournament-card">
+              <Card.Img variant="top" src={tournament.coverImage || "https://via.placeholder.com/300x200"} />
+              <Card.Body>
+                <Card.Title>{tournament.name}</Card.Title>
+                <Card.Text><strong>ELO Requirement:</strong> {tournament.ELOrequirement}</Card.Text>
+                <Card.Text><strong>Location:</strong> {tournament.location}</Card.Text>
+                <Card.Text><strong>Max Players:</strong> {tournament.maxPlayers}</Card.Text>
 
-              <div className="btn-container">
-                {isAdmin ? (
-                  <>
-                    <Button variant="info">
-                      <Link
-                        to="/tournament/view"
-                        state={{ tournamentId: tournament.id }}
-                        style={{ color: 'white', textDecoration: 'none' }}
-                      >
-                        View
-                      </Link>
-                    </Button>
-                    <Button variant="warning" onClick={() => handleOpenModal('edit', tournament)}>Edit</Button>
-                    <Button variant="danger" onClick={() => handleOpenModal('delete', tournament)}>Delete</Button>
-                  </>
-                ) : (
-                  <form action={`/tournament/register/${tournament.id}`} method="GET">
-                    <button type="submit" className="btn register-btn">
-                      Register
-                    </button>
-                  </form>
-                )}
-              </div>
-            </div>
+                <div className="btn-container d-flex justify-content-between">
+                  {isAdmin ? (
+                    <>
+                      <Button variant="info">
+                        <Link to="/tournament/view" state={{ tournamentId: tournament.id }} className="text-white text-decoration-none">
+                          View
+                        </Link>
+                      </Button>
+                      <Button variant="warning" onClick={() => handleOpenModal('edit', tournament)}>Edit</Button>
+                      <Button variant="danger" onClick={() => handleOpenModal('delete', tournament)}>Delete</Button>
+                    </>
+                  ) : (
+                    <Button variant="primary" className="register-btn">Register</Button>
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
           ))}
         </div>
 
-        {/* Modal for Add, View, Edit, and Delete */}
+        {/* Modal for Add, Edit, and Delete */}
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
-            <Modal.Title>
-              {modalType === 'view' ? 'View Tournament' :
-                modalType === 'edit' ? 'Edit Tournament' :
-                  modalType === 'add' ? 'Add Tournament' :
-                    'Confirm Delete'}
-            </Modal.Title>
+            <Modal.Title>{modalType === 'add' ? 'Add Tournament' : modalType === 'edit' ? 'Edit Tournament' : 'Confirm Delete'}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {modalType === 'view' && selectedTournament && (
-              <div>
-                <p><strong>Name:</strong> {selectedTournament?.name}</p>
-                <p><strong>ELO Requirement:</strong> {selectedTournament?.ELOrequirement}</p>
-                <p><strong>Location:</strong> {selectedTournament?.location}</p>
-                <p><strong>Max Players:</strong> {selectedTournament?.maxPlayers}</p>
-                <p><strong>Start Date:</strong> {selectedTournament?.startDate}</p>
-                <p><strong>End Date:</strong> {selectedTournament?.endDate}</p>
-                <p><strong>Registration End Date:</strong> {selectedTournament?.registrationEndDate}</p>
-              </div>
-            )}
-            {(modalType === 'edit' || modalType === 'add') && selectedTournament && (
+            {(modalType === 'edit' || modalType === 'add') && (
               <Form>
-                {/* Other fields for tournament data */}
-                <Form.Group controlId="formCoverImage">
-                  <Form.Label>Cover Image</Form.Label>
-                  <Form.Control
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setCoverImage(e.target.files[0])} // Store the selected file
-                  />
-                </Form.Group>
-
-                {/* Preview the selected image */}
-                {coverImage && (
-                  <div className="cover-image-preview">
-                    <img
-                      src={URL.createObjectURL(coverImage)}
-                      alt="Cover Preview"
-                      style={{ width: "100%", marginTop: "10px" }}
-                    />
-                  </div>
-                )}
-                <Form.Group controlId="formName">
+                <Form.Group controlId="formName" className="mb-3">
                   <Form.Label>Name</Form.Label>
                   <Form.Control
                     type="text"
@@ -170,7 +157,7 @@ const Tournament = () => {
                     onChange={(e) => setSelectedTournament({ ...selectedTournament, name: e.target.value })}
                   />
                 </Form.Group>
-                <Form.Group controlId="formELO">
+                <Form.Group controlId="formELO" className="mb-3">
                   <Form.Label>ELO Requirement</Form.Label>
                   <Form.Control
                     type="number"
@@ -178,15 +165,23 @@ const Tournament = () => {
                     onChange={(e) => setSelectedTournament({ ...selectedTournament, ELOrequirement: parseInt(e.target.value) })}
                   />
                 </Form.Group>
-                <Form.Group controlId="formMaxPlayers">
-                  <Form.Label>Max Players (must be a power of 2)</Form.Label>
+                <Form.Group controlId="formMaxPlayers" className="mb-3">
+                  <Form.Label>Max Players</Form.Label>
                   <Form.Control
                     type="number"
                     value={selectedTournament?.maxPlayers || ''}
                     onChange={(e) => setSelectedTournament({ ...selectedTournament, maxPlayers: parseInt(e.target.value) })}
                   />
                 </Form.Group>
-                <Form.Group controlId="formLocation">
+                <Form.Group controlId="formGender" className="mb-3">
+                  <Form.Label>Gender</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={selectedTournament?.gender || ''}
+                    onChange={(e) => setSelectedTournament({ ...selectedTournament, gender: e.target.value })}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formLocation" className="mb-3">
                   <Form.Label>Location</Form.Label>
                   <Form.Control
                     type="text"
@@ -194,7 +189,16 @@ const Tournament = () => {
                     onChange={(e) => setSelectedTournament({ ...selectedTournament, location: e.target.value })}
                   />
                 </Form.Group>
-                <Form.Group controlId="formStartDate">
+                <Form.Group controlId="formDescription" className="mb-3">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={selectedTournament?.description || ''}
+                    onChange={(e) => setSelectedTournament({ ...selectedTournament, description: e.target.value })}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formStartDate" className="mb-3">
                   <Form.Label>Start Date</Form.Label>
                   <Form.Control
                     type="date"
@@ -202,7 +206,7 @@ const Tournament = () => {
                     onChange={(e) => setSelectedTournament({ ...selectedTournament, startDate: e.target.value })}
                   />
                 </Form.Group>
-                <Form.Group controlId="formEndDate">
+                <Form.Group controlId="formEndDate" className="mb-3">
                   <Form.Label>End Date</Form.Label>
                   <Form.Control
                     type="date"
@@ -210,13 +214,17 @@ const Tournament = () => {
                     onChange={(e) => setSelectedTournament({ ...selectedTournament, endDate: e.target.value })}
                   />
                 </Form.Group>
-                <Form.Group controlId="formRegistrationEndDate">
+                <Form.Group controlId="formRegistrationEndDate" className="mb-3">
                   <Form.Label>Registration End Date</Form.Label>
                   <Form.Control
                     type="date"
                     value={selectedTournament?.registrationEndDate || ''}
                     onChange={(e) => setSelectedTournament({ ...selectedTournament, registrationEndDate: e.target.value })}
                   />
+                </Form.Group>
+                <Form.Group controlId="formCoverImage" className="mb-3">
+                  <Form.Label>Cover Image</Form.Label>
+                  <Form.Control type="file" accept="image/*" onChange={(e) => setCoverImage(e.target.files[0])} />
                 </Form.Group>
               </Form>
             )}
@@ -225,22 +233,15 @@ const Tournament = () => {
             )}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Close
-            </Button>
+            <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
             {(modalType === 'edit' || modalType === 'add') && (
-              <Button variant="primary" onClick={handleSaveChanges}>
-                Save Changes
-              </Button>
+              <Button variant="primary" onClick={handleSaveChanges}>Save Changes</Button>
             )}
             {modalType === 'delete' && (
-              <Button variant="danger" onClick={handleDeleteTournament}>
-                Confirm Delete
-              </Button>
+              <Button variant="danger" onClick={handleDeleteTournament}>Confirm Delete</Button>
             )}
           </Modal.Footer>
         </Modal>
-
       </div>
     </div>
   );

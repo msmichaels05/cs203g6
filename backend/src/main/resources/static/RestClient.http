@@ -126,13 +126,13 @@ Authorization: Basic admin goodpassword
 
 
 {
-    "name": "test1",
+    "name": "test6",
     "gender": "Female",
     "elorequirement": 100,
     "maxPlayers":2,
     "location": "Singapore",
     "description":"newbie training session",
-    "startDate": "2024-12-01",
+    "startDate": "2024-12-09",
     "endDate":"2024-12-24"
 }
 

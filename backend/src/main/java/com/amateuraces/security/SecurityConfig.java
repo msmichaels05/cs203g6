@@ -1,5 +1,7 @@
 package com.amateuraces.security;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,6 +13,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
 
 @EnableWebSecurity
 @Configuration
@@ -39,9 +46,23 @@ public class SecurityConfig {
     }
 //                .requestMatchers(HttpMethod.PUT, "/players/*").hasAnyRole("ADMIN","USER")
 //                .requestMatchers(HttpMethod.DELETE, "/players/*").authenticated()
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:3000"); // Frontend origin
+        config.addAllowedHeader("*"); // Allow all headers
+        config.addAllowedMethod("*"); // Allow all HTTP methods
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .cors(Customizer.withDefaults()) // Enable CORS using the custom configuration source
             .authorizeHttpRequests((authz) -> authz
                 .requestMatchers("/error").permitAll() // the default error page
                 .requestMatchers(HttpMethod.GET, "/users", "/users/**").permitAll()
@@ -86,10 +107,24 @@ public class SecurityConfig {
             )
             .csrf(csrf -> csrf.disable()) // CSRF protection is needed only for browser based attacks
 
-            .headers(header -> header.disable()) // disable the security headers, as we do not return HTML in our APIs
+            .headers(headers -> headers.disable()) // Disable headers, as we do not return HTML in our APIs
             .authenticationProvider(authenticationProvider());
 
         return http.build();
+    }
+
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Allow only your frontend origin
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 
