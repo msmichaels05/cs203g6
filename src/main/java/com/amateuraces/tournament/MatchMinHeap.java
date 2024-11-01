@@ -1,5 +1,6 @@
 package com.amateuraces.tournament;
 
+import com.amateuraces.player.Player;
 import com.amateuraces.match.Match;
 
 import jakarta.persistence.CascadeType;
@@ -27,17 +28,17 @@ public class MatchMinHeap {
     }
 
     // Get the parent index
-    private int getParentIndex(int index) { //root is the final match
+    public int getParentIndex(int index) { //root is the final match
         return (index - 1) / 2; 
     }
 
     // Get the left child index
-    private int getLeftChildIndex(int index) {
+    public int getLeftChildIndex(int index) {
         return 2 * index + 1;
     }
 
     // Get the right child index
-    private int getRightChildIndex(int index) {
+    public int getRightChildIndex(int index) {
         return 2 * index + 2;
     }
 
@@ -54,6 +55,15 @@ public class MatchMinHeap {
     //     System.arraycopy(heap, 0, newHeap, 0, heap.length);
     //     heap = newHeap;
     // }
+
+    public int getIndex(Match match) {
+        for (int i=0; i<heap.size(); i++) {
+            if (heap.get(i).equals(match)) {
+                return i;
+            }
+        }
+        return -1; //invalid match
+    }
 
     // Add a new match to the heap
     public void insert(Match match) {
@@ -157,6 +167,10 @@ public class MatchMinHeap {
         }
 
         return nodesAtHeight;
+    }
+
+    public Match recordNextMatch(Match match, int roundNo, Player winner) {
+        return recordNextMatch(match, roundNo, winner);
     }
 
     public String printHeap() { //To print out the draw on console

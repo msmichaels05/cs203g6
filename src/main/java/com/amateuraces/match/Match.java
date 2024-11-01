@@ -55,4 +55,12 @@ public class Match {
         this.player1 = player1;
         this.player2 = player2;
     }
+
+    public void setPlayer1(Player newPlayer) {
+        player1 = newPlayer;
+    }
+
+    public void setPlayer2(Player newPlayer) {
+        player2 = newPlayer;
+    }
 }

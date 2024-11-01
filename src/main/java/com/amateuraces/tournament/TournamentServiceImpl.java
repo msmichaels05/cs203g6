@@ -85,9 +85,14 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     @Override
-    public Tournament recordMatchResult(Long tournamentId, Long matchId, String result) {
+    public Tournament recordMatchResult(Long tournamentId, Match match, Player winner, String result) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'recordMatchResult'");
+        //throw new UnsupportedOperationException("Unimplemented method 'recordMatchResult'");
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+            .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
+        Match updatedMatch = tournament.recordMatchResult(match, 0, winner, result);
+        if (updatedMatch == null) return null;
+        else return tournament;
     }
 
     @Override

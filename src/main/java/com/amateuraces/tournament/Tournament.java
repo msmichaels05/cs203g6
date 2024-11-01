@@ -217,5 +217,11 @@ public class Tournament {
         }
     }
 
+    //Update match results
+    public Match recordMatchResult(Match match, int roundNo, Player winner, String score) {
+        //Returns & updates next round match by adding the player that moved forward
+        return draw.recordNextMatch(match, roundNo, winner);
+    }
+
 }
 

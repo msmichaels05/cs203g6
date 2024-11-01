@@ -85,7 +85,7 @@ public interface TournamentService {
      * @param result The result of the match (e.g., playerA wins, playerB wins).
      * @return The updated tournament with match results.
      */
-    Tournament recordMatchResult(Long tournamentId, Long matchId, String result);
+    Tournament recordMatchResult(Long tournamentId, Match match, Player winner, String result);
 
     /**
      * Validate if the registration period is valid.
