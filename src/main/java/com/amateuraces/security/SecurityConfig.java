@@ -18,8 +18,8 @@ public class SecurityConfig {
     
     private UserDetailsService userDetailsService;
 
-    public SecurityConfig(UserDetailsService userSvc){
-        this.userDetailsService = userSvc;
+    public SecurityConfig(UserDetailsService userDetailService){
+        this.userDetailsService = userDetailService;
     }
     
     /**
@@ -60,13 +60,13 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/players/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/matches").permitAll()
                 .requestMatchers(HttpMethod.GET, "/matches/complete/{id}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/matches").permitAll()//hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/matches/add").permitAll()//hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/matches/{id}").permitAll()//hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/matches/delete/{id}").permitAll()//hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/matches/{id}/result").permitAll()//hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/matches/{id}/result/updateScore").permitAll()//hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/matches/{id}/result/update-winner").permitAll()//hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/matches").permitAll()//.hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/matches/add").permitAll()//hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/matches/{id}").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/matches/delete/{id}").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/matches/{id}/result").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/matches/{id}/result/updateScore").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/matches/{id}/result/update-winner").hasAuthority("ROLE_ADMIN")
 
 
                 .requestMatchers("/register", "/login", "/player/register/**").permitAll()

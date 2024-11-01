@@ -1,5 +1,7 @@
 package com.amateuraces.tournament;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 import org.springframework.security.core.Authentication;
@@ -18,7 +20,6 @@ public class TournamentServiceImpl implements TournamentService {
     private PlayerRepository playerRepository;
     private MatchRepository matchRepository;
     // private CustomUserDetailsService userDetailsService;
-    // private PlayerRepository playerRepository;
 
     public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository,
             MatchRepository matchRepository) {
@@ -44,6 +45,27 @@ public class TournamentServiceImpl implements TournamentService {
         if (tournament.getName() == null || tournament.getName().isEmpty()) {
             throw new TournamentNotFoundException(tournament.getId());
         }
+
+        // Check if a tournament with the same name already exists
+        if (tournamentRepository.findByName(tournament.getName()).isPresent()) {
+            throw new ExistingTournamentException("Tournament with this name already exists");
+        }
+
+        LocalDate currentDate = LocalDate.now();
+
+        // Check if the tournament's start date is at least one month in the future
+        if (!tournament.getStartDate().isAfter(currentDate.plusMonths(1))) {
+            throw new IllegalArgumentException("The tournament must be scheduled at least one month in advance from today.");
+        }
+    
+        // Validate that the start date is before the end date
+        if (!tournament.getStartDate().isBefore(tournament.getEndDate())) {
+            throw new IllegalArgumentException("Start date must be before end date.");
+        }
+
+        // Set Registration period : 1 week before start date
+        LocalDate registrationEndDate = tournament.getStartDate().minusWeeks(1);
+        tournament.setRegistrationEndDate(registrationEndDate);
         return tournamentRepository.save(tournament);
     }
 
@@ -78,9 +100,31 @@ public class TournamentServiceImpl implements TournamentService {
 
             // Continue with your logic to join the tournament...
             Tournament tournament = tournamentRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Tournament not found for ID: " + id));
+                    .orElseThrow(() -> new TournamentNotFoundException(id));
+            
+            //Check gender of the tournament
+            if (!(tournament.getGender().equals(player.getGender()))){
+                throw new IllegalArgumentException("Only "+ tournament.getGender()+" allowed");
+            }
+
+            //Check Elo requirement to join tournament
+            if(tournament.getELOrequirement() > player.getElo()){
+                throw new IllegalArgumentException("Min elo requirement: "+ tournament.getELOrequirement());
+            }
+
+            //Check if the player is already in the tournament
+            if(tournament.getPlayers().contains(player)){
+                throw new IllegalArgumentException("Player has already joined this tournament.");
+            }
+            
+            //Check if tournament is full
+            if (tournament.getPlayerCount() >= tournament.getMaxPlayers()) {
+                throw new IllegalArgumentException("Cannot join tournament: it is full.");
+            }
 
             tournament.getPlayers().add(player);
+            //Increment player count
+            tournament.setPlayerCount(tournament.getPlayerCount()+1);
             tournamentRepository.save(tournament);
         } else {
             throw new RuntimeException("User not authenticated or not of type User");
@@ -99,22 +143,40 @@ public class TournamentServiceImpl implements TournamentService {
         return tournamentRepository.findById(id).map(tournament -> {
             tournament.setName(newTournamentInfo.getName());
             tournament.setELOrequirement(newTournamentInfo.getELOrequirement());
+            tournament.setLocation(newTournamentInfo.getLocation());
+            tournament.setMaxPlayers(newTournamentInfo.getMaxPlayers());
+            tournament.setDescription(newTournamentInfo.getDescription());
+            tournament.setStartDate(newTournamentInfo.getStartDate());
+            tournament.setEndDate(newTournamentInfo.getEndDate());
+            tournament.setGender(newTournamentInfo.getGender());
             return tournamentRepository.save(tournament);
         }).orElse(null);
     }
 
+
     @Override
-    public Tournament addMatchToTournament(Long tournamentId, Match match) {
-        Tournament tournament = tournamentRepository.findById(tournamentId)
+    public void removePlayerFromTournament(Long tournamentId, Long playerId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            User userDetails = (User) authentication.getPrincipal();
+            Long userId = userDetails.getId(); // This is also the player ID
+
+            // Now you can find the player by userId
+            Player player = playerRepository.findById(userId)
+                    .orElseThrow(() -> new PlayerNotFoundException("Player not registered"));
+
+            Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
-        
-        match.setTournament(tournament);
-        tournament.addMatch(match);
-
-        matchRepository.save(match);
-        return tournamentRepository.save(tournament);
+    
+            tournament.getPlayers().remove(player);
+            tournament.setPlayerCount(tournament.getPlayerCount()-1);
+            tournamentRepository.save(tournament);
+        } else {
+            throw new UserAuthenticationException();
+        }
     }
-
+    
     // @Override
     // public Set<Match> performRandomDraw(Long tournamentId) {
     // Tournament tournament = tournamentRepository.findById(tournamentId)

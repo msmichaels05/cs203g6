@@ -40,6 +40,8 @@ public class PlayerServiceTest {
         verify(players).save(player);
     }
     
+    // Doesn't check for same name as some players may have both the same first and last name - their id is the identifier
+
     @Test
     void addPlayer_NewPhoneNumber_ReturnSavedPlayer(){
         
@@ -52,7 +54,6 @@ public class PlayerServiceTest {
         assertEquals(player.getPhoneNumber(),savedPlayer.getPhoneNumber());
         verify(players).save(player);
     }
-
     
     @Test
     void addPlayer_SamePhoneNumber_ReturnNull(){
@@ -69,6 +70,66 @@ public class PlayerServiceTest {
         
         verify(players).findByPhoneNumber(player.getPhoneNumber());
         verify(players, never()).save(any(Player.class));
+    }
+
+    @Test
+    public void updatePlayerName_ValidId_ReturnUpdatedPlayer() {
+        Player existingPlayer = new Player();
+        existingPlayer.setId(1L);
+        existingPlayer.setName("Old Player");
+
+        Player newPlayerInfo = new Player();
+        newPlayerInfo.setName("Updated Player");
+
+        when(players.findById(1L)).thenReturn(Optional.of(existingPlayer));
+        when(players.save(any(Player.class))).thenReturn(existingPlayer);
+
+        Player updatedPlayer = playerService.updatePlayer(1L, newPlayerInfo);
+
+        assertNotNull(updatedPlayer);
+        assertEquals("Updated Player", updatedPlayer.getName());
+
+        verify(players).save(existingPlayer);
+    }
+
+    @Test
+    public void updatePlayerGender_ValidId_ReturnUpdatedPlayer() {
+        Player existingPlayer = new Player();
+        existingPlayer.setId(1L);
+        existingPlayer.setGender("Female");
+
+        Player newPlayerInfo = new Player();
+        newPlayerInfo.setGender("Male");
+
+        when(players.findById(1L)).thenReturn(Optional.of(existingPlayer));
+        when(players.save(any(Player.class))).thenReturn(existingPlayer);
+
+        Player updatedPlayer = playerService.updatePlayer(1L, newPlayerInfo);
+
+        assertNotNull(updatedPlayer);
+        assertEquals("Male", updatedPlayer.getGender());
+
+        verify(players).save(existingPlayer);
+    }
+
+    @Test
+    public void updatePlayerAge_ValidId_ReturnUpdatedPlayer() {
+        Player existingPlayer = new Player();
+        existingPlayer.setId(1L);
+        existingPlayer.setAge(20);
+
+        Player newPlayerInfo = new Player();
+        newPlayerInfo.setAge(21);
+
+        when(players.findById(1L)).thenReturn(Optional.of(existingPlayer));
+        when(players.save(any(Player.class))).thenReturn(existingPlayer);
+
+        Player updatedPlayer = playerService.updatePlayer(1L, newPlayerInfo);
+
+        assertNotNull(updatedPlayer);
+        assertEquals(21, updatedPlayer.getAge());
+
+        verify(players).save(existingPlayer);
     }
 
     @Test

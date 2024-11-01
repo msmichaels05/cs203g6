@@ -1,117 +1,90 @@
 package com.amateuraces;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.amateuraces.match.Match;
+import com.amateuraces.match.MatchRepository;
+import com.amateuraces.match.MatchServiceImpl;
+import com.amateuraces.player.Player;
+import com.amateuraces.player.PlayerRepository;
+import com.amateuraces.player.PlayerServiceImpl;
+import com.amateuraces.tournament.Tournament;
 
 @ExtendWith(MockitoExtension.class)
 public class MatchServiceTest {
 
-//     @Mock
-//     private TournamentRepository tournamentRepository;
+    // @Mock
+    // private MatchRepository matchRepository;
 
-//     @Mock
-//     private PlayerRepository players;
+    // @Mock
+    // private PlayerRepository players;
 
-//     @Mock
-//     private MatchRepository matches;
+    // @InjectMocks
+    // private MatchServiceImpl matchService;
 
-//     @InjectMocks
-//     private TournamentServiceImpl tournamentService;
+    // @InjectMocks
+    // private PlayerServiceImpl playerService;
 
-//     @InjectMocks
-//     private PlayerServiceImpl playerService;
-
-//     @InjectMocks
-//     private MatchServiceImpl matchService;
-
-//     @BeforeEach
-//     void setUp() {
-//         MockitoAnnotations.openMocks(this);
-//     }
-
-//     @Test
-//     void addMatch_ShouldSaveMatchInIncompleteRepository() {
-//         Player player1 = new Player();
-//         player1.setId(10L);
-
-//         Player player2 = new Player();
-//         player2.setId(20L);
-
-//         Match match = new Match(10L, 20L);
-//         match.setId(1L);
-
-//         // Mock save operation for incompleteMatches
-//         when(matches.save(any(Match.class))).thenReturn(match);
-
-//         // Call the service to add the match
-//         Match savedMatch = matchService.addMatch(match);
-
-//         // Validate the result
-//         assertNotNull(savedMatch);  // Check if the saved match is not null
-//         assertEquals(match, savedMatch);  // Check if the returned match is the same as expected
-//         verify(matches).save(match);  // Verify that the save method was called
-//     }
-
-    // @Test
-    // void addMatch_ShouldSaveMatchInIncompleteRepository() {
-    //     // Given
-    //     Player player1 = new Player();
-    //     player1.setId(10L);
-
-    //     Player player2 = new Player();
-    //     player2.setId(20L);
-
-    //     Match match = new Match(player1, player2);  // Create the match with players
-    //     match.setId(1L);  // Set the match ID
-
-    //     // When
-    //     when(incompleteMatches.save(any(Match.class))).thenReturn(match);  // Mock saving
-
-    //     // Act
-    //     Match savedMatch = matchService.addMatch(match);  // Call the service to add the match
-
-    //     // Then
-    //     verify(incompleteMatches).save(match);
-    //     assertNotNull(savedMatch);  // Check if the saved match is not null
-    //     assertEquals(match, savedMatch);  // Check if the returned match is the same as expected
-    //       // Verify that the save method was called
+    // @BeforeEach
+    // void setUp() {
+    //     MockitoAnnotations.openMocks(this);
     // }
 
     // @Test
-    // public void recordMatchResult_ValidMatchAndPlayers_UpdatesAndSaves() {
-    //     // Arrange
-    //     Player winner = new Player("Winner", "Male", 25, "1234567890", 10, 8);
-    //     winner.setId(1L); // Ensure the winner ID is 1L
+    // void addMatch_ReturnSavedMatch() {
+    //     Match match = new Match(new Tournament("test tournament"), new Player("adam"), new Player("bob"));
+    //     when(matchRepository.save(any(Match.class))).thenReturn(match);
+    //     Match savedMatch = matchService.addMatch(match);
 
-    //     Player loser = new Player("Loser", "Male", 24, "0987654321", 10, 5);
-    //     loser.setId(2L); // Ensure the loser ID is 2L
+    //     assertNotNull(savedMatch);
+    //     assertEquals(match.getTournament(), savedMatch.getTournament());
+    //     assertEquals(match.getPlayer1(), savedMatch.getPlayer1());
+    //     assertEquals(match.getPlayer2(), savedMatch.getPlayer2());
 
-    //     // Create a match and set the ID to 1L
-    //     Match match = new Match();
-    //     match.setId(1L); // Ensure the match ID is 1L
-    //     match.setPlayer1(winner);
-    //     match.setPlayer2(loser);
+    //     verify(matchRepository).save(match);
+    // }
 
-    //     // Mock repository behavior for finding the match and players
-    //     when(incompleteMatches.findById(1L)).thenReturn(Optional.of(match)); // Ensure match is returned
-    //     when(players.findById(1L)).thenReturn(Optional.of(winner)); // Mock the winner retrieval
-    //     when(players.findById(2L)).thenReturn(Optional.of(loser)); // Mock the loser retrieval
+    // @Test
+    // public void updateMatchWinner_ValidId_ReturnUpdatedMatch() {
+    //     Match existingMatch = new Match(new Tournament("test tournament"), new Player("adam"), new Player("bob"));
 
-    //     // Mock saving behavior for match and players
-    //     when(incompleteMatches.save(any(Match.class))).thenAnswer(invocation -> invocation.getArgument(0));
-    //     when(players.save(any(Player.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    //     Match newMatchInfo = existingMatch;
+    //     newMatchInfo.setWinner(existingMatch.getPlayer1());
 
-    //     // Act
-    //     Match updatedMatch = matchService.recordMatchResult(1L, 1L, 2L, "6-0, 6-0");
+    //     when(matchRepository.findById(1L)).thenReturn(Optional.of(existingMatch));
+    //     when(matchRepository.save(any(Match.class))).thenReturn(existingMatch);
 
-    //     // Assert
-    //     assertNotNull(updatedMatch); // Ensure match is not null
-    //     assertEquals(winner, updatedMatch.getWinner()); // Ensure the winner is set correctly
-    //     assertEquals("6-0, 6-0", updatedMatch.getScore()); // Ensure the score is set correctly
+    //     Match updatedMatch = matchService.updateMatch(1L, newMatchInfo);
 
-    //     // Verify that players and match were saved
-    //     verify(players).save(winner);
-    //     verify(players).save(loser);
-    //     verify(completedMatches).save(updatedMatch);
+    //     assertNotNull(updatedMatch);
+    //     assertEquals(newMatchInfo.getWinner(), updatedMatch.getWinner());
+
+    //     verify(matchRepository).save(existingMatch);
+    // }
+
+    // @Test
+    // void updateMatch_NotFound_ReturnNull(){
+    //     Match match = new Match(new Tournament("test tournament"), new Player("adam"), new Player("bob"));
+    //     Long matchID = 10L;
+    //     when(matchRepository.findById(matchID)).thenReturn(Optional.empty());
+        
+    //     Match updatedMatch = matchService.updateMatch(matchID, match);
+        
+    //     assertNull(updatedMatch);
+    //     verify(matchRepository).findById(matchID);
     // }
 }

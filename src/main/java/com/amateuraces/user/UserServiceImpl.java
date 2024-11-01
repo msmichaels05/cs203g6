@@ -17,9 +17,9 @@ import jakarta.transaction.Transactional;
 public class UserServiceImpl implements UserService {
 /*This implementation is meant for business logic,which could be added later*Currently,it does not have much in terms of the business logic yet*/
     @Autowired
-    private UserRepository users;
+    private UserRepository userRepository;
     @Autowired
-    private PlayerRepository players;
+    private PlayerRepository playerRepository;
     @Autowired
     private TournamentRepository tournamentRepository;
 
@@ -30,28 +30,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> listUsers() {
-        return users.findAll();
+        return userRepository.findAll();
     }
 
     @Override
     public User getUser(Long id){
-        return users.findById(id).orElse(null);
+        return userRepository.findById(id).orElse(null);
     }   
 
     @Override
     public User addUser(User user) {
-        Optional<User> sameUsernames = users.findByUsername(user.getUsername());
-        Optional<User> sameEmail = users.findByEmail(user.getEmail());
-        if (sameUsernames.isPresent() || sameEmail.isPresent()) {
-            return null; // or throw an exception
+        Optional<User> sameUsernames = userRepository.findByUsername(user.getUsername());
+        Optional<User> sameEmail = userRepository.findByEmail(user.getEmail());
+        if (sameUsernames.isPresent() && sameEmail.isPresent()){
+            throw new ExistingUserException("Username and Email has been used");
+        }if (sameUsernames.isPresent()) {
+            throw new ExistingUserException("Username has been used");
+        } if(sameEmail.isPresent()){
+            throw new ExistingUserException("Email has been used");
         }
-        return users.save(user);
+        return userRepository.save(user);
     }
 
     @Override
     public User updateUser(Long id, User newUserInfo) {
-        return users.findById(id).map(user -> {user.setPassword(newUserInfo.getPassword());
-            return users.save(user);
+        return userRepository.findById(id).map(user -> {user.setPassword(newUserInfo.getPassword());
+            return userRepository.save(user);
         }).orElse(null);
     }
 
@@ -63,7 +67,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void deleteUser(Long id){
-        User user = users.findById(id)
+        User user = userRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         // Get the associated Player
@@ -76,15 +80,15 @@ public class UserServiceImpl implements UserService {
                 tournamentRepository.save(tournament); // Save changes to the tournament
             }
 
-            players.delete(player); //  delete the player entirely
+            playerRepository.delete(player); //  delete the player entirely
         }
 
         // Now delete the user
-        users.delete(user); 
+        userRepository.delete(user); 
     }
 
      @Override
     public Optional<User> findByUsername(String username) {
-        return users.findByUsername(username);
+        return userRepository.findByUsername(username);
     }
 }

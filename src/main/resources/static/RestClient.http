@@ -5,10 +5,32 @@ Content-Type: application/json
 
 
 {
+    "username": "betatester",
+    "email": "betatester@email.com",
+    "password": "betatester"   
+}
+
+
+### POST NEW USER IF NOT AUTHORIZED AUTHORIIES FIXED ROLE_USER
+# By right users would only key in username and password but in the event they try to change authority it will fail
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
     "username": "username",
-    "password": "password",
-    "authorities":"ROLE_ADMIN"
-    
+    "email": "user@email.com",
+    "password": "betatester"   
+}
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernames",
+    "email": "use@email.com",
+    "password": "betatester"   
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -43,7 +65,21 @@ Authorization: Basic betatester betatester
 # Show that player can create 
 POST http://localhost:8080/users/3/players
 Content-Type: application/json
-Authorization: Basic username password
+Authorization: Basic betatester betatester
+
+{
+    "name":"Alphabravos",
+    "phoneNumber" :"88888882",
+    "email" : "alphabravo@gmail.com",
+    "age" : 18,
+    "gender" : "Male"
+}
+
+### POST PLAYER INFO TO USER AFTER CREATION OF USER
+# Show that player can create 
+POST http://localhost:8080/users/4/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
 
 {
     "name":"Alphabravo",
@@ -52,7 +88,6 @@ Authorization: Basic username password
     "age" : 18,
     "gender" : "Male"
 }
-
 ### Showcase user cannot post in admin
 POST http://localhost:8080/users/1/admins
 Content-Type: application/json
@@ -93,9 +128,19 @@ Authorization: Basic admin goodpassword
 
 
 {
-    "name": "test",
-    "elorequirement": 100
+    "name": "test1",
+    "gender": "Female",
+    "elorequirement": 100,
+    "maxPlayers":2,
+    "location": "Singapore",
+    "description":"newbie training session",
+    "startDate": "2024-12-01",
+    "endDate":"2024-12-24"
 }
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username betatester 
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
@@ -103,10 +148,18 @@ Authorization: Basic betatester betatester
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
+Authorization: Basic usernames betatester 
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
 Authorization: Basic username password 
 
 ###
 GET http://localhost:8080/tournaments/1/players
+
+###
+DELETE http://localhost:8080/tournaments/1/players/2
+Authorization: Basic betatester betatester
 
 ### Tournament
 GET http://localhost:8080/tournament

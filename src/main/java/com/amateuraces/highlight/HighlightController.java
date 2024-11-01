@@ -19,8 +19,8 @@ import jakarta.validation.Valid;
 public class HighlightController {
     private final HighlightService highlightService;
 
-    public HighlightController(HighlightService hs){
-        highlightService = hs;
+    public HighlightController(HighlightService highlightService){
+        this.highlightService = highlightService;
     }
 
     @GetMapping("/highlights")

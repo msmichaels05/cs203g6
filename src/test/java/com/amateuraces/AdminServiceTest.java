@@ -42,6 +42,55 @@ public class AdminServiceTest {
     }
 
     @Test
+    void addAdmin_NewPhoneNumber_ReturnSavedAdmin(){
+        
+        Admin admin = new Admin();
+        admin.setPhoneNumber("12345678");
+        when(admins.save(any(Admin.class))).thenReturn(admin);
+        Admin savedAdmin = adminService.addAdmin(admin);
+        
+        assertNotNull(savedAdmin);
+        assertEquals(admin.getPhoneNumber(),savedAdmin.getPhoneNumber());
+        verify(admins).save(admin);
+    }
+    
+    @Test
+    void addAdmin_SamePhoneNumber_ReturnNull(){
+        Admin admin = new Admin();
+        admin.setPhoneNumber("10293848");
+        Admin sameAdminNumber = new Admin();
+        sameAdminNumber.setPhoneNumber("10293848");
+
+        Optional<Admin> samePhoneNumber = Optional.of(sameAdminNumber);
+        when(admins.findByPhoneNumber(admin.getPhoneNumber())).thenReturn(samePhoneNumber);
+        Admin savedAdmin = adminService.addAdmin(admin);
+        assertNull(savedAdmin);
+        
+        verify(admins).findByPhoneNumber(admin.getPhoneNumber());
+        verify(admins, never()).save(any(Admin.class));
+    }
+    
+    @Test
+    public void updateAdmin_ValidId_ReturnUpdatedAdmin() {
+        Admin existingAdmin = new Admin();
+        existingAdmin.setId(1L);
+        existingAdmin.setName("testadmin");
+
+        Admin newAdminInfo = new Admin();
+        newAdminInfo.setName("newadmin");
+
+        when(admins.findById(1L)).thenReturn(Optional.of(existingAdmin));
+        when(admins.save(any(Admin.class))).thenReturn(existingAdmin);
+
+        Admin updatedAdmin = adminService.updateAdmin(1L, newAdminInfo);
+
+        assertNotNull(updatedAdmin);
+        assertEquals("newadmin", updatedAdmin.getName());
+
+        verify(admins).save(existingAdmin);
+    }
+
+    @Test
     void updateAdmin_NotFound_ReturnNull(){
         Admin admin = new Admin();
         admin.setName("Updated Name of Admin");

@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.amateuraces.player.Player;
+import com.amateuraces.player.PlayerNotFoundException;
 
 import jakarta.validation.Valid;
 
@@ -168,6 +169,19 @@ public class TournamentController {
     @GetMapping("/tournaments/{id}/players")
     public Set<Player> getPlayersInTournament(@PathVariable("id") Long tournamentId) {
         return tournamentService.getPlayersInTournament(tournamentId);
+    }
+
+    @ResponseBody
+    @DeleteMapping("/tournaments/{tournamentId}/players/{playerId}")
+    public void removePlayerFromTournament(@PathVariable(value="tournamentId")Long tournamentId,
+        @PathVariable(value="playerId")Long playerId) {
+      try {
+        tournamentService.removePlayerFromTournament(tournamentId, playerId);
+      } catch(TournamentNotFoundException e){
+        throw new TournamentNotFoundException(tournamentId);
+      }catch(PlayerNotFoundException e){
+        throw new PlayerNotFoundException(playerId);
+      }
     }
 
     // @PostMapping("/tournaments/{tournamentId}/draw")
