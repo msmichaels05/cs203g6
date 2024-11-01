@@ -331,15 +331,14 @@ GET http://localhost:8080/matches
 
 POST http://localhost:8080/matches
 Content-Type: application/json
-Authorization: Basic admin goodpassword
 
 {
-    "Tournament": "test",
-    "Player1": "Player1",
-    "Player2": "Player2"
+    "tournament": "test",
+    "player1": "Player1",
+    "player2": "Player2"
 }
 
 ###
 
-DELETE http://localhost:8080/matches/3
+DELETE http://localhost:8080/matches/1
 Authorization: Basic admin goodpassword

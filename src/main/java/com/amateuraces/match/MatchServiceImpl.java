@@ -23,7 +23,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public List<Match> listMatches() {
-        return matchRepository.findAll();
+        return matches.findAll();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public Match addMatch(Match match) {
-        return matchRepository.save(match);
+        return matches.save(match);
     }
 
     @Override

@@ -4,26 +4,21 @@ import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.amateuraces.player.PlayerNotFoundException;
-import com.amateuraces.tournament.Tournament;
 
 //import jakarta.validation.Valid;
 
-@RESTController
+@Controller
 public class MatchController {
     private final MatchService matchService;
     
@@ -35,6 +30,7 @@ public class MatchController {
      * List all completed matches in the system
      * @return list of all matchs
      */
+    @ResponseBody
     @GetMapping("/matches")
         public List<Match> getMatches(){
             return matchService.listMatches();
