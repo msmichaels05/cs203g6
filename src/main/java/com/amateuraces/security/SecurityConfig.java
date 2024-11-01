@@ -62,7 +62,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/matches/complete/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/matches").permitAll()
                 // .requestMatchers(HttpMethod.POST, "/matches/add").permitAll()//hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/matches/{id}").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/matches/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/matches/delete/{id}").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/matches/{id}/result").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/matches/{id}/result/updateScore").hasAuthority("ROLE_ADMIN")

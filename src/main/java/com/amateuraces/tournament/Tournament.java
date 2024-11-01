@@ -133,7 +133,7 @@ public class Tournament {
 
     public void addMatch(Match match) {
         matches.add(match);
-        match.setTournament(this); // Ensure the bidirectional relationship is maintained
+        match.setTournament(this.name); // Ensure the bidirectional relationship is maintained
     }
     
     public void removeMatch(Match match) {

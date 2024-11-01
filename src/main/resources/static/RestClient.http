@@ -333,7 +333,7 @@ POST http://localhost:8080/matches
 Content-Type: application/json
 
 {
-    "tournament": "test",
+    "tournament": "test2",
     "player1": "Player1",
     "player2": "Player2"
 }
@@ -341,4 +341,3 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:8080/matches/1
-Authorization: Basic admin goodpassword
