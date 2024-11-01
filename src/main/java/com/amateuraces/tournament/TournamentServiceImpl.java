@@ -96,6 +96,15 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     @Override
+    public Tournament updateNextRound(Long tournamentId, Match match, Player winner, String result) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+            .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
+        Match updatedMatch = tournament.updateNextRound(match, 0, winner, result);
+        if (updatedMatch == null) return null;
+        else return tournament;
+    }
+
+    @Override
     public void initialiseDraw(Long tournamentId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
             .orElseThrow(() -> new TournamentNotFoundException(tournamentId));

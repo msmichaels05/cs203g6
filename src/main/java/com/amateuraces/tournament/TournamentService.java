@@ -87,6 +87,8 @@ public interface TournamentService {
      */
     Tournament recordMatchResult(Long tournamentId, Match match, Player winner, String result);
 
+    Tournament updateNextRound(Long tournamentId, Match match, Player winner, String result);
+
     /**
      * Validate if the registration period is valid.
      * @param tournamentId The ID of the tournament.

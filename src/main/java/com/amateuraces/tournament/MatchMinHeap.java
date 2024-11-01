@@ -28,17 +28,17 @@ public class MatchMinHeap {
     }
 
     // Get the parent index
-    public int getParentIndex(int index) { //root is the final match
+    private int getParentIndex(int index) { //root is the final match
         return (index - 1) / 2; 
     }
 
     // Get the left child index
-    public int getLeftChildIndex(int index) {
+    private int getLeftChildIndex(int index) {
         return 2 * index + 1;
     }
 
     // Get the right child index
-    public int getRightChildIndex(int index) {
+    private int getRightChildIndex(int index) {
         return 2 * index + 2;
     }
 
@@ -169,8 +169,40 @@ public class MatchMinHeap {
         return nodesAtHeight;
     }
 
-    public Match recordNextMatch(Match match, int roundNo, Player winner) {
-        return recordNextMatch(match, roundNo, winner);
+    public Match recordMatchResult(Match match, int roundNo, Player winner, String score) {
+        List<Match> matchesInRound = matchesInRound(roundNo);
+        int matchIndex = -1;
+        for (int i=0; i<matchesInRound.size(); i++) {
+            if (matchesInRound.get(i).equals(match)) {
+                matchIndex = i;
+            }
+        }
+
+        if (matchIndex == -1) return null; //Invalid match
+
+        //Update winner
+        return null;
+    }
+
+    public Match updateNextRound(Match match, int roundNo, Player winner) {
+        List<Match> matchesInRound = matchesInRound(roundNo);
+        int matchIndex = -1;
+        for (int i=0; i<matchesInRound.size(); i++) {
+            if (matchesInRound.get(i).equals(match)) {
+                matchIndex = i;
+            }
+        }
+
+        if (matchIndex == -1) return null; //Invalid match
+        
+        int nextRoundMatchIndex = getParentIndex(matchIndex);
+        if (getLeftChildIndex(nextRoundMatchIndex) == matchIndex) {
+            heap.get(nextRoundMatchIndex).setPlayer1(winner);
+        }
+        if (getRightChildIndex(nextRoundMatchIndex) == matchIndex) {
+            heap.get(nextRoundMatchIndex).setPlayer2(winner);
+        }
+        return heap.get(nextRoundMatchIndex);
     }
 
     public String printHeap() { //To print out the draw on console
