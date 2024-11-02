@@ -56,6 +56,8 @@ public class MatchMinHeap {
     //     heap = newHeap;
     // }
 
+    public List<Match> getAllMatches() {return heap;}
+
     public int getIndex(Match match) {
         for (int i=0; i<heap.size(); i++) {
             if (heap.get(i).equals(match)) {

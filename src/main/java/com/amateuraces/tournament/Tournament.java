@@ -40,7 +40,7 @@ public class Tournament {
 
     private int ELOrequirement;
 
-    private int maxPlayers;
+    private int maxPlayers = 32;
 
     private int playerCount = 0;
 
@@ -118,6 +118,8 @@ public class Tournament {
         players.remove(player);
         player.removeFromTournamentHistory(this);// Also remove this tournament from the player's list
     }
+
+    public MatchMinHeap getDraw() {return draw;}
     // public boolean addPlayer(Player player){
     //     players.add(player);
     //     return true;
@@ -133,12 +135,24 @@ public class Tournament {
     //     players.clear();
     // }
 
-    //Draw is a min-heap struct, similar to binary tree, but condition is parent is always smaller than child
+    /**
+     * Create Draw of the tournament. 
+     * Draw is a min-heap struct, similar to binary tree, but condition is parent is always smaller than child
+     * @param round1Matches Get total number of 1st round matches, even matches with BYES. 
+     *  1: int of log2(playerCount) 
+     *  2: Take the ceiling of it, then subtract by 1
+     *  3: Calculate 2 to the power of the result above
+     * @param totalRounds Total number of rounds excluding 1st round (2nd round - Finals)
+     *  1: Take log2(round1Matches) to calculate totalRounds
+     * @param numberOfSeeds Total number of seeded players, which is least number that is gives int when log2(number) >= playerCount, then divide by 4
+     * @param playersByElo An array which is first initialised as an array of all players in the tournament before sorting by desc order of ELO ranking
+     */
+
     public void initialiseDraw() { //Algorithm to create the draw
         //Once there are 17 players, there has to be 16 1st round matches, only 2 unlucky players have to face off in 1st round, everybody else gets BYE in the 1st round
-        int round1Matches = (int) Math.pow(2, (int) Math.ceil((Math.log(playerCount) / Math.log(2))) -1); //Get total number of 1st round matches, even matches with BYES
-        int totalRounds = (int) Math.log((double)round1Matches); //total number of rounds excluding 1st round
-        for (int i=1; i<totalRounds; i*=2) { //Insert Final Round first, then the rounds below it
+        int round1Matches = (int) Math.pow(2, (int) Math.ceil((Math.log(playerCount) / Math.log(2))) -1); 
+        int totalRounds = (int) ( Math.log((double)round1Matches) / Math.log(2) ); 
+        for (int i=1; i<totalRounds+1; i++) { //Insert Final Round first, then the rounds below it
             for (int j=0; j<i; j++) { //create match for each round, start from finals -> 2nd round
                 Match tempmatch = new Match(null, null);  //Since subsequent matches outcome not determined yet, players are set to null 
                 draw.insert(tempmatch); //insert match for the particular round
@@ -149,10 +163,9 @@ public class Tournament {
         Player[] seededPlayers = null;
         Player[] unseededPlayers = null;
 
-        //Segregate seeded & unseeded players
-        int no = (int) Math.pow(2, (int) Math.ceil((Math.log(playerCount) / Math.log(2))) -1);
-        int numberOfSeeds = no / 4;
-        Player[] playersByElo = players.toArray(new Player[0]);  //Get all players in the tournament
+        //Segregate seeded & unseeded players;
+        int numberOfSeeds = ((int) Math.pow(2, (int) Math.ceil((Math.log(playerCount) / Math.log(2))) -1)) / 4; 
+        Player[] playersByElo = players.toArray(new Player[0]); 
         Arrays.sort(playersByElo, new EloComparator()); //Sort players in desc order of elo
         seededPlayers = Arrays.copyOfRange(playersByElo, 0, numberOfSeeds); //All seeded players
         unseededPlayers = Arrays.copyOfRange(playersByElo, numberOfSeeds + 1, playersByElo.length); //All unseeded players 
@@ -170,8 +183,28 @@ public class Tournament {
         return draw.printHeap();
     }
 
+    public Player[] recursion(Player[] slots, Player[] seededPlayers, int playerCOunt, int index) {
+        if (playerCOunt < 16) {
+            slots[0] = seededPlayers[0];
+            slots[1] = seededPlayers[1];
+            return slots;
+        }
+        if (index == slots.length / 2 -1) {
+            slots[index + 1] = seededPlayers[2];
+            slots[index] = seededPlayers[3];
+        }
+        else {
+            slots[index] = seededPlayers[seededPlayers.length - index - 1];
+            slots[index] = seededPlayers[seededPlayers.length - index - 2];
+            slots[slots.length - index - 1] = seededPlayers[seededPlayers.length - index - 3];
+            slots[slots.length - index - 2] = seededPlayers[seededPlayers.length - index - 4];
+            //return recursion(slots, seededPlayers, index + )
+        }
+
+    }
+
     // Method to assign seeded players to specific slots
-    private static void assignSeedsToSlots(Player[] seededPlayers, Player[] slots) {
+    public static void assignSeedsToSlots(Player[] seededPlayers, Player[] slots) {
         int totalMatches = slots.length / 2;
 
         // Seed 1
@@ -197,7 +230,7 @@ public class Tournament {
     }
 
     // Method to get predefined positions for seeds 5 to n
-    private static int[] getSeedPositions(int numberOfSeeds, int totalSlots) {
+    public static int[] getSeedPositions(int numberOfSeeds, int totalSlots) {
         // Positions can be predefined according to tournament standards
         // For simplicity, we'll return an array of positions
         // Adjust this method based on the specific seeding rules
@@ -207,7 +240,7 @@ public class Tournament {
     }
 
     // Method to fill remaining slots with unseeded players
-    private static void fillUnseededPlayers(Player[] slots, List<Player> unseededPlayers) {
+    public static void fillUnseededPlayers(Player[] slots, List<Player> unseededPlayers) {
         Random rand = new Random();
         for (int i = 0; i < slots.length; i++) {
             if (slots[i] == null) {
@@ -226,6 +259,11 @@ public class Tournament {
     public Match updateNextRound(Match match, int roundNo, Player winner, String score) {
         //Returns & updates next round match by adding the player that moved forward
         return draw.updateNextRound(match, roundNo, winner);
+    }
+
+    public String getTournamentname() {
+        // TODO Auto-generated method stub
+        return name;
     }
 
 }
