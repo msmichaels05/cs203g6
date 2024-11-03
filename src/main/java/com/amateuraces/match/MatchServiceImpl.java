@@ -66,11 +66,11 @@ public class MatchServiceImpl implements MatchService {
         Player loser = players.findById(loserId)
                 .orElseThrow(() -> new PlayerNotFoundException(loserId));
 
-        if (!match.isPlayerInvolved(winner)) {
+        if (!match.isPlayerInvolved(winner.getName())) {
             throw new PlayerNotPartOfMatchException(winnerId, matchId); // If either player is not part of the match
         }
 
-        if (!match.isPlayerInvolved(loser)) {
+        if (!match.isPlayerInvolved(loser.getName())) {
             throw new PlayerNotPartOfMatchException(loserId, matchId); // If either player is not part of the match
         }
 
@@ -112,11 +112,11 @@ public class MatchServiceImpl implements MatchService {
         Player newWinner = players.findById(newWinnerId)
                 .orElseThrow(() -> new PlayerNotFoundException(newWinnerId));
 
-        if (!match.isPlayerInvolved(oldWinner)) {
+        if (!match.isPlayerInvolved(oldWinner.getName())) {
             throw new PlayerNotPartOfMatchException(oldWinnerId, matchId); // If either player is not part of the match
         }
 
-        if (!match.isPlayerInvolved(newWinner)) {
+        if (!match.isPlayerInvolved(newWinner.getName())) {
             throw new PlayerNotPartOfMatchException(newWinnerId, matchId); // If either player is not part of the match
         }
         

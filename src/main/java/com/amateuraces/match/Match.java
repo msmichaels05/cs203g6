@@ -1,18 +1,14 @@
 package com.amateuraces.match;
 
+import java.time.LocalDate;
 import java.util.Objects;
-
-import com.amateuraces.player.Player;
-import com.amateuraces.tournament.Tournament;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,12 +27,14 @@ public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotNull
     private String tournament;
-
+    @NotNull
     private String player1;
-
+    @NotNull
     private String player2;
+    @NotNull
+    private LocalDate startTime;
 
     private String winner;
 
@@ -51,10 +49,11 @@ public class Match {
     @Column(name = "isCompleted", nullable = false)
     private boolean isCompleted = false;
 
-    public Match(String tournament, String player1, String player2) {
+    public Match(String tournament, String player1, String player2, LocalDate startTime) {
         this.tournament = tournament;
         this.player1 = player1;
         this.player2 = player2;
+        this.startTime = startTime;
     }
 
     public Match(String player1, String player2) {
@@ -76,7 +75,7 @@ public class Match {
         this.isCompleted = true;
     }
 
-    public boolean isPlayerInvolved(Player player) {
-        return Objects.equals(player1, player.getId()) || Objects.equals(player2, player.getId());
+    public boolean isPlayerInvolved(String player) {
+        return Objects.equals(player1, player) || Objects.equals(player2, player);
     }
 }

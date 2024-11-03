@@ -164,7 +164,7 @@ public class TournamentServiceImpl implements TournamentService {
 
             // Now you can find the player by userId
             Player player = playerRepository.findById(userId)
-                    .orElseThrow(() -> new PlayerNotFoundException("Player not registered"));
+                    .orElseThrow(() -> new PlayerNotFoundException(playerId));
 
             Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new TournamentNotFoundException(tournamentId));

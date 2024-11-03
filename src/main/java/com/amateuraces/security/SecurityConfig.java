@@ -60,9 +60,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/players/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/matches").permitAll()
                 .requestMatchers(HttpMethod.GET, "/matches/complete/{id}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/matches").permitAll()//.hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.POST, "/matches/add").permitAll()//hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/matches/{id}").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/matches").permitAll()
+                // .requestMatchers(HttpMethod.POST, "/matches/add").permitAll()//hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/matches/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/matches/delete/{id}").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/matches/{id}/result").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/matches/{id}/result/updateScore").hasAuthority("ROLE_ADMIN")
@@ -74,7 +74,7 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()  // Allow access to H2 Console
                 // note that Spring Security 6 secures all endpoints by default
                 // remove the below line after adding the required rules
-                .anyRequest().permitAll()  // All other requests require authentication
+                // .anyRequest().permitAll()  // All other requests require authentication
             )
             // ensure that the application won’t create any session in our stateless REST APIs
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

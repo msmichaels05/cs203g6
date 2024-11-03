@@ -30,6 +30,7 @@ public class MatchController {
      * List all completed matches in the system
      * @return list of all matchs
      */
+    @ResponseBody
     @GetMapping("/matches")
         public List<Match> getMatches(){
             return matchService.listMatches();

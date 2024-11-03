@@ -1,16 +1,30 @@
 package com.amateuraces.tournament;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
-import com.amateuraces.match.*;
+import com.amateuraces.match.Match;
 import com.amateuraces.player.Player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
 @Entity
@@ -131,9 +145,17 @@ public class Tournament {
         player.getTournaments().remove(this); // Also remove this tournament from the player's list
     }
 
+    public boolean isDateWithinTournament(LocalDate date) {
+        return (date.isEqual(startDate) || date.isAfter(startDate)) &&
+               (date.isEqual(endDate) || date.isBefore(endDate));
+    }
+
     public void addMatch(Match match) {
+        if (!isDateWithinTournament(match.getStartTime())) {
+            throw new IllegalArgumentException("Match date must be within the tournament's start and end dates.");
+        }
         matches.add(match);
-        match.setTournament(this); // Ensure the bidirectional relationship is maintained
+        match.setTournament(this.getName()); // Ensure the bidirectional relationship is maintained
     }
     
     public void removeMatch(Match match) {
