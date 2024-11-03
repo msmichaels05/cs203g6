@@ -138,6 +138,9 @@ public class Tournament {
     /**
      * Create Draw of the tournament. 
      * Draw is a min-heap struct, similar to binary tree, but condition is parent is always smaller than child
+     * log2(31) = 4.95
+     * log2(17) = 4.08
+     * log2(15) = 3.9
      * @param round1Matches Get total number of 1st round matches, even matches with BYES. 
      *  1: int of log2(playerCount) 
      *  2: Take the ceiling of it, then subtract by 1
@@ -150,10 +153,10 @@ public class Tournament {
 
     public void initialiseDraw() { //Algorithm to create the draw
         //Once there are 17 players, there has to be 16 1st round matches, only 2 unlucky players have to face off in 1st round, everybody else gets BYE in the 1st round
-        int round1Matches = (int) Math.pow(2, (int) Math.ceil((Math.log(playerCount) / Math.log(2))) -1); 
-        int totalRounds = (int) ( Math.log((double)round1Matches) / Math.log(2) ); 
-        for (int i=1; i<totalRounds+1; i++) { //Insert Final Round first, then the rounds below it
-            for (int j=0; j<i; j++) { //create match for each round, start from finals -> 2nd round
+        int round1Matches = (int) Math.pow(2, Math.ceil((Math.log(playerCount) / Math.log(2))) -1); 
+        int totalRounds = (int) ( Math.log(round1Matches) / Math.log(2) ); 
+        for (int i=0; i<totalRounds+1; i++) { //Insert Final Round first, then the rounds below it
+            for (int j=0; j<Math.pow(2, i); j++) { //create match for each round, start from finals -> 2nd round
                 Match tempmatch = new Match(null, null);  //Since subsequent matches outcome not determined yet, players are set to null 
                 draw.insert(tempmatch); //insert match for the particular round
             }
@@ -164,7 +167,8 @@ public class Tournament {
         Player[] unseededPlayers = null;
 
         //Segregate seeded & unseeded players;
-        int numberOfSeeds = ((int) Math.pow(2, (int) Math.ceil((Math.log(playerCount) / Math.log(2))) -1)) / 4; 
+        int numberOfSeeds = round1Matches / 4; 
+        if (numberOfSeeds < 2) numberOfSeeds = 0;
         Player[] playersByElo = players.toArray(new Player[0]); 
         Arrays.sort(playersByElo, new EloComparator()); //Sort players in desc order of elo
         seededPlayers = Arrays.copyOfRange(playersByElo, 0, numberOfSeeds); //All seeded players
@@ -182,27 +186,7 @@ public class Tournament {
     public String printDraw() {
         return draw.printHeap();
     }
-
-    public Player[] recursion(Player[] slots, Player[] seededPlayers, int playerCOunt, int index) {
-        if (playerCOunt < 16) {
-            slots[0] = seededPlayers[0];
-            slots[1] = seededPlayers[1];
-            return slots;
-        }
-        if (index == slots.length / 2 -1) {
-            slots[index + 1] = seededPlayers[2];
-            slots[index] = seededPlayers[3];
-        }
-        else {
-            slots[index] = seededPlayers[seededPlayers.length - index - 1];
-            slots[index] = seededPlayers[seededPlayers.length - index - 2];
-            slots[slots.length - index - 1] = seededPlayers[seededPlayers.length - index - 3];
-            slots[slots.length - index - 2] = seededPlayers[seededPlayers.length - index - 4];
-            //return recursion(slots, seededPlayers, index + )
-        }
-
-    }
-
+    
     // Method to assign seeded players to specific slots
     public static void assignSeedsToSlots(Player[] seededPlayers, Player[] slots) {
         int totalMatches = slots.length / 2;
@@ -258,7 +242,7 @@ public class Tournament {
     //Update next round results
     public Match updateNextRound(Match match, int roundNo, Player winner, String score) {
         //Returns & updates next round match by adding the player that moved forward
-        return draw.updateNextRound(match, roundNo, winner);
+        return draw.updateNextRound(match, roundNo, winner, score);
     }
 
     public String getTournamentname() {

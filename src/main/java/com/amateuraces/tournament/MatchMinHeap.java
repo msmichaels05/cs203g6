@@ -186,7 +186,7 @@ public class MatchMinHeap {
         return null;
     }
 
-    public Match updateNextRound(Match match, int roundNo, Player winner) {
+    public Match updateNextRound(Match match, int roundNo, Player winner, String score) {
         List<Match> matchesInRound = matchesInRound(roundNo);
         int matchIndex = -1;
         for (int i=0; i<matchesInRound.size(); i++) {
@@ -204,6 +204,7 @@ public class MatchMinHeap {
         if (getRightChildIndex(nextRoundMatchIndex) == matchIndex) {
             heap.get(nextRoundMatchIndex).setPlayer2(winner);
         }
+        recordMatchResult(match, roundNo, winner, score);
         return heap.get(nextRoundMatchIndex);
     }
 
