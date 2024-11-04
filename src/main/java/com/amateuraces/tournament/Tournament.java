@@ -7,10 +7,15 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 //import org.hibernate.mapping.List;
 
@@ -52,8 +57,8 @@ public class Tournament {
 
     private String description;
 
-    @Transient
-    private MatchMinHeap draw = null; //need to determine size eventually
+    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Match> draw = new ArrayList<>(); //Contains all matches in the tournament
 
     @ManyToMany
     @JoinTable(
@@ -85,7 +90,6 @@ public class Tournament {
         this.maxPlayers = maxPlayers;
         this.location = location;
         this.description = description;
-        this.draw = new MatchMinHeap(maxPlayers);
     }
 
     public Tournament(String name) {
@@ -105,6 +109,11 @@ public class Tournament {
         ELOrequirement = newRequirement;
     }
 
+    public void addMatch(Match match) {
+        draw.add(match);
+        match.setTournament(this);
+    }
+
     public boolean addPlayer(Player player) {
         boolean added = players.add(player);
         if (added) {
@@ -118,8 +127,6 @@ public class Tournament {
         players.remove(player);
         player.removeFromTournamentHistory(this);// Also remove this tournament from the player's list
     }
-
-    public MatchMinHeap getDraw() {return draw;}
     // public boolean addPlayer(Player player){
     //     players.add(player);
     //     return true;
@@ -135,119 +142,191 @@ public class Tournament {
     //     players.clear();
     // }
 
-    /**
-     * Create Draw of the tournament. 
-     * Draw is a min-heap struct, similar to binary tree, but condition is parent is always smaller than child
-     * log2(31) = 4.95
-     * log2(17) = 4.08
-     * log2(15) = 3.9
-     * @param round1Matches Get total number of 1st round matches, even matches with BYES. 
-     *  1: int of log2(playerCount) 
-     *  2: Take the ceiling of it, then subtract by 1
-     *  3: Calculate 2 to the power of the result above
-     * @param totalRounds Total number of rounds excluding 1st round (2nd round - Finals)
-     *  1: Take log2(round1Matches) to calculate totalRounds
-     * @param numberOfSeeds Total number of seeded players, which is least number that is gives int when log2(number) >= playerCount, then divide by 4
-     * @param playersByElo An array which is first initialised as an array of all players in the tournament before sorting by desc order of ELO ranking
-     */
+    public String getTournamentname() {
+        return name;
+    }
 
-    public void initialiseDraw() { //Algorithm to create the draw
-        //Once there are 17 players, there has to be 16 1st round matches, only 2 unlucky players have to face off in 1st round, everybody else gets BYE in the 1st round
+    public void initialiseDraw() {
         int round1Matches = (int) Math.pow(2, Math.ceil((Math.log(playerCount) / Math.log(2))) -1); 
         int totalRounds = (int) ( Math.log(round1Matches) / Math.log(2) ); 
-        for (int i=0; i<totalRounds+1; i++) { //Insert Final Round first, then the rounds below it
-            for (int j=0; j<Math.pow(2, i); j++) { //create match for each round, start from finals -> 2nd round
-                Match tempmatch = new Match(null, null);  //Since subsequent matches outcome not determined yet, players are set to null 
-                draw.insert(tempmatch); //insert match for the particular round
-            }
-        } //All matches for subsequent rounds have been created and added to the drawHeap
+        int totalMatches = round1Matches + totalRounds;
 
-        //ALL PLAYERS players attribute
-        Player[] seededPlayers = null;
-        Player[] unseededPlayers = null;
+        // Create a list to hold all matches indexed by their positions
+        List<Match> matchList = new ArrayList<>(Collections.nCopies(totalMatches, null));
+    
+        // Create matches starting from the final match
+        createMatchesRecursively(matchList, 0, totalRounds);
+    
+        // Assign players to first-round matches
+        List<Player> playerList = new ArrayList<>(players);
+    
+        // Seed players and assign to matches
+        assignPlayersToMatches(matchList, playerList);
+    
+        // Add matches to the tournament
+        for (Match match : matchList) {
+            addMatch(match);
+        }
+    }
 
-        //Segregate seeded & unseeded players;
-        int numberOfSeeds = round1Matches / 4; 
-        if (numberOfSeeds < 2) numberOfSeeds = 0;
-        Player[] playersByElo = players.toArray(new Player[0]); 
-        Arrays.sort(playersByElo, new EloComparator()); //Sort players in desc order of elo
-        seededPlayers = Arrays.copyOfRange(playersByElo, 0, numberOfSeeds); //All seeded players
-        unseededPlayers = Arrays.copyOfRange(playersByElo, numberOfSeeds + 1, playersByElo.length); //All unseeded players 
-  
-        Player[] slots = new Player[seededPlayers.length + unseededPlayers.length];
-        
-        assignSeedsToSlots(seededPlayers, slots); 
-        for (int r=0; r<slots.length; r+=2) {
-            Match temp1stRoundMatch = new Match(slots[r], slots[r+1]);
-            draw.insert(temp1stRoundMatch); //Add every matched up player to draw
-        } //DONE
-    } 
+    private void collectMatchesPerRound(Match match, Map<Integer, List<Match>> rounds) {
+        if (match == null) {
+            return;
+        }
 
-    public String printDraw() {
-        return draw.printHeap();
+        // Add the match to the list for its round
+        rounds.computeIfAbsent(match.getRoundNumber(), k -> new ArrayList<>()).add(match);
+
+        // Recursively collect matches from child matches
+        collectMatchesPerRound(match.getLeftChild(), rounds);
+        collectMatchesPerRound(match.getRightChild(), rounds);
+    }
+
+    private void createMatchesRecursively(List<Match> matchList, int index, int roundsRemaining) {
+        if (roundsRemaining == 0) {
+            return;
+        }
+    
+        Match match = new Match();
+        match.setRoundNumber(roundsRemaining);
+    
+        matchList.set(index, match);
+    
+        // Left child
+        int leftChildIndex = 2 * index + 1;
+        createMatchesRecursively(matchList, leftChildIndex, roundsRemaining - 1);
+        if (matchList.get(leftChildIndex) != null) {
+            matchList.get(leftChildIndex).setParentMatch(match);
+            match.getChildMatches().add(matchList.get(leftChildIndex));
+        }
+    
+        // Right child
+        int rightChildIndex = 2 * index + 2;
+        createMatchesRecursively(matchList, rightChildIndex, roundsRemaining - 1);
+        if (matchList.get(rightChildIndex) != null) {
+            matchList.get(rightChildIndex).setParentMatch(match);
+            match.getChildMatches().add(matchList.get(rightChildIndex));
+        }
     }
     
-    // Method to assign seeded players to specific slots
-    public static void assignSeedsToSlots(Player[] seededPlayers, Player[] slots) {
-        int totalMatches = slots.length / 2;
+    private void assignPlayersToMatches(List<Match> matchList, List<Player> playerList) {
+        // Sort players by ELO rating
+        playerList.sort(new EloComparator());
 
-        // Seed 1
-        slots[0] = seededPlayers[0];
+        // Determine number of seeds
+        int numberOfSeeds = calculateNumberOfSeeds(playerList.size());
 
-        // Seed 2
-        slots[slots.length - 1] = seededPlayers[1];
+        // Assign seeds to predefined positions
+        Map<Integer, Player> seededPositions = assignSeeds(playerList, numberOfSeeds, matchList);
 
-        // Seeds 3 and 4
-        int midPoint = totalMatches / 2;
-        slots[midPoint - 1] = seededPlayers[2];
-        slots[midPoint] = seededPlayers[3];
+        // Assign unseeded players to remaining matches
+        assignUnseededPlayers(playerList, seededPositions, matchList);
+    }
 
-        // Seeds 5 to n
-        int seedIndex = 4;
-        int[] predefinedPositions = getSeedPositions(seededPlayers.length, slots.length);
+    private int calculateNumberOfSeeds(int playerCount) {
+        // Implement your logic to calculate the number of seeds
+        return playerCount / 4;
+    }
 
-        for (int pos : predefinedPositions) {
-            if (seedIndex >= seededPlayers.length) break;
-            slots[pos] = seededPlayers[seedIndex];
-            seedIndex++;
+    private Map<Integer, Player> assignSeeds(List<Player> playerList, int numberOfSeeds, List<Match> matchList) {
+        Map<Integer, Player> seededPositions = new HashMap<>();
+
+        // Example positions for seeds (adjust as needed)
+        int[] seedPositions = {0, matchList.size() - 1, matchList.size() / 2 - 1, matchList.size() / 2};
+
+        for (int i = 0; i < numberOfSeeds && i < seedPositions.length; i++) {
+            int position = seedPositions[i];
+            Player player = playerList.get(i);
+            Match match = matchList.get(position);
+            match.setPlayer1(player); // Or assign according to your logic
+            seededPositions.put(position, player);
         }
+
+        // Remove seeded players from the list
+        playerList.subList(0, numberOfSeeds).clear();
+
+        return seededPositions;
     }
 
-    // Method to get predefined positions for seeds 5 to n
-    public static int[] getSeedPositions(int numberOfSeeds, int totalSlots) {
-        // Positions can be predefined according to tournament standards
-        // For simplicity, we'll return an array of positions
-        // Adjust this method based on the specific seeding rules
-
-        // Example positions for seeds 5 to 8 in a 32-player draw
-        return new int[]{(totalSlots / 4) - 1, (3 * totalSlots / 4), (totalSlots / 4), (3 * totalSlots / 4) - 1};
-    }
-
-    // Method to fill remaining slots with unseeded players
-    public static void fillUnseededPlayers(Player[] slots, List<Player> unseededPlayers) {
-        Random rand = new Random();
-        for (int i = 0; i < slots.length; i++) {
-            if (slots[i] == null) {
-                int index = rand.nextInt(unseededPlayers.size());
-                slots[i] = unseededPlayers.remove(index);
+    private void assignUnseededPlayers(List<Player> playerList, Map<Integer, Player> seededPositions, List<Match> matchList) {
+        Random random = new Random();
+        for (int i = 0; i < matchList.size(); i++) {
+            if (!seededPositions.containsKey(i)) {
+                Match match = matchList.get(i);
+                if (match.getPlayer1() == null && !playerList.isEmpty()) {
+                    int index = random.nextInt(playerList.size());
+                    match.setPlayer1(playerList.remove(index));
+                }
+                if (match.getPlayer2() == null && !playerList.isEmpty()) {
+                    int index = random.nextInt(playerList.size());
+                    match.setPlayer2(playerList.remove(index));
+                }
             }
         }
     }
 
-    //Update match results
-    public Match recordMatchResult(Match match, int roundNo, Player winner, String score) {
-        return draw.recordMatchResult(match, roundNo, winner, score);
+    public Match recordMatchResult(Match match, Player winner, String result) {
+        for (Match m : draw) {
+            if (m.equals(match)) {
+                m.setWinner(winner);
+                return m;
+            }
+        }
+        return null;
     }
 
-    //Update next round results
-    public Match updateNextRound(Match match, int roundNo, Player winner, String score) {
-        //Returns & updates next round match by adding the player that moved forward
-        return draw.updateNextRound(match, roundNo, winner, score);
+    public String printDraw() {
+        // Find the final match (match without a parent)
+        Match finalMatch = findFinalMatch();
+        if (finalMatch == null) {
+            return "No matches to display, draw not out yet";
+        }
+
+        // Use a recursive method to collect matches per round
+        Map<Integer, List<Match>> rounds = new TreeMap<>();
+        collectMatchesPerRound(finalMatch, rounds);
+
+        // Print matches round by round
+        for (Map.Entry<Integer, List<Match>> entry : rounds.entrySet()) {
+            int roundNumber = entry.getKey();
+            List<Match> matches = entry.getValue();
+
+            System.out.println("Round " + roundNumber + ":");
+            for (Match match : matches) {
+                String player1Name = (match.getPlayer1() != null) ? match.getPlayer1().getName() : "TBD";
+                String player2Name = (match.getPlayer2() != null) ? match.getPlayer2().getName() : "TBD";
+                System.out.println("  Match ID " + match.getId() + ": " + player1Name + " vs. " + player2Name);
+            }
+            System.out.println();
+        }
+
+        return "END OF DRAW";
     }
 
-    public String getTournamentname() {
-        // TODO Auto-generated method stub
-        return name;
+    private Match findFinalMatch() {
+        for (Match match : draw) {
+            if (match.getParentMatch() == null) {
+                return match;
+            }
+        }
+        return null;
+    }
+
+    //Returns next round match 
+    public Match updateNextRound(Match match, Player winner, String result) {
+        for (Match m : draw) {
+            if (m.equals(match)) {
+                Match nextRound = match.getParentMatch();
+                if (nextRound.getLeftChild().equals(m)) {
+                    nextRound.setPlayer1(winner);
+                }
+                if (nextRound.getRightChild().equals(m)) {
+                    nextRound.setPlayer2(winner);  
+                }
+                return nextRound;
+            }
+        }
+        return null;
     }
 
 }

@@ -1,9 +1,14 @@
 package com.amateuraces.match;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.amateuraces.player.Player;
 import com.amateuraces.tournament.Tournament;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,6 +50,18 @@ public class Match {
     @JoinColumn(name = "matchWinner")
     private Player winner;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_match_id")
+    private Match parentMatch = null;
+
+    @OneToOne(mappedBy = "parentMatch", cascade = CascadeType.ALL)
+    private Match leftChild = null;
+
+    @OneToOne(mappedBy = "parentMatch", cascade = CascadeType.ALL)
+    private Match rightChild = null;
+
+    private int roundNumber;
+
     public Match(Tournament tournament, Player player1, Player player2) {
         this.tournament = tournament;
         this.player1 = player1;
@@ -62,5 +79,50 @@ public class Match {
 
     public void setPlayer2(Player newPlayer) {
         player2 = newPlayer;
+    }
+
+    public void setLeftChild(Match leftChild) {
+        this.leftChild = leftChild;
+        if (leftChild != null) {
+            leftChild.setParentMatch(this);
+        }
+    }
+    
+    public void setRightChild(Match rightChild) {
+        this.rightChild = rightChild;
+        if (rightChild != null) {
+            rightChild.setParentMatch(this);
+        }
+    }
+    
+
+    public List<Match> getChildMatches() {
+        List<Match> children = new ArrayList<>();
+        if (leftChild != null) {
+            children.add(leftChild);
+        }
+        if (rightChild != null) {
+            children.add(rightChild);
+        }
+        return children;
+    }
+
+    public void setParentMatch(Match match) {
+        this.parentMatch = match;
+        // Ensure bidirectional relationship
+        if (match != null) {
+            if (match.getLeftChild() == null) {
+                match.setLeftChild(this);
+            } else if (match.getRightChild() == null) {
+                match.setRightChild(this);
+            } else {
+                // Handle the case where both child slots are occupied
+                throw new IllegalStateException("Parent match already has two child matches.");
+            }
+        }
+    }
+
+    public void setRoundNumber(int roundNumber) {
+        this.roundNumber = roundNumber;
     }
 }
