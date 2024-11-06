@@ -160,33 +160,114 @@ public class TournamentController {
     // }
 
     /**
-     * Record the result of a match.
-     * 
-     * @param tournamentId the ID of the tournament
-     * @param matchId     the ID of the match
-     * @param result      the result of the match
-     * @return ResponseEntity containing the updated tournament
+     * Endpoint to record match results
+     * @param tournamentId ID of the tournament where the match result is recorded
+     * @param matchId ID of the match being updated
+     * @param winnerId ID of the winning player
+     * @param result Result of the match (e.g., score)
+     * @return Response indicating success or failure
      */
-    @PostMapping("/tournaments/{tournamentId}/matches/{matchId}/result")
-    public ResponseEntity<Tournament> recordMatchResult(
-            @PathVariable Long tournamentId, 
-            @PathVariable Long matchId, 
+    @PostMapping("/{tournamentId}/recordMatchResult")
+    public ResponseEntity<String> recordMatchResult(
+            @PathVariable Long tournamentId,
+            @RequestParam Long matchId,
+            @RequestParam Long winnerId,
             @RequestParam String result) {
         
-        Tournament updatedTournament = tournamentService.recordMatchResult(tournamentId, matchId, result);
-        return ResponseEntity.ok(updatedTournament);
+        try {
+            // Retrieve the Match and Player instances based on IDs
+            Match match = new Match(); // Create a Match object with the specified ID (you may need to customize this for your setup)
+            match.setId(matchId);      // Set the ID to identify the match
+
+            Player winner = new Player(); // Create a Player object with the specified ID (customize as needed)
+            winner.setId(winnerId);       // Set the ID to identify the player
+
+            Tournament tournament = tournamentService.recordMatchResult(tournamentId, match, winner, result);
+
+            if (tournament == null) {
+                return ResponseEntity.status(404).body("Match not found in the tournament with ID: " + tournamentId);
+            }
+
+            return ResponseEntity.ok("Match result recorded successfully in tournament ID: " + tournamentId);
+
+        } catch (TournamentNotFoundException ex) {
+            return ResponseEntity.status(404).body("Tournament not found with ID: " + tournamentId);
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body("An error occurred while recording the match result.");
+        }
     }
 
-    @PostMapping("/initialise-draw")
-    public ResponseEntity<String> initialiseDraw(@PathVariable Long id) {
-        tournamentService.initialiseDraw(id);
-        return ResponseEntity.ok("Tournament draw initialised.");
+    /**
+     * Endpoint to update the next round with the match result
+     * @param tournamentId ID of the tournament where the match result is recorded
+     * @param matchId ID of the completed match
+     * @param winnerId ID of the winning player
+     * @param result Result of the match (e.g., score)
+     * @return Response indicating success or failure
+     */
+    @PostMapping("/{tournamentId}/updateNextRound")
+    public ResponseEntity<String> updateNextRound(
+            @PathVariable Long tournamentId,
+            @RequestParam Long matchId,
+            @RequestParam Long winnerId,
+            @RequestParam String result) {
+
+        try {
+            // Retrieve the Match and Player instances based on IDs
+            Match match = new Match(); // Create a Match object with the specified ID (minimal initialization)
+            match.setId(matchId);      // Set the ID to identify the match
+
+            Player winner = new Player(); // Create a Player object with the specified ID
+            winner.setId(winnerId);       // Set the ID to identify the player
+
+            // Call the service method to update the next round
+            Tournament tournament = tournamentService.updateNextRound(tournamentId, match, winner, result);
+
+            if (tournament == null) {
+                return ResponseEntity.status(404).body("Match not found in the tournament with ID: " + tournamentId);
+            }
+
+            return ResponseEntity.ok("Next round updated successfully in tournament ID: " + tournamentId);
+
+        } catch (TournamentNotFoundException ex) {
+            return ResponseEntity.status(404).body("Tournament not found with ID: " + tournamentId);
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body("An error occurred while updating the next round.");
+        }
     }
 
-    @GetMapping("/print-draw")
-    public ResponseEntity<String> printDraw(@PathVariable Long id) {
-        String drawOutput = tournamentService.printDraw(id);
-        return ResponseEntity.ok(drawOutput);
+    /**
+     * Endpoint to initialize the tournament draw
+     * @param tournamentId ID of the tournament to initialize the draw for
+     * @return Response indicating success or failure
+     */
+    @PostMapping("/{tournamentId}/initialiseDraw")
+    public ResponseEntity<String> initialiseDraw(@PathVariable Long tournamentId) {
+        try {
+            tournamentService.initialiseDraw(tournamentId); // Call service method to initialize the draw
+            return ResponseEntity.ok("Draw initialized successfully for tournament ID: " + tournamentId);
+        } catch (TournamentNotFoundException ex) {
+            return ResponseEntity.status(404).body("Tournament not found with ID: " + tournamentId);
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body("An error occurred while initializing the draw.");
+        }
+    }
+
+    /**
+     * Endpoint to print the tournament draw
+     * @param tournamentId ID of the tournament to print the draw for
+     * @return Response containing the draw structure or an error message
+     */
+    @GetMapping("/{tournamentId}/printDraw")
+    public ResponseEntity<String> printDraw(@PathVariable Long tournamentId) {
+        try {
+            String drawOutput = tournamentService.printDraw(tournamentId); // Call service method to get draw output
+            return ResponseEntity.ok(drawOutput);
+        } catch (TournamentNotFoundException ex) {
+            return ResponseEntity.status(404).body("Tournament not found with ID: " + tournamentId);
+        } catch (Exception ex) {
+            return ResponseEntity.status(500).body("An error occurred while printing the draw.");
+        }
     }
 
     /**
