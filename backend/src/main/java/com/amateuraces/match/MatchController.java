@@ -67,13 +67,13 @@ public class MatchController {
      * @param newMatchInfo
      * @return the updated, or newly added book
      */
-    @PutMapping("/matches/{id}")
-    public Match updateMatch(@PathVariable Long id, @Valid @RequestBody Match newMatchInfo){
-        Match match = matchService.updateMatch(id, newMatchInfo);
-        if(match == null) throw new MatchNotFoundException(id);
+    // @PutMapping("/matches/{id}")
+    // public Match updateMatch(@PathVariable Long id, @Valid @RequestBody Match newMatchInfo){
+    //     Match match = matchService.updateMatch(id, newMatchInfo);
+    //     if(match == null) throw new MatchNotFoundException(id);
         
-        return match;
-    }
+    //     return match;
+    // }
 
         /**
      * Remove a match with the DELETE request to "/matchs/{id}"

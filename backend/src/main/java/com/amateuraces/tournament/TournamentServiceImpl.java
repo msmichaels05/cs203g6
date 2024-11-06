@@ -11,19 +11,24 @@ import jakarta.transaction.*;
 
 import com.amateuraces.player.*;
 import com.amateuraces.user.*;
+import com.amateuraces.match.*;
 
 @Service
 public class TournamentServiceImpl implements TournamentService {
 
     private  TournamentRepository tournamentRepository;
     private PlayerRepository playerRepository;
+    private MatchRepository matchRepository;
     // private CustomUserDetailsService userDetailsService;
 
-    public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository) {
+    public TournamentServiceImpl(TournamentRepository tournamentRepository, PlayerRepository playerRepository,
+    MatchRepository matchRepository) {
         this.tournamentRepository = tournamentRepository;
         this.playerRepository = playerRepository;
+        this.matchRepository = matchRepository;
         // this.userDetailsService = userDetailsService;
     }
+
 
     @Override
     public List<Tournament> listTournaments() {
@@ -178,171 +183,55 @@ public class TournamentServiceImpl implements TournamentService {
             throw new UserAuthenticationException();
         }
     }
-    
-    // @Override
-    // public Set<Match> performRandomDraw(Long tournamentId) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+    /**
+     * Creates matches for the given tournament by pairing up players.
+     * 
+     * @param tournamentId the ID of the tournament to create matches for.
+     * @return a list of created matches.
+     */
+    @Transactional
+    public List<Match> createMatchesForTournament(Long tournamentId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
 
-    //     // Ensure there are enough players for the tournament
-    //     Set<Player> players = tournament.getPlayers();
-    //     if (players.size() < 2) {
-    //         throw new IllegalArgumentException("Not enough players to perform a draw");
-    //     }
+        Set<Player> players = tournament.getPlayers(); // Get the players in the tournament
 
-        // // Shuffle the players to ensure a random draw
-        // List<Player> playerList = new ArrayList<>(players); // Convert to a List
-        // Collections.shuffle(playerList);
+        // Generate matches by pairing players
+        List<Match> matches = new ArrayList<>();
+        int matchId = 1;
+        Player[] playerArray = players.toArray(new Player[0]); // Convert the set to an array for pairing
 
-        // // Create matches for every two players
-        // Set<Match> matches = new HashSet<>();
-        // for (int i = 0; i < playerList.size(); i += 2) {
-        //     if (i + 1 < playerList.size()) {
-        //         Player player1 = playerList.get(i);
-        //         Player player2 = playerList.get(i + 1);
-        //         Match match = new Match(tournament, player1, player2);
-        //         matches.add(match);
-        //     }
-        // }
+        for (int i = 0; i < playerArray.length; i += 2) {
+            if (i + 1 < playerArray.length) {
+                Player player1 = playerArray[i];
+                Player player2 = playerArray[i + 1];
 
-    //     // Save all the matches
-    //     matchRepository.saveAll(matches);
-        
-    //     // Return the matches
-    //     return matches;
-    // }
+                // Create a match and set tournament and players
+                Match match = new Match();
+                match.setTournament(tournament);
+                match.setPlayer1(player1);
+                match.setPlayer2(player2);
+                match.setStatus("Scheduled"); // Default status is "Scheduled"
 
+                // Save the match to the database
+                matchRepository.save(match);
+                matches.add(match);
+            } else {
+                // If there’s an odd number of players, one player gets a bye (no opponent)
+                Player player1 = playerArray[i];
+                Match match = new Match();
+                match.setTournament(tournament);
+                match.setPlayer1(player1);
+                match.setPlayer2(null); // No opponent for the player
+                match.setStatus("Scheduled");
 
+                // Save the match to the database
+                matchRepository.save(match);
+                matches.add(match);
+            }
+            matchId++;
+        }
 
-    // @Override
-    // public Tournament recordMatchResult(Long tournamentId, Long matchId, String result) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
-
-    //     // Find the match by its ID
-    //     Match match = matchRepository.findById(matchId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Match not found"));
-
-    //     // Determine the winner based on the result
-    //     if (result.equalsIgnoreCase(match.getPlayer1().getName())) {
-    //         match.setWinner(match.getPlayer1());
-    //     } else if (result.equalsIgnoreCase(match.getPlayer2().getName())) {
-    //         match.setWinner(match.getPlayer2());
-    //     } else {
-    //         throw new IllegalArgumentException("Invalid result: winner not found");
-    //     }
-
-    //     // Update the match and save it
-    //     matchRepository.save(match);
-
-    //     // Return the updated tournament
-    //     return tournamentRepository.save(tournament);
-    // }
-    // @Override
-    // public Tournament addPlayerToTournament(Long tournamentId, Long playerId) {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'addPlayerToTournament'");
-    // }
-
-    // @Override
-    // public List<Player> getPlayersInTournament(Long tournamentId) {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'getPlayersInTournament'");
-    // }
-
-    // @Override
-    // public List<Match> performRandomDraw(Long tournamentId) {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'performRandomDraw'");
-    // }
-
-    // @Override
-    // public Tournament recordMatchResult(Long tournamentId, Long matchId, String result) {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'recordMatchResult'");
-    // }
-
-    // @Override
-    // public Tournament addPlayerToTournament(Long tournamentId, Long playerId) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
-    //     Player player = playerRepository.findById(playerId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Player not found"));
-
-    //     tournament.addPlayer(player); // Add the player
-    //     return tournamentRepository.save(tournament); // Persist the changes
-    // }
-
-    // @Override
-    // public Tournament setRegistrationPeriod(Long tournamentId, String startDate, String endDate) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
-
-    //     tournament.setRegistrationStartDate(startDate);
-    //     tournament.setRegistrationEndDate(endDate);
-        
-    //     // Automatically update registration status in the Tournament class
-    //     return tournamentRepository.save(tournament);
-    // }
-
-    // @Override
-    // public List<Player> getPlayersInTournament(Long tournamentId) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
-
-    //     return tournament.getPlayers(); // Directly return the players
-    // }
-
-    // @Override
-    // public List<Match> performRandomDraw(Long tournamentId) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
-
-    //     // Logic for performing random draw goes here
-    //     return new ArrayList<>(); // Return matches after drawing
-    // }
-
-    // // @Override
-    // // public Tournament updateTournamentStatus(Long tournamentId, String status) {
-    // //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    // //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
-
-    // //     tournament.setStatus(status);
-    // //     return tournamentRepository.save(tournament);
-    // // }
-
-    // @Override
-    // public Tournament recordMatchResult(Long tournamentId, Long matchId, String result) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
-
-    //     // Logic to find the match and update the result
-    //     return tournamentRepository.save(tournament);
-    // }
-
-    // // @Override
-    // // public boolean validateRegistrationPeriod(Long tournamentId) {
-    // //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    // //             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
-
-    // //     return tournament.checkRegistrationPeriod();
-    // // }
-
-    // /**
-    //  * Register a player for a tournament.
-    //  *
-    //  * @param tournamentId the ID of the tournament
-    //  * @param playerId     the ID of the player to register
-    //  * @return the updated Tournament object after registration
-    //  */
-    // // public Tournament registerPlayerForTournament(Long tournamentId, Long playerId) {
-    // //     Tournament tournament = getTournamentById(tournamentId);
-    // //     if (tournament != null && tournament.isRegistrationOpen()) {
-    // //         // Assuming you have a Player class and a way to find a Player by ID
-    // //         Player player = new Player(); // Retrieve player based on playerId
-    // //         tournament.addPlayer(player);
-    //         return tournamentRepository.save(tournament);
-    //     }
-    //     return null; // Or throw an exception
-    // }
+        return matches; // Return the list of matches that were created
+    }
 }

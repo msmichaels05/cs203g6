@@ -41,10 +41,12 @@ public class Match {
     @JoinColumn(name = "matchPlayer2")
     private Player player2;
 
-    @OneToOne
-    @JoinColumn(name = "matchWinner")
-    private Player winner;
+    // @OneToOne
+    // @JoinColumn(name = "matchWinner")
+    // private Player winner;
 
+    private String status;
+    
     public Match(Tournament tournament, Player player1, Player player2) {
         this.tournament = tournament;
         this.player1 = player1;

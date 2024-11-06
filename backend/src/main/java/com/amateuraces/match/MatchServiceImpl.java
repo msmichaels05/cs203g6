@@ -34,13 +34,13 @@ public class MatchServiceImpl implements MatchService {
         return matchRepository.save(match);
     }
 
-    @Override
-    public Match updateMatch(Long id, Match newMatchInfo) {
-        return matchRepository.findById(id).map(match -> {
-            match.setWinner(newMatchInfo.getWinner());
-            return matchRepository.save(match);
-        }).orElse(null);
-    }
+    // @Override
+    // public Match updateMatch(Long id, Match newMatchInfo) {
+    //     return matchRepository.findById(id).map(match -> {
+    //         match.setWinner(newMatchInfo.getWinner());
+    //         return matchRepository.save(match);
+    //     }).orElse(null);
+    // }
 
     /**
      * Remove a match with the given id

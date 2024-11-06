@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/users/*/players").hasRole("USER")  
                 .requestMatchers(HttpMethod.POST, "/users/*/admins").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/player/delete/*").permitAll()
-                .requestMatchers(HttpMethod.GET, "/players", "/api/players").permitAll()
+                .requestMatchers(HttpMethod.GET, "/players").permitAll()
                 .requestMatchers(HttpMethod.GET, "/admins").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyRole("USER","ADMIN")
@@ -70,8 +70,8 @@ public class SecurityConfig {
 
 
 
-                .requestMatchers("/register", "/login", "/player/register/**").permitAll()
-                .requestMatchers("/home").permitAll()  // home is accessible to those with registered accounts
+                // .requestMatchers("/register", "/login", "/player/register/**").permitAll()
+                // .requestMatchers("/home").permitAll()  // home is accessible to those with registered accounts
                 .requestMatchers("/h2-console/**").permitAll()  // Allow access to H2 Console
                 // note that Spring Security 6 secures all endpoints by default
                 // remove the below line after adding the required rules

@@ -12,14 +12,14 @@ public interface MatchService {
      */
     Match addMatch(Match match);
 
-    /**
-     * Return the updated match
-     * 
-     * @param id
-     * @param match
-     * @return
-     */
-    Match updateMatch(Long id, Match match);
+    // /**
+    //  * Return the updated match
+    //  * 
+    //  * @param id
+    //  * @param match
+    //  * @return
+    //  */
+    // Match updateMatch(Long id, Match match);
 
     /**
      * Change method's signature: do not return a value for delete operation
