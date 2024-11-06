@@ -1,3 +1,4 @@
+
 package com.amateuraces.tournament;
 
 import java.time.LocalDate;
@@ -129,6 +130,16 @@ public class Tournament {
     public void removePlayer(Player player) {
         players.remove(player);
         player.getTournaments().remove(this); // Also remove this tournament from the player's list
+    }
+
+    public void addMatch(Match match) {
+        matches.add(match);
+        match.setTournament(this); // Ensure the bidirectional relationship is maintained
+    }
+    
+    public void removeMatch(Match match) {
+        matches.remove(match);
+        match.setTournament(null); // Remove the tournament reference from the match
     }
 
     // // Get the count of registered players

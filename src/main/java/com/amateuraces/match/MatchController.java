@@ -42,7 +42,7 @@ public class MatchController {
      * @param id
      * @return match with the given id
      */
-    @GetMapping("/matches/{id}")
+    @GetMapping("/matches/complete/{id}")
     public Match getMatch(@PathVariable Long id){
         Match match = matchService.getMatch(id);
 
@@ -100,13 +100,6 @@ public class MatchController {
          }catch(EmptyResultDataAccessException e) {
             throw new MatchNotFoundException(id);
          }
-    }
-
-    // Delete a tournament
-    @PostMapping("/matches/delete/{id}")
-    public String deleteMatches(@PathVariable Long id) {
-        matchService.deleteMatch(id);
-        return "redirect:/tournaments";
     }
 
     @PostMapping("matches/{id}/result")
