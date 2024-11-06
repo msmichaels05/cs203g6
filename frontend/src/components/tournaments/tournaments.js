@@ -50,7 +50,7 @@ const Tournament = () => {
     setSelectedTournament(
       tournament || {
         name: '',
-        ELOrequirement: '',
+        elorequirement: '',
         maxPlayers: '',
         playerCount: 0,
         startDate: '',
@@ -72,6 +72,7 @@ const Tournament = () => {
   // Save changes in add/edit mode
   const handleSaveChanges = async () => {
     try {
+      console.log('Selected Tournament Data:', selectedTournament); // Confirm elorequirement value here
       if (modalType === 'edit') {
         if (!isPowerOfTwo(selectedTournament.maxPlayers)) {
           alert('Max players must be a power of 2 (e.g., 2, 4, 8, 16, etc.)');
@@ -117,7 +118,7 @@ const Tournament = () => {
               <Card.Img variant="top" src={tournament.coverImage || "https://via.placeholder.com/300x200"} />
               <Card.Body>
                 <Card.Title>{tournament.name}</Card.Title>
-                <Card.Text><strong>ELO Requirement:</strong> {tournament.ELOrequirement}</Card.Text>
+                <Card.Text><strong>ELO Requirement:</strong> {tournament.elorequirement}</Card.Text>
                 <Card.Text><strong>Location:</strong> {tournament.location}</Card.Text>
                 <Card.Text><strong>Max Players:</strong> {tournament.maxPlayers}</Card.Text>
 
@@ -161,8 +162,8 @@ const Tournament = () => {
                   <Form.Label>ELO Requirement</Form.Label>
                   <Form.Control
                     type="number"
-                    value={selectedTournament?.ELOrequirement || ''}
-                    onChange={(e) => setSelectedTournament({ ...selectedTournament, ELOrequirement: parseInt(e.target.value) })}
+                    value={selectedTournament?.elorequirement || ''}
+                    onChange={(e) => setSelectedTournament({ ...selectedTournament, elorequirement: parseInt(e.target.value) })}
                   />
                 </Form.Group>
                 <Form.Group controlId="formMaxPlayers" className="mb-3">

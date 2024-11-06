@@ -126,7 +126,7 @@ Authorization: Basic admin goodpassword
 
 
 {
-    "name": "test6",
+    "name": "test1",
     "gender": "Female",
     "elorequirement": 100,
     "maxPlayers":2,

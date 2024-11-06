@@ -1,0 +1,9 @@
+2024-11-06 15:35:34.263201+08:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]GET * FROM TOURNAMENT"; expected "GRANT"; SQL statement:
+GET * FROM TOURNAMENT [42001-224]
+2024-11-06 15:35:44.935699+08:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]TOURNAMENT"; expected "TRUNCATE"; SQL statement:
+TOURNAMENT [42001-224]
+2024-11-06 15:35:54.284580+08:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]USERS"; expected "UPDATE"; SQL statement:
+USERS [42001-224]
