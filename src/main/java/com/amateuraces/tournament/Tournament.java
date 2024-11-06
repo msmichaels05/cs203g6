@@ -1,30 +1,16 @@
 package com.amateuraces.tournament;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
-import com.amateuraces.match.Match;
+import com.amateuraces.match.*;
 import com.amateuraces.player.Player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 
 @Entity
@@ -145,24 +131,6 @@ public class Tournament {
         player.getTournaments().remove(this); // Also remove this tournament from the player's list
     }
 
-    public boolean isDateWithinTournament(LocalDate date) {
-        return (date.isEqual(startDate) || date.isAfter(startDate)) &&
-               (date.isEqual(endDate) || date.isBefore(endDate));
-    }
-
-    public void addMatch(Match match) {
-        if (!isDateWithinTournament(match.getStartTime())) {
-            throw new IllegalArgumentException("Match date must be within the tournament's start and end dates.");
-        }
-        matches.add(match);
-        match.setTournament(this.getName()); // Ensure the bidirectional relationship is maintained
-    }
-    
-    public void removeMatch(Match match) {
-        matches.remove(match);
-        match.setTournament(null); // Remove the tournament reference from the match
-    }
-
     // // Get the count of registered players
     // public int getRegisteredPlayerCount() {
     //     return players.size();
@@ -173,4 +141,3 @@ public class Tournament {
     //     players.clear();
     // }
 }
-

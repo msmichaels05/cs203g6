@@ -1,14 +1,15 @@
 package com.amateuraces.match;
 
-import java.time.LocalDate;
 import java.util.Objects;
+
+import com.amateuraces.player.Player;
+import com.amateuraces.tournament.Tournament;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,14 +28,12 @@ public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    private String tournament;
-    @NotNull
+
+    private Tournament tournament;
+
     private String player1;
-    @NotNull
+
     private String player2;
-    @NotNull
-    private LocalDate startTime;
 
     private String winner;
 
@@ -49,23 +48,15 @@ public class Match {
     @Column(name = "isCompleted", nullable = false)
     private boolean isCompleted = false;
 
-    public Match(String tournament, String player1, String player2, LocalDate startTime) {
+    public Match(Tournament tournament, String player1, String player2) {
         this.tournament = tournament;
         this.player1 = player1;
         this.player2 = player2;
-        this.startTime = startTime;
     }
 
     public Match(String player1, String player2) {
         this.player1 = player1;
         this.player2 = player2;
-    }
-
-    public Match(String tournament, String winner, String loser, String score) {
-        this.tournament = tournament;
-        this.winner = winner;
-        this.loser = loser;
-        this.score = score;
     }
 
     public void setMatchResult(String winner, String loser, String score) {
@@ -75,7 +66,7 @@ public class Match {
         this.isCompleted = true;
     }
 
-    public boolean isPlayerInvolved(String player) {
-        return Objects.equals(player1, player) || Objects.equals(player2, player);
+    public boolean isPlayerInvolved(Player player) {
+        return Objects.equals(player1, player.getId()) || Objects.equals(player2, player.getId());
     }
 }

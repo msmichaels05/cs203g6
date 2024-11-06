@@ -42,7 +42,7 @@ public class MatchController {
      * @param id
      * @return match with the given id
      */
-    @GetMapping("/matches/complete/{id}")
+    @GetMapping("/matches/{id}")
     public Match getMatch(@PathVariable Long id){
         Match match = matchService.getMatch(id);
 
@@ -133,7 +133,7 @@ public class MatchController {
         }
     }
 
-    @PutMapping("matches/{id}/result/update-winner")
+    @PutMapping("matches/{id}/result/updateWinner")
     public Match updateRecordMatchWinner(Long id, Long oldWinnerId, Long newWinnerId, String newScore) {
         try {
             Match updatedMatch = matchService.updateRecordMatchWinner(id, oldWinnerId, newWinnerId, newScore);
