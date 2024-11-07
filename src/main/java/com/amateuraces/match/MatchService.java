@@ -3,25 +3,12 @@ package com.amateuraces.match;
 import java.util.List;
 
 public interface MatchService {
-     /**
-     * Get all matches.
-     * @return List of matches.
-     */
     List<Match> listMatches();
 
-    /**
-     * Return a match
-     * 
-     * @param id
-     * @param match
-     * @return
-     */
     Match getMatch(Long id);
 
     /**
      * Return the newly added match
-     * @param match
-     * @return
      */
     Match addMatch(Match match);
 

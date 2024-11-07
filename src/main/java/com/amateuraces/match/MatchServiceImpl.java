@@ -1,5 +1,7 @@
 package com.amateuraces.match;
 
+import static org.mockito.ArgumentMatchers.matches;
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -13,57 +15,63 @@ import com.amateuraces.player.PlayerRepository;
 @Service
 public class MatchServiceImpl implements MatchService {
 
-    private final MatchRepository matches;
-    private final PlayerRepository players;
+    private MatchRepository matchRepository;
+    private PlayerRepository playerRepository;
 
-    public MatchServiceImpl(MatchRepository matches, PlayerRepository players) {
-        this.matches = matches;
-        this.players = players;
+
+    public MatchServiceImpl(MatchRepository matchRepository, PlayerRepository playerRepository) {
+        this.matchRepository = matchRepository;
+        this.playerRepository = playerRepository;
     }
 
     @Override
     public List<Match> listMatches() {
-        return matches.findAll();
+        return matchRepository.findAll();
     }
 
     @Override
     public Match getMatch(Long id) {
-        return matches.findById(id).orElse(null);
+        return matchRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Match addMatch(Match match) {
+        return matchRepository.save(match);
     }
 
     // @Override
     // public Match updateMatch(Long id, Match newMatchInfo) {
-    // return incompleteMatches.findById(id).map(match -> {
-    // match.setWinner(newMatchInfo.getWinner());
-    // return completedMatches.save(match);
-    // }).orElse(null);
+    //     return matchRepository.findById(id).map(match -> {
+    //         match.setWinner(newMatchInfo.getWinner());
+    //         return matchRepository.save(match);
+    //     }).orElse(null);
     // }
 
-    @Override
-    public Match addMatch(Match match) {
-        return matches.save(match);
-    }
-
+    /**
+     * Remove a match with the given id
+     * Spring Data JPA does not return a value for delete operation
+     * Cascading: removing a match will also remove all its associated reviews
+     */
     @Override
     public void deleteMatch(Long id) {
         // Check if the match exists before attempting to delete
-        if (!matches.existsById(id)) {
+        if (!matchRepository.existsById(id)) {
             throw new MatchNotFoundException(id);
         }
 
         // If the match exists, delete them
-        matches.deleteById(id);
+        matchRepository.deleteById(id);
     }
 
     @Override
     public Match recordMatchResult(Long matchId, Long winnerId, Long loserId, String score) {
-        Match match = matches.findById(matchId)
+        Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId)); // This line should find the match
 
-        Player winner = players.findById(winnerId)
+        Player winner = playerRepository.findById(winnerId)
                 .orElseThrow(() -> new PlayerNotFoundException(winnerId));
 
-        Player loser = players.findById(loserId)
+        Player loser = playerRepository.findById(loserId)
                 .orElseThrow(() -> new PlayerNotFoundException(loserId));
 
         if (!match.isPlayerInvolved(winner)) {
@@ -87,29 +95,29 @@ public class MatchServiceImpl implements MatchService {
 
         match.setElo(winner.changedElo(loser.getElo(), true));
 
-        return matches.save(match); // Persist the match result
+        return matchRepository.save(match); // Persist the match result
     }
 
     @Override
     public Match updateRecordMatchScore(Long matchId, String newScore) {
-        Match match = matches.findById(matchId)
+        Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId));
 
         match.setScore(newScore); // Assuming there's a setScore method in the Match class
 
-        return matches.save(match); // Save updated match
+        return matchRepository.save(match); // Save updated match
     }
 
     @Override
     public Match updateRecordMatchWinner(Long matchId, Long oldWinnerId, Long newWinnerId, String newScore) {
         // Fetch the match
-        Match match = matches.findById(matchId)
+        Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId));
 
         // Fetch the players
-        Player oldWinner = players.findById(oldWinnerId)
+        Player oldWinner = playerRepository.findById(oldWinnerId)
                 .orElseThrow(() -> new PlayerNotFoundException(oldWinnerId));
-        Player newWinner = players.findById(newWinnerId)
+        Player newWinner = playerRepository.findById(newWinnerId)
                 .orElseThrow(() -> new PlayerNotFoundException(newWinnerId));
 
         if (!match.isPlayerInvolved(oldWinner)) {
@@ -136,6 +144,6 @@ public class MatchServiceImpl implements MatchService {
         newWinner.updateWinsAndLosses(true);
         oldWinner.updateWinsAndLosses(false);
 
-        return matches.save(match);
+        return matchRepository.save(match);
     }
 }

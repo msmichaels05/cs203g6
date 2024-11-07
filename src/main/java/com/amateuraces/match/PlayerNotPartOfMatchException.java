@@ -14,4 +14,7 @@ public class PlayerNotPartOfMatchException extends RuntimeException{
         super("Player with ID " + playerId + " is not part of match with ID " + matchId);
     }
     
+    public PlayerNotPartOfMatchException(Long playerId1, Long playerId2, Long matchId) {
+        super("Either player with ID " + playerId1 + " or ID " + playerId2 + " is not part of match with ID " + matchId);
+    }
 }

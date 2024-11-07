@@ -61,7 +61,6 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/matches").permitAll()
                 .requestMatchers(HttpMethod.GET, "/matches/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/matches").permitAll()//hasAuthority("ROLE_ADMIN")
-                // .requestMatchers(HttpMethod.POST, "/matches/add").permitAll()//hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/matches/{id}").permitAll()//hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/matches/{id}/result").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/matches/{id}/result/updateScore").hasAuthority("ROLE_ADMIN")
