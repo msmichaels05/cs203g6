@@ -2,6 +2,7 @@ package com.amateuraces.tournament;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -47,6 +48,11 @@ public class Tournament {
 
     private String description;
 
+    // The champion player of a tournament
+    @ManyToOne
+    @JoinColumn(name = "player_id")
+    private Player championPlayer;
+
     @ManyToMany
     @JoinTable(
         name = "tournament_players",
@@ -55,20 +61,6 @@ public class Tournament {
     )
     @JsonIgnore
     private Set<Player> players = new HashSet<>();
-
-        // // Implement equals and hashCode
-        // @Override
-        // public boolean equals(Object o) {
-        //     if (this == o) return true;
-        //     if (!(o instanceof Tournament)) return false;
-        //     Tournament tournament = (Tournament) o;
-        //     return Objects.equals(id, tournament.id); // Compare based on 'id'
-        // }
-    
-        // @Override
-        // public int hashCode() {
-        //     return Objects.hash(id); // Hash based on 'id'
-        // }
 
     // Custom setter to enforce even maxPlayers
     public void setMaxPlayers(int maxPlayers) {
@@ -128,19 +120,6 @@ public class Tournament {
         players.remove(player);
         player.getTournaments().remove(this); // Also remove this tournament from the player's list
     }
-    // public boolean addPlayer(Player player){
-    //     players.add(player);
-    //     return true;
-    // }
 
-    // // Get the count of registered players
-    // public int getRegisteredPlayerCount() {
-    //     return players.size();
-    // }
-
-    // // Clear the list of players
-    // public void clearPlayers() {
-    //     players.clear();
-    // }
 }
 

@@ -27,12 +27,6 @@ public class SecurityConfig {
     public SecurityConfig(UserDetailsService userDetailService){
         this.userDetailsService = userDetailService;
     }
-    
-    /**
-     * Exposes a bean of DaoAuthenticationProvider, a type of AuthenticationProvider
-     * Attaches the user details and the password encoder   
-     * @return
-     */
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -43,31 +37,32 @@ public class SecurityConfig {
  
         return authProvider;
     }
-//                .requestMatchers(HttpMethod.PUT, "/players/*").hasAnyRole("ADMIN","USER")
-//                .requestMatchers(HttpMethod.DELETE, "/players/*").authenticated()
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(Customizer.withDefaults()) // Enable CORS using the custom configuration source
             .authorizeHttpRequests((authz) -> authz
-                .requestMatchers("/error").permitAll() // the default error page
+                // the default error page
+                .requestMatchers("/error").permitAll()
+                
+                // Users security
                 .requestMatchers(HttpMethod.GET, "/users", "/users/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/users/*/players").hasRole("USER")  
-                .requestMatchers(HttpMethod.POST, "/users/*/admins").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/player/delete/*").permitAll()
-                .requestMatchers(HttpMethod.GET, "/players").permitAll()
-                .requestMatchers(HttpMethod.GET, "/admins").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyRole("USER","ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/users/*").hasAuthority("ROLE_ADMIN")
+                // Players security
+                .requestMatchers(HttpMethod.GET, "/players").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/*/players").hasRole("USER")  
+
+                // Admin security
+                .requestMatchers(HttpMethod.GET, "/admins").permitAll()
+
+                // Tournament security
                 .requestMatchers(HttpMethod.GET, "/tournaments", "/tournaments/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/tournaments").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/players/*").permitAll()
-                // .requestMatchers(HttpMethod.GET, "/api/user/role").permitAll()
 
 
 
@@ -82,31 +77,22 @@ public class SecurityConfig {
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .httpBasic(Customizer.withDefaults())
 
-            .formLogin(form -> form
-                .loginPage("/login")  // Custom login page
-                .defaultSuccessUrl("/home", true)  // Redirect to home after successful login
-                .failureUrl("/login?error=true")  // Redirect to login page with error=true on failure
-                .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login") // Redirect to login after logout
-                .permitAll()
+            // CSRF protection is needed only for browser based attacks
+            .csrf(csrf -> csrf.disable()) 
 
-            )
-            .csrf(csrf -> csrf.disable()) // CSRF protection is needed only for browser based attacks
-
-            .headers(headers -> headers.disable()) // Disable headers, as we do not return HTML in our APIs
+            // Disable headers, as we do not return HTML in our APIs
+            .headers(headers -> headers.disable()) 
             .authenticationProvider(authenticationProvider());
 
         return http.build();
     }
 
-
+    // For REACT
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Allow only your frontend origin
+        // Allow only your frontend origin
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -116,12 +102,6 @@ public class SecurityConfig {
         return source;
     }
 
-
-
-    /**
-     * @Bean annotation is used to declare a PasswordEncoder bean in the Spring application context. 
-     * Any calls to encoder() will then be intercepted to return the bean instance.
-     */
     @Bean
     public BCryptPasswordEncoder encoder() {
         // auto-generate a random salt internally

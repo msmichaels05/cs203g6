@@ -189,6 +189,7 @@ public class TournamentServiceImpl implements TournamentService {
      * @param tournamentId the ID of the tournament to create matches for.
      * @return a list of created matches.
      */
+
     @Transactional
     public List<Match> createMatchesForTournament(Long tournamentId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
@@ -198,7 +199,6 @@ public class TournamentServiceImpl implements TournamentService {
 
         // Generate matches by pairing players
         List<Match> matches = new ArrayList<>();
-        int matchId = 1;
         Player[] playerArray = players.toArray(new Player[0]); // Convert the set to an array for pairing
 
         for (int i = 0; i < playerArray.length; i += 2) {
@@ -207,12 +207,7 @@ public class TournamentServiceImpl implements TournamentService {
                 Player player2 = playerArray[i + 1];
 
                 // Create a match and set tournament and players
-                Match match = new Match();
-                match.setTournament(tournament);
-                match.setPlayer1(player1);
-                match.setPlayer2(player2);
-                match.setStatus("Scheduled"); // Default status is "Scheduled"
-
+                Match match = new Match(tournament,player1,player2);
                 // Save the match to the database
                 matchRepository.save(match);
                 matches.add(match);
@@ -223,13 +218,11 @@ public class TournamentServiceImpl implements TournamentService {
                 match.setTournament(tournament);
                 match.setPlayer1(player1);
                 match.setPlayer2(null); // No opponent for the player
-                match.setStatus("Scheduled");
 
                 // Save the match to the database
                 matchRepository.save(match);
                 matches.add(match);
             }
-            matchId++;
         }
 
         return matches; // Return the list of matches that were created
