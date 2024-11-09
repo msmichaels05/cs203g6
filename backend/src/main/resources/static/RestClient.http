@@ -208,9 +208,14 @@ Authorization: Basic admin goodpassword
     "maxPlayers":8,
     "location": "Singapore",
     "description":"newbie training session",
-    "startDate": "2024-12-09",
-    "endDate":"2024-12-24"
+    "startDate": "2024-12-29",
+    "endDate":"2024-12-31"
 }
+
+### Tournament
+GET http://localhost:8080/tournaments
+Content-Type: application/json
+Authorization: Basic admin goodpassword
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
@@ -243,8 +248,73 @@ Authorization: Basic admin goodpassword
 ### POST DRAW ALGO
 
 POST http://localhost:8080/tournaments/1/matches
+Content-Type: application/json
 Authorization: Basic admin goodpassword
 
+{
+    "tournament": {
+        "name": "test1",
+        "gender": "Female",
+        "elorequirement": 100,
+        "maxPlayers": 8,
+        "location": "Singapore",
+        "description": "newbie training session",
+        "startDate": "2024-12-29",
+        "endDate": "2024-12-31"
+    },
+    "player1": {
+        "name": "Alpha",
+        "phoneNumber": "12345678",
+        "email": "alphabo@gmail.com",
+        "age": 18,
+        "gender": "Female",
+        "user": {
+            "username": "betatester",
+            "email": "betatester@email.com",
+            "password": "$2a$10$tQSBc3Ryy8PeD19r2eL8rewXWYFCvVsXuS1Rr138FlT37Te2SSiC6" 
+        }
+    },
+    "player2": {
+        "name": "Alphabravos",
+        "phoneNumber": "88888882",
+        "email": "alphabravo@gmail.com",
+        "age": 18,
+        "gender": "Female",
+        "user": {
+            "email": "user@email.com",
+            "username": "username",
+            "password": "$2a$10$EYAljLDWpBfjcwIVBSnp.Or63FQzGpqYCl3Z8IgdQqPf7vXkbHcU6"
+        }
+    },
+    "winner": {},
+    "score": "14-10"
+}
+
+###
+POST http://localhost:8080/tournaments/1/matches
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+{
+    "tournament": {
+        "id": 1
+    },
+    "player1": {
+        "id": 1
+    },
+    "player2": {
+        "id": 2
+    }
+}
+###
+POST http://localhost:8080/tournaments/1/matches/1/result
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "winnerId": 2,
+    "loserId": 3,
+    "score": "15-40"
+}
 ### GET MATCHES
 
 GET http://localhost:8080/matches
@@ -258,8 +328,6 @@ Authorization: Basic betatester betatester
 
 ### Tournament
 GET http://localhost:8080/tournaments
-
-
 
 ### GET SPECIFIC PLAYER 
 GET http://localhost:8080/users/2/players

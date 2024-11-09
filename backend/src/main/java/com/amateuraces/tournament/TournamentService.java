@@ -1,7 +1,7 @@
 package com.amateuraces.tournament;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
-import com.amateuraces.match.Match;
 import com.amateuraces.player.Player;
 
 public interface TournamentService {
@@ -31,6 +31,6 @@ public interface TournamentService {
 
     void removePlayerFromTournament(Long tournamentId, Long playerId);
 
-    List<Match> createMatchesForTournament(Long tournamentId);
+    // List<Match> createMatchesForTournament(Long tournamentId);
 
 }

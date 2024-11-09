@@ -189,49 +189,47 @@ public class TournamentServiceImpl implements TournamentService {
      * @param tournamentId the ID of the tournament to create matches for.
      * @return a list of created matches.
      */
-    @Transactional
-    public List<Match> createMatchesForTournament(Long tournamentId) {
-        Tournament tournament = tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
+    // @Transactional
+    // public List<Match> createMatchesForTournament(Long tournamentId) {
+    //     Tournament tournament = tournamentRepository.findById(tournamentId)
+    //             .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
 
-        Set<Player> players = tournament.getPlayers(); // Get the players in the tournament
+    //     Set<Player> players = tournament.getPlayers(); // Get the players in the tournament
 
-        // Generate matches by pairing players
-        List<Match> matches = new ArrayList<>();
-        int matchId = 1;
-        Player[] playerArray = players.toArray(new Player[0]); // Convert the set to an array for pairing
+    //     // Generate matches by pairing players
+    //     List<Match> matches = new ArrayList<>();
+    //     Player[] playerArray = players.toArray(new Player[0]); // Convert the set to an array for pairing
 
-        for (int i = 0; i < playerArray.length; i += 2) {
-            if (i + 1 < playerArray.length) {
-                Player player1 = playerArray[i];
-                Player player2 = playerArray[i + 1];
+    //     for (int i = 0; i < playerArray.length; i += 2) {
+    //         if (i + 1 < playerArray.length) {
+    //             Player player1 = playerArray[i];
+    //             Player player2 = playerArray[i + 1];
 
-                // Create a match and set tournament and players
-                Match match = new Match();
-                match.setTournament(tournament);
-                match.setPlayer1(player1);
-                match.setPlayer2(player2);
-                match.setStatus("Scheduled"); // Default status is "Scheduled"
+    //             // Create a match and set tournament and players
+    //             Match match = new Match();
+    //             match.setTournament(tournament);
+    //             match.setPlayer1(player1);
+    //             match.setPlayer2(player2);
+    //             match.setStatus("Scheduled"); // Default status is "Scheduled"
 
-                // Save the match to the database
-                matchRepository.save(match);
-                matches.add(match);
-            } else {
-                // If there’s an odd number of players, one player gets a bye (no opponent)
-                Player player1 = playerArray[i];
-                Match match = new Match();
-                match.setTournament(tournament);
-                match.setPlayer1(player1);
-                match.setPlayer2(null); // No opponent for the player
-                match.setStatus("Scheduled");
+    //             // Save the match to the database
+    //             matchRepository.save(match);
+    //             matches.add(match);
+    //         } else {
+    //             // If there’s an odd number of players, one player gets a bye (no opponent)
+    //             Player player1 = playerArray[i];
+    //             Match match = new Match();
+    //             match.setTournament(tournament);
+    //             match.setPlayer1(player1);
+    //             match.setPlayer2(null); // No opponent for the player
+    //             match.setStatus("Scheduled");
 
-                // Save the match to the database
-                matchRepository.save(match);
-                matches.add(match);
-            }
-            matchId++;
-        }
+    //             // Save the match to the database
+    //             matchRepository.save(match);
+    //             matches.add(match);
+    //         }
+    //     }
 
-        return matches; // Return the list of matches that were created
-    }
+    //     return matches; // Return the list of matches that were created
+    // }
 }

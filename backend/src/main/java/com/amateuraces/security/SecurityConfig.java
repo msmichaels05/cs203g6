@@ -67,8 +67,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/players/*").permitAll()
-
-
+                .requestMatchers(HttpMethod.GET, "/tournaments/*/matches").permitAll()
+                .requestMatchers(HttpMethod.GET, "/tournaments/*/matches/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/tournaments/*/matches").permitAll()//hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/tournaments/*/matches/{id}").permitAll()//hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/tournaments/*/matches/{id}/result/*").hasAuthority("ROLE_ADMIN")
 
                 // .requestMatchers("/register", "/login", "/player/register/**").permitAll()
                 // .requestMatchers("/home").permitAll()  // home is accessible to those with registered accounts
