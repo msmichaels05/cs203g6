@@ -4,20 +4,19 @@ import { FaUserCircle } from 'react-icons/fa';  // Import icon for profile
 
 const PlayerNavbar = () => {
   return (
-    <Navbar expand="lg" style={{ backgroundColor: '#004080' }}>
+    <Navbar expand="lg" style={{ backgroundColor: '#004080', padding: '10px 0' }}>
       <Container>
         <Navbar.Brand href="/" style={{ color: 'white' }}>AmateurAces - Player</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+        <Navbar.Collapse id="basic-navbar-nav" style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <Nav>
             <Nav.Link href="/authen_home" style={navLinkStyle}>Home</Nav.Link>
-            <Nav.Link href="/schedule" style={navLinkStyle}>Schedule</Nav.Link>
             <Nav.Link href="/draws" style={navLinkStyle}>Draws</Nav.Link>
             <Nav.Link href="/players" style={navLinkStyle}>Players</Nav.Link>
           </Nav>
 
           {/* Profile and Logout Links on the right side */}
-          <Nav className="ml-auto">
+          <Nav className="ml-auto" style={{ alignItems: 'center' }}>
             <Nav.Link href="/profile" style={profileLinkStyle}>
               <FaUserCircle style={profileIconStyle} /> My Profile
             </Nav.Link>
