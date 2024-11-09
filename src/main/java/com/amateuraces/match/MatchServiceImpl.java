@@ -64,18 +64,28 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match recordMatchResult(Long matchId, Long winnerId, String score) {
+    public Match recordMatchResult(Long matchId, Long winnerId, Long loserId, String score) {
         //Check if match exsits
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId));
 
+        //Check if either player exists
         Player winner = playerRepository.findById(winnerId)
                 .orElseThrow(() -> new PlayerNotFoundException(winnerId));
 
-         // If player is not part of the match
+        Player loser = playerRepository.findById(loserId)
+                .orElseThrow(() -> new PlayerNotFoundException(loserId));
+
+
+        // If either player is part of the match
         if (!match.isPlayerInvolved(winner)) {
             throw new PlayerNotPartOfMatchException(winnerId, matchId);
         }
+
+        if (!match.isPlayerInvolved(loser)) {
+            throw new PlayerNotPartOfMatchException(loserId, matchId);
+        }
+
 
         // Update the match result
         match.setMatchResult(winner, score);
@@ -109,29 +119,27 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public Match updateRecordMatchWinner(Long matchId, Long oldWinnerId, Long newWinnerId, String newScore) {
-        // Fetch the match
+        // Fetch the match and check if it exist
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId));
 
-        // Fetch the players
+        // Fetch the players and check it either player exist
         Player oldWinner = playerRepository.findById(oldWinnerId)
                 .orElseThrow(() -> new PlayerNotFoundException(oldWinnerId));
         Player newWinner = playerRepository.findById(newWinnerId)
                 .orElseThrow(() -> new PlayerNotFoundException(newWinnerId));
 
-        // If player is not part of the match
+        // If either player part of the match
         if (!match.isPlayerInvolved(oldWinner)) {
             throw new PlayerNotPartOfMatchException(oldWinnerId, matchId);
         }
 
-        // If player is not part of the match
         if (!match.isPlayerInvolved(newWinner)) {
             throw new PlayerNotPartOfMatchException(newWinnerId, matchId);
         }
         
         // Update the match result with new winner and loser
         match.setMatchResult(newWinner, newScore);
-        match.setCompleted(true);
         
         // Revert ELO
         oldWinner.revertElo(match, true);

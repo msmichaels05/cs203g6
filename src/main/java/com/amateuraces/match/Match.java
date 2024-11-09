@@ -68,7 +68,7 @@ public class Match {
         this.player2 = player2;
     }
 
-    public void setMatchResult(Player winner, Player loser, String score) {
+    public void setMatchResult(Player winner, String score) {
         this.winner = winner;
         this.score = score;
         this.isCompleted = true;
