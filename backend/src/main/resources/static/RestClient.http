@@ -323,6 +323,11 @@ Authorization: Basic username password
 }
 
 
+### GET USER ROLE 
+GET http://localhost:8080/api/user/role
+Content-Type: application/json
+
+
 
 
 ###
@@ -399,8 +404,14 @@ Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 {
-    "name" : "US OPEN",
-    "elorequirement" : 1500
+    "name": "US OPEN",
+    "elorequirement": 1500,
+    "maxPlayers": 32,
+    "gender": "Male",
+    "location": "New York",
+    "description": "Grand Slam Tournament",
+    "startDate": "2024-12-10",
+    "endDate": "2024-12-12"
      
 }
 
