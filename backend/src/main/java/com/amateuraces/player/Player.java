@@ -68,7 +68,7 @@ public class Player {
     private User user;
 
     // Single champion Player for a Tournament
-    @OneToMany(mappedBy = "championPlayer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "championPlayer", cascade = CascadeType.PERSIST)
     private List<Tournament> tournament;
 
     @Override
