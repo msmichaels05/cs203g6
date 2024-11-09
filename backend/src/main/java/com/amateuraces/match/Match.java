@@ -57,6 +57,12 @@ public class Match {
     @Column(name = "isCompleted", nullable = false)
     private boolean isCompleted = false;
 
+    private String status = "Scheduled";
+
+    public Match(Tournament tournament) {
+        this.tournament = tournament;
+    }
+
     public Match(Tournament tournament, Player player1, Player player2) {
         this.tournament = tournament;
         this.player1 = player1;

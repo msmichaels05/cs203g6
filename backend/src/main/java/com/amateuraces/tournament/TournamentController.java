@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.amateuraces.match.Match;
 import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerNotFoundException;
 
@@ -30,11 +31,11 @@ public class TournamentController {
     }
 
     // // Call match algorithm
-    // @ResponseBody
-    // @PostMapping("/tournaments/{id}/matches")
-    // public List<Match> createMatchesForTournament(@PathVariable Long id) {
-    //     return tournamentService.createMatchesForTournament(id); // Create and save matches for a given tournament
-    // }
+    @ResponseBody
+    @PostMapping("/tournaments/{id}/matches")
+    public List<Match> createMatchesForTournament(@PathVariable Long id) {
+        return tournamentService.createMatchesForTournament(id); // Create and save matches for a given tournament
+    }
 
     @ResponseBody
     @GetMapping("/tournaments")
@@ -127,4 +128,16 @@ public class TournamentController {
         throw new PlayerNotFoundException(playerId);
       }
     }
+
+    @PostMapping("/tournaments/{tournamentId}/initialise-draw")
+    public List<Match> initialiseDraw(@PathVariable Long tournamentId) {
+        List<Match> round1Matches = tournamentService.initialiseDraw(tournamentId);
+        return round1Matches;
+    }
+
+    // @PostMapping("/{tournamentId}/update-next-round")
+    // public List<Match> updateNextRound(@PathVariable Long tournamentId) {
+    //     List<Match> nextRoundMatches = tournamentService.updateNextRound(tournamentId);
+    //     return nextRoundMatches;
+    // }
 }

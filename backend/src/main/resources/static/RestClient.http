@@ -66,6 +66,28 @@ Content-Type: application/json
     "password": "betatester"   
 }
 
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernamesssss",
+    "email": "de@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernamessssss",
+    "email": "e@email.com",
+    "password": "betatester"   
+}
+
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
 # Show that cannot create player for admin
 POST http://localhost:8080/users/1/players
@@ -164,6 +186,33 @@ Authorization: Basic usernames betatester
     "gender" : "Female"
 }
 
+###
+# Show that player can create 
+POST http://localhost:8080/users/8/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"phasssasds",
+    "phoneNumber" :"88266721",
+    "email" : "poasdpoad@gmail.com",
+    "age" : 18,
+    "gender" : "Female"
+}
+###
+# Show that player can create 
+POST http://localhost:8080/users/9/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"phaswerirhtews",
+    "phoneNumber" :"882883451",
+    "email" : "alpo13498@gmail.com",
+    "age" : 18,
+    "gender" : "Female"
+}
+
 ### Showcase user cannot post in admin
 POST http://localhost:8080/users/1/admins
 Content-Type: application/json
@@ -243,6 +292,14 @@ Authorization: Basic usernamessss betatester
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
+Authorization: Basic usernamesssss betatester
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic usernamessssss betatester
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
 Authorization: Basic admin goodpassword 
 
 ### POST DRAW ALGO
@@ -252,59 +309,18 @@ Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 {
-    "tournament": {
-        "name": "test1",
-        "gender": "Female",
-        "elorequirement": 100,
-        "maxPlayers": 8,
-        "location": "Singapore",
-        "description": "newbie training session",
-        "startDate": "2024-12-29",
-        "endDate": "2024-12-31"
-    },
-    "player1": {
-        "name": "Alpha",
-        "phoneNumber": "12345678",
-        "email": "alphabo@gmail.com",
-        "age": 18,
-        "gender": "Female",
-        "user": {
-            "username": "betatester",
-            "email": "betatester@email.com",
-            "password": "$2a$10$tQSBc3Ryy8PeD19r2eL8rewXWYFCvVsXuS1Rr138FlT37Te2SSiC6" 
-        }
-    },
-    "player2": {
-        "name": "Alphabravos",
-        "phoneNumber": "88888882",
-        "email": "alphabravo@gmail.com",
-        "age": 18,
-        "gender": "Female",
-        "user": {
-            "email": "user@email.com",
-            "username": "username",
-            "password": "$2a$10$EYAljLDWpBfjcwIVBSnp.Or63FQzGpqYCl3Z8IgdQqPf7vXkbHcU6"
-        }
-    },
-    "winner": {},
-    "score": "14-10"
+
 }
 
-###
-POST http://localhost:8080/tournaments/1/matches
+### Initialise Draw
+POST http://localhost:8080/tournaments/1/initialise-draw
 Content-Type: application/json
-Authorization: Basic admin goodpassword
-{
-    "tournament": {
-        "id": 1
-    },
-    "player1": {
-        "id": 1
-    },
-    "player2": {
-        "id": 2
-    }
-}
+
+
+### Print Draw
+POST http://localhost:8080/tournaments/1/update-next-round
+Content-Type: application/json
+
 ###
 POST http://localhost:8080/tournaments/1/matches/1/result
 Content-Type: application/json
