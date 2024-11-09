@@ -10,8 +10,6 @@ function CustomNavbar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/home" style={navLinkStyle}>Home</Nav.Link>
-            <Nav.Link href="/schedule" style={navLinkStyle}>Schedule</Nav.Link>
-            <Nav.Link href="/draws" style={navLinkStyle}>Draws</Nav.Link>
             <Nav.Link href="/players" style={navLinkStyle}>Players</Nav.Link>
             <Nav.Link href="/tournaments" style={navLinkStyle}>Tournaments</Nav.Link>
           </Nav>
