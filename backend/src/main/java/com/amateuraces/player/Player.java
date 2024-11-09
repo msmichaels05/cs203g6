@@ -13,7 +13,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -64,6 +66,10 @@ public class Player {
     @MapsId
     @JoinColumn(name="user_id",nullable = false)
     private User user;
+
+    // Single champion Player for a Tournament
+    @OneToMany(mappedBy = "championPlayer", cascade = CascadeType.ALL)
+    private List<Tournament> tournament;
 
     @Override
     public boolean equals(Object o) {

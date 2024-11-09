@@ -66,6 +66,18 @@ Content-Type: application/json
     "password": "betatester"   
 }
 
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+
+{
+    "username": "admin2",
+    "email": "admin2@email.com",
+    "password": "betatester"   
+}
+
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
 # Show that cannot create player for admin
 POST http://localhost:8080/users/1/players
@@ -208,7 +220,7 @@ Authorization: Basic admin goodpassword
     "maxPlayers":8,
     "location": "Singapore",
     "description":"newbie training session",
-    "startDate": "2024-12-09",
+    "startDate": "2024-12-22",
     "endDate":"2024-12-24"
 }
 

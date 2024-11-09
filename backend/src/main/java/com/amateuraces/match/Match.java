@@ -45,16 +45,12 @@ public class Match {
     // @JoinColumn(name = "matchWinner")
     // private Player winner;
 
-    private String status;
-    
-    public Match(Tournament tournament, Player player1, Player player2) {
+    private String status = "Scheduled";
+
+    public Match(Tournament tournament, Player player1, Player player2){
         this.tournament = tournament;
         this.player1 = player1;
         this.player2 = player2;
     }
 
-    public Match(Player player1, Player player2) {
-        this.player1 = player1;
-        this.player2 = player2;
-    }
 }
