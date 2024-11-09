@@ -48,10 +48,6 @@ public class Match {
     @JoinColumn(name = "winner")
     private Player winner;
 
-    @OneToOne
-    @JoinColumn(name = "loser")
-    private Player loser;
-
     @Column(name = "matchScore")
     private String score;
 
@@ -74,7 +70,6 @@ public class Match {
 
     public void setMatchResult(Player winner, Player loser, String score) {
         this.winner = winner;
-        this.loser = loser;
         this.score = score;
         this.isCompleted = true;
     }

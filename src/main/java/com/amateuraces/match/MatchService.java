@@ -12,15 +12,6 @@ public interface MatchService {
      */
     Match addMatch(Match match);
 
-    // /**
-    //  * Return the updated match
-    //  * 
-    //  * @param id
-    //  * @param match
-    //  * @return
-    //  */
-    // Match updateMatch(Long id, Match match);
-
     /**
      * Change method's signature: do not return a value for delete operation
      * @param id
@@ -32,7 +23,6 @@ public interface MatchService {
      *
      * @param matchId 
      * @param winnerId
-     * @param loserId 
      * @param score 
      * @return
      */

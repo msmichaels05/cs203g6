@@ -64,26 +64,21 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public Match recordMatchResult(Long matchId, Long winnerId, Long loserId, String score) {
+    public Match recordMatchResult(Long matchId, Long winnerId, String score) {
+        //Check if match exsits
         Match match = matchRepository.findById(matchId)
-                .orElseThrow(() -> new MatchNotFoundException(matchId)); // This line should find the match
+                .orElseThrow(() -> new MatchNotFoundException(matchId));
 
         Player winner = playerRepository.findById(winnerId)
                 .orElseThrow(() -> new PlayerNotFoundException(winnerId));
 
-        Player loser = playerRepository.findById(loserId)
-                .orElseThrow(() -> new PlayerNotFoundException(loserId));
-
+         // If player is not part of the match
         if (!match.isPlayerInvolved(winner)) {
-            throw new PlayerNotPartOfMatchException(winnerId, matchId); // If either player is not part of the match
-        }
-
-        if (!match.isPlayerInvolved(loser)) {
-            throw new PlayerNotPartOfMatchException(loserId, matchId); // If either player is not part of the match
+            throw new PlayerNotPartOfMatchException(winnerId, matchId);
         }
 
         // Update the match result
-        match.setMatchResult(winner, loser, score);
+        match.setMatchResult(winner, score);
 
         // Update both players' statistics
         winner.updateWinsAndLosses(true);
@@ -93,9 +88,11 @@ public class MatchServiceImpl implements MatchService {
         winner.updateElo(loser.getElo(), true);
         loser.updateElo(winner.getElo(), false);
 
+        //Store elo change in case if need to reverse elo
         match.setElo(winner.changedElo(loser.getElo(), true));
 
-        return matchRepository.save(match); // Persist the match result
+        // save match into repo
+        return matchRepository.save(match);
     }
 
     @Override
@@ -103,9 +100,11 @@ public class MatchServiceImpl implements MatchService {
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId));
 
-        match.setScore(newScore); // Assuming there's a setScore method in the Match class
-
-        return matchRepository.save(match); // Save updated match
+        //Set new score for match
+        match.setScore(newScore);
+        
+        // Save updated match
+        return matchRepository.save(match);
     }
 
     @Override
@@ -120,16 +119,18 @@ public class MatchServiceImpl implements MatchService {
         Player newWinner = playerRepository.findById(newWinnerId)
                 .orElseThrow(() -> new PlayerNotFoundException(newWinnerId));
 
+        // If player is not part of the match
         if (!match.isPlayerInvolved(oldWinner)) {
-            throw new PlayerNotPartOfMatchException(oldWinnerId, matchId); // If either player is not part of the match
+            throw new PlayerNotPartOfMatchException(oldWinnerId, matchId);
         }
 
+        // If player is not part of the match
         if (!match.isPlayerInvolved(newWinner)) {
-            throw new PlayerNotPartOfMatchException(newWinnerId, matchId); // If either player is not part of the match
+            throw new PlayerNotPartOfMatchException(newWinnerId, matchId);
         }
         
         // Update the match result with new winner and loser
-        match.setMatchResult(newWinner, oldWinner, newScore);
+        match.setMatchResult(newWinner, newScore);
         match.setCompleted(true);
         
         // Revert ELO
