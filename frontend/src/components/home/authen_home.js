@@ -7,7 +7,7 @@ import './home.css';
 const Authen_home = () => {
   // Mock user role (In the future, this should come from your backend or global state, like Redux or Context API)
   const user = {
-    role: 'player',  // Change this to 'admin' for admin view
+    role: 'players',  // Change this to 'admin' for admin view
   };
 
   return (
