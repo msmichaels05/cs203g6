@@ -1,25 +1,4 @@
 /* Overall page styling within register page */
-/* Place the tennis ball within the register container */
-.register-container {
-  position: relative; /* Allows positioning of tennis ball relative to form */
-  /* Other existing styles */
-}
-
-/* Tennis ball styling */
-.tennis-ball {
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle at 30% 30%, #ccff00, #99cc00); /* Gradient for the tennis ball */
-  border-radius: 50%;
-  position: absolute;
-  top: -40px; /* Adjust position to place it above the form */
-  left: calc(50% - 40px); /* Center it horizontally */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  border: 2px solid white; /* White border for definition */
-}
-
-
-
 .register-page body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -39,9 +18,9 @@
   background-color: #e6f0ff; /* Soft blue background for contrast */
   margin-top: 150px;
   margin: 0;
-} 
+}
 
-/* Apply scale transform to zoom out only the register form */
+/* Container for the register form */
 .register-container {
   width: 400px;
   padding: 40px;
@@ -59,6 +38,65 @@
   transform-origin: center; /* Ensures scaling from the center */
 }
 
+/* Tennis Ball Styling for Register Page */
+.register-page .tennis-ball {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 30% 30%, #ccff00, #99cc00);
+  border-radius: 50%;
+  position: absolute;
+  overflow: hidden;
+  top: -40px; /* Moves the ball above the form */
+  left: calc(50% - 40px); /* Centers the ball horizontally */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid white;
+}
+
+/* Curved stripes for the tennis ball */
+.register-page .tennis-ball::before,
+.register-page .tennis-ball::after {
+  content: '';
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 100%;
+  border: solid 0.5em #fff;
+  border-radius: 50%;
+  box-sizing: border-box;
+ 
+}
+
+/* Position the first stripe */
+.register-page .tennis-ball::before {
+  right: 70%; /* Adjust this to move the stripe to the right */
+}
+
+/* Position the second stripe */
+.register-page .tennis-ball::after {
+  left: 70%; /* Adjust this to move the stripe to the left */
+}
+
+/* Register page body */
+.register-page body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #e6f0ff; /* Soft blue background for contrast */
+}
+
+/* Register page container settings */
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #e6f0ff; /* Soft blue background for contrast */
+  margin-top: 150px;
+  margin: 0;
+}
 
 /* Header styling */
 .register-page .register-container h2 {
@@ -67,19 +105,6 @@
   margin-top: 50px;
   margin-bottom: 30px;
   font-size: 1.8rem;
-}
-
-/* Tennis ball styling */
-.register-page .tennis-ball {
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle at 30% 30%, #ccff00, #99cc00);
-  border-radius: 50%;
-  position: absolute;
-  top: -40px;
-  left: calc(50% - 40px);
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  border: 2px solid white;
 }
 
 /* Form styling */

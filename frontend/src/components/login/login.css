@@ -63,17 +63,43 @@
 }
 
 /* Tennis ball styling */
+/* Tennis Ball Styling for Login Page */
 .login-page .tennis-ball {
   width: 80px;
   height: 80px;
   background: radial-gradient(circle at 30% 30%, #ccff00, #99cc00);
   border-radius: 50%;
   position: absolute;
-  top: -40px;
-  left: calc(50% - 40px);
+  overflow: hidden;
+  top: -40px; /* Moves the ball above the form */
+  left: calc(50% - 40px); /* Centers the ball horizontally */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   border: 2px solid white;
 }
+
+/* Curved stripes for the tennis ball */
+.login-page .tennis-ball::before,
+.login-page .tennis-ball::after {
+  content: '';
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 100%;
+  border: solid 0.5em #fff;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+/* Position the first stripe */
+.login-page .tennis-ball::before {
+  right: 70%; /* Adjust this to move the stripe to the right */
+}
+
+/* Position the second stripe */
+.login-page .tennis-ball::after {
+  left: 70%; /* Adjust this to move the stripe to the left */
+}
+
 
 /* Form styling */
 .login-page .form-group {
