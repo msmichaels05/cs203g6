@@ -1,5 +1,5 @@
-/* Overall page styling */
-body {
+/* Overall page styling within login page */
+.login-page body {
   margin: 0;
   font-family: Arial, sans-serif;
   display: flex;
@@ -9,10 +9,21 @@ body {
   background-color: #e6f0ff; /* Soft blue background for contrast */
 }
 
+/* Set up the login page container to take the full viewport height */
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #e6f0ff; /* Soft blue background for contrast */
+  margin-top: 150px;
+  margin: 0;
+} 
+
 /* Container for the login form */
 .login-container {
-  width: 400px; /* Increased container width */
-  padding: 40px; /* Increased padding */
+  width: 400px;
+  padding: 40px;
   background-color: white;
   border-radius: 12px;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
@@ -22,19 +33,37 @@ body {
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
+  margin-top: 50px;
+  transform: scale(0.8); /* Adjust scale to zoom out */
+  transform-origin: center; /* Ensures scaling from the center */
 }
 
-/* Header styling with added margin */
-.login-container h2 {
+/* Container for the login form
+.login-page .login-container {
+  width: 400px;
+  padding: 40px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+} */
+
+/* Header styling */
+.login-page .login-container h2 {
   color: #004080;
   font-weight: bold;
-  margin-top: 50px; /* Added more space above */
-  margin-bottom: 30px; /* Space below the header */
-  font-size: 1.8rem; /* Adjust font size */
+  margin-top: 50px;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
 }
 
 /* Tennis ball styling */
-.tennis-ball {
+.login-page .tennis-ball {
   width: 80px;
   height: 80px;
   background: radial-gradient(circle at 30% 30%, #ccff00, #99cc00);
@@ -46,21 +75,20 @@ body {
   border: 2px solid white;
 }
 
-/* Form styling with increased spacing */
-.form-group {
+/* Form styling */
+.login-page .form-group {
   width: 100%;
   text-align: left;
 }
 
-.form-group label {
+.login-page .form-group label {
   color: #333;
   font-weight: bold;
   margin-bottom: 8px;
 }
 
-.form-group input {
-  width: 100%; /* Ensures full width */
-  max-width: 100%; /* Prevents shrinking */
+.login-page .form-group input {
+  width: 100%;
   padding: 12px;
   font-size: 1rem;
   border: 1px solid #ccc;
@@ -69,47 +97,47 @@ body {
 }
 
 /* Button styling */
-button {
+.login-page button {
   width: 100%;
-  padding: 15px; /* Increased padding */
+  padding: 15px;
   background-color: #007bb5;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  margin-top: 25px; /* More space above button */
+  margin-top: 25px;
   font-size: 1rem;
   transition: background-color 0.3s;
 }
 
-button:hover {
+.login-page button:hover {
   background-color: #005f87;
 }
 
-/* Link text styling with space between */
-.additional-options {
+/* Link text styling */
+.login-page .additional-options {
   margin-top: 25px;
   color: #004080;
 }
 
-.link-text {
+.login-page .link-text {
   cursor: pointer;
   text-decoration: underline;
   font-size: 0.95rem;
   color: #004080;
 }
 
-.link-text:first-of-type {
-  margin-right: 20px; /* Increased space between links */
+.login-page .link-text:first-of-type {
+  margin-right: 20px;
 }
 
-.link-text:hover {
+.login-page .link-text:hover {
   color: #002a5c;
 }
 
 /* Error message styling */
-.error {
+.login-page .error {
   color: red;
   margin-top: 10px;
   text-align: center;
