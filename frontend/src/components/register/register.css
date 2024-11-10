@@ -1,58 +1,151 @@
+/* Overall page styling within register page */
+/* Place the tennis ball within the register container */
 .register-container {
-    width: 350px;
-    margin: 100px auto;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-  }
-  
-  .register-container h2 {
-    font-size: 24px;
-    color: #004080; /* Blueish color for a professional look */
-    margin-bottom: 20px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
-    text-align: left;
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-  }
-  
-  button {
-    width: 100%;
-    padding: 10px;
-    background-color: #004080;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
-  button:hover {
-    background-color: #003060; /* Darker blue on hover */
-  }
-  
-  .error {
-    color: #ff4d4d;
-    font-size: 14px;
-    margin-top: 10px;
-    text-align: center;
-  }
-  
+  position: relative; /* Allows positioning of tennis ball relative to form */
+  /* Other existing styles */
+}
+
+/* Tennis ball styling */
+.tennis-ball {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 30% 30%, #ccff00, #99cc00); /* Gradient for the tennis ball */
+  border-radius: 50%;
+  position: absolute;
+  top: -40px; /* Adjust position to place it above the form */
+  left: calc(50% - 40px); /* Center it horizontally */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  border: 2px solid white; /* White border for definition */
+}
+
+
+
+.register-page body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #e6f0ff; /* Soft blue background for contrast */
+}
+
+/* Set up the register page container to take the full viewport height */
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #e6f0ff; /* Soft blue background for contrast */
+  margin-top: 150px;
+  margin: 0;
+} 
+
+/* Apply scale transform to zoom out only the register form */
+.register-container {
+  width: 400px;
+  padding: 40px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  margin-top: 50px;
+  transform: scale(0.8); /* Adjust scale to zoom out */
+  transform-origin: center; /* Ensures scaling from the center */
+}
+
+
+/* Header styling */
+.register-page .register-container h2 {
+  color: #004080;
+  font-weight: bold;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+}
+
+/* Tennis ball styling */
+.register-page .tennis-ball {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 30% 30%, #ccff00, #99cc00);
+  border-radius: 50%;
+  position: absolute;
+  top: -40px;
+  left: calc(50% - 40px);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid white;
+}
+
+/* Form styling */
+.register-page .form-group {
+  width: 100%;
+  text-align: left;
+}
+
+.register-page .form-group label {
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.register-page .form-group input {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Button styling */
+.register-page button {
+  width: 100%;
+  padding: 15px;
+  background-color: #007bb5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 25px;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.register-page button:hover {
+  background-color: #005f87;
+}
+
+/* Link text styling */
+.register-page .additional-options {
+  margin-top: 25px;
+  color: #004080;
+}
+
+.register-page .link-text {
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.95rem;
+  color: #004080;
+}
+
+.register-page .link-text:first-of-type {
+  margin-right: 20px;
+}
+
+.register-page .link-text:hover {
+  color: #002a5c;
+}
+
+/* Error message styling */
+.register-page .error {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+}
