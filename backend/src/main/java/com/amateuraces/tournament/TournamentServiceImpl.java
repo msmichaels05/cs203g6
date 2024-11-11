@@ -1,11 +1,7 @@
 package com.amateuraces.tournament;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -343,13 +339,14 @@ public class TournamentServiceImpl implements TournamentService {
                 .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
 
         int totalPlayers = tournament.getPlayerCount();
-        List<Player> players = new ArrayList<>(tournament.getPlayers()); // Convert the set to a list
-        Collections.shuffle(players); // Optional: Shuffle players for random pairing
+        // List<Player> players = new ArrayList<>(tournament.getPlayers()); // Convert the set to a list
+        // Collections.shuffle(players); // Optional: Shuffle players for random pairing
 
-        // int totalSlots = (int) Math.pow(2, Math.ceil(Math.log(totalPlayers) / Math.log(2)));
-        // int totalSeededPlayers = calculateNumberOfSeeds(totalSlots);
-        // Map<Integer, Player> playerSlotAssignment = new HashMap<>();
-        // assignPlayersToMatches(tournament.getPlayers(), totalSeededPlayers, playerSlotAssignment);
+        int totalSlots = (int) Math.pow(2, Math.ceil(Math.log(totalPlayers) / Math.log(2)));
+        System.out.println("Total slots is " + totalSlots);
+        int totalSeededPlayers = calculateNumberOfSeeds(totalSlots);
+        Map<Integer, Player> playerSlotAssignment = new HashMap<>();
+        assignPlayersToMatches(tournament.getPlayers(), totalSeededPlayers, playerSlotAssignment, totalSlots);
 
         // Determine the next power of two greater than or equal to totalPlayers
         int nextPowerOfTwo = 1;
@@ -365,23 +362,50 @@ public class TournamentServiceImpl implements TournamentService {
         List<Match> firstRoundMatches = new ArrayList<>();
         int playerIndex = 0;
 
-        // Assign byes if necessary
-        while (numberOfByes > 0 && playerIndex < players.size()) {
-            Player playerWithBye = players.get(playerIndex++);
-            Match match = new Match(tournament, playerWithBye, null); // Player gets a bye
+        for (int i=0; i<totalSlots; i+=2) {
+            Player player1 = playerSlotAssignment.get(i);
+            Player player2 = playerSlotAssignment.get(i+1);
+
+            if (player1 != null) System.out.println("Slot number " + i + " is for player " + player1.getElo());
+            if (player2 != null) System.out.println("Slot number " + (i+1) + " is for player " + player2.getElo());
+            System.out.println();
+
+            Match match = new Match(tournament, player1, player2);
+            if (player1==null && player2==null) {
+                match.setWinner(null);
+            }
+            if (player1 == null) {
+                match.setWinner(player2);
+                System.out.println("Slot number " + i + " is for bye");
+            }
+            if (player2 == null) {
+                match.setWinner(player1);
+                System.out.println("Slot number " + (i+1) + " is for bye");
+            }
+
             firstRoundMatches.add(match);
-            numberOfByes--;
         }
 
-        // Create matches for remaining players
-        while (playerIndex < players.size()) {
-            Player player1 = players.get(playerIndex++);
-            Player player2 = (playerIndex < players.size()) ? players.get(playerIndex++) : null;
-            Match match = new Match(tournament, player1, player2);
-            firstRoundMatches.add(match);
-        }
+        // // Assign byes if necessary
+        // while (numberOfByes > 0 && playerIndex < players.size()) {
+        //     Player playerWithBye = players.get(playerIndex++);
+        //     Match match = new Match(tournament, playerWithBye, null); // Player gets a bye
+        //     firstRoundMatches.add(match);
+        //     numberOfByes--;
+        // }
+
+        // // Create matches for remaining players
+        // while (playerIndex < players.size()) {
+        //     Player player1 = players.get(playerIndex++);
+        //     Player player2 = (playerIndex < players.size()) ? players.get(playerIndex++) : null;
+        //     Match match = new Match(tournament, player1, player2);
+        //     firstRoundMatches.add(match);
+        // }
 
         matches.addAll(firstRoundMatches);
+
+        //System.out.println("FIRSTROUNDMATCHes");
+        //System.out.println(firstRoundMatches.toString());
 
         // Build subsequent rounds
         List<Match> previousRoundMatches = firstRoundMatches;
@@ -395,6 +419,8 @@ public class TournamentServiceImpl implements TournamentService {
                 currentRoundMatches.add(match);
             }
             matches.addAll(currentRoundMatches);
+            //System.out.println("NEXTROUNDMATCHES");
+            //System.out.println(currentRoundMatches.toString());
             previousRoundMatches = currentRoundMatches;
         }
 
@@ -412,7 +438,18 @@ public class TournamentServiceImpl implements TournamentService {
     public static int calculateEloGain(Player player1, Player player2, String set1Score, String set2Score,
             String set3Score) {
         int K = 32; // K-factor in Elo rating system
-        double eloDifference = player2.getElo() - player1.getElo();
+        double eloDifference = 0;
+        if (player1 == null && player2 == null) {
+            eloDifference = 0;
+        }
+        else if (player1 == null) {
+            eloDifference = player2.getElo();
+        }
+        else if (player2 == null) {
+            eloDifference = player1.getElo();
+        }
+        else eloDifference = player2.getElo() - player1.getElo();
+
         double expectedScore = 1 / (1 + Math.pow(10, eloDifference / 400.0));
 
         int actualScore = calculateActualScore(set1Score, set2Score, set3Score);
@@ -467,4 +504,128 @@ public class TournamentServiceImpl implements TournamentService {
 
         return totalScore1 - totalScore2;
     }
+
+    private int calculateNumberOfSeeds(int playerCount) {
+        if (playerCount < 9) return 2; // Only 2 seeded players if there are fewer than 9 players
+        return playerCount / 4;
+    }
+
+    private void assignPlayersToMatches(Set<Player> playerSet, int totalSeededPlayers, Map<Integer, Player> playerSlotAssignment, int totalSlots) {
+        if (playerSet == null || playerSet.isEmpty()) {
+            throw new IllegalArgumentException("Player list is empty or null.");
+        }
+        System.out.println("Total slots is " + totalSlots);
+        // Convert playerSet to an array and sort it
+        Player[] playerArray = playerSet.toArray(new Player[0]);
+        Arrays.sort(playerArray);
+        int totalPlayers = playerArray.length;
+
+        // Determine seeded and unseeded players
+        Player[] seededPlayers = Arrays.copyOfRange(playerArray, 0, totalSeededPlayers);
+        System.out.println("Number of seedded players: " + seededPlayers.length);
+        System.out.println("First seed is " + seededPlayers[0].getElo());
+        System.out.println("Second seed is " + seededPlayers[1].getElo());
+        List<Player> unseededPlayers = new ArrayList<>(Arrays.asList(Arrays.copyOfRange(playerArray, totalSeededPlayers, totalPlayers)));
+
+        for (int i=totalPlayers; i<totalSlots; i++) {
+            unseededPlayers.add(0, null);
+        }
+
+        // Place seeded players in predefined positions
+        assignSeededPlayers(unseededPlayers, seededPlayers, totalSeededPlayers, totalSlots, playerSlotAssignment);
+
+        // // Place unseeded players in the remaining slots
+        fillRemainingSlots(playerSlotAssignment, unseededPlayers, totalPlayers * 2);
+    }
+
+    private void assignTop4Seeds(Map<Integer, Player> playerSlotAssignment, Player[] seededPlayers, int totalSlots) {
+        int mid = totalSlots / 2;
+        System.out.println("Total slots is " + totalSlots);
+        playerSlotAssignment.put(0, seededPlayers[0]); // Assign seeded 1 to top of the draw
+        playerSlotAssignment.put(totalSlots - 1, seededPlayers[1]); // Assign seeded 2 to bottom of the draw
+        if (seededPlayers.length == 2) return; // Only if there are only 2 seeded players
+        playerSlotAssignment.put(mid - 1, seededPlayers[2]); // Assign seeded 3 to middle of the draw
+        playerSlotAssignment.put(mid, seededPlayers[3]); // Assign seeded 4 to middle of the draw
+    }
+    
+    private void assignSeededPlayers(List<Player> unseededPlayers, Player[] seededPlayers, int numberOfSeeds, int totalSlots, Map<Integer, Player> playerSlotAssignment) {
+        int mid = totalSlots / 2;
+        int seededPlayersSize = seededPlayers.length;
+    
+        System.out.println("Total slots is " + totalSlots);
+        // Assign top 4 seeds to their slots
+        assignTop4Seeds(playerSlotAssignment, seededPlayers, totalSlots);
+        System.out.println("Slot number 0" + playerSlotAssignment.get(0).getElo());
+        System.out.println("Slot number " + (totalSlots-1) + playerSlotAssignment.get(totalSlots-1).getElo());
+        System.out.println("TOtal number of unseeded players: " + unseededPlayers.size());
+    
+        // Assign unseeded players or BYE to slots adjacent to top seeds
+        assignUnseededPlayers(unseededPlayers, playerSlotAssignment, 0);
+        assignUnseededPlayers(unseededPlayers, playerSlotAssignment, totalSlots - 1);
+    
+        if (seededPlayersSize < 4) {
+            //fillRemainingSlots(playerSlotAssignment, unseededPlayers, totalSlots);
+            return; // If there are only 2 seeded players
+        }
+    
+        // Assign unseeded players or BYE to slots adjacent to seeds 3 & 4
+        assignUnseededPlayers(unseededPlayers, playerSlotAssignment, mid);
+        assignUnseededPlayers(unseededPlayers, playerSlotAssignment, mid - 1);
+    
+        if (seededPlayersSize < 8) {
+            //fillRemainingSlots(playerSlotAssignment, unseededPlayers, totalSlots);
+            return; // If there are only 4 seeded players
+        }
+    
+        // Assign remaining seeds
+        List<Integer> slotsToAssign = new ArrayList<>();
+        slotsToAssign.add(numberOfSeeds - 1);
+        slotsToAssign.add(numberOfSeeds);
+    
+        int temp1 = numberOfSeeds * 3;
+        slotsToAssign.add(temp1);
+        slotsToAssign.add(temp1 - 1);
+    
+        int upper = (int) (Math.log(numberOfSeeds) / Math.log(2));
+        for (int r = 2; r < upper; r++) {
+            int lowerbound = (int) Math.pow(2, r);
+            int upperbound = (int) Math.pow(2, r + 1);
+            for (int i = lowerbound; i < upperbound; i++) {
+                if (i < seededPlayers.length) {
+                    int tempindex = slotsToAssign.get(0);
+                    playerSlotAssignment.put(tempindex, seededPlayers[i]);
+                    assignUnseededPlayers(unseededPlayers, playerSlotAssignment, tempindex);
+                    
+                    slotsToAssign.add(tempindex - 8);
+                    slotsToAssign.add(tempindex + 8);
+                    slotsToAssign.remove(0);
+                }
+            }
+        }
+    }
+
+    private void assignUnseededPlayers(List<Player> unseededPlayers, Map<Integer, Player> playerAssignment, int index) {
+        if (!unseededPlayers.isEmpty()) {
+            if (index % 2 == 0) {
+                playerAssignment.put(index + 1, unseededPlayers.remove(0));
+            } else {
+                playerAssignment.put(index - 1, unseededPlayers.remove(0));
+            }
+        }
+    }    
+
+    private void fillRemainingSlots(Map<Integer, Player> playerSlotAssignment, List<Player> unseededPlayers, int totalSlots) {
+        //System.out.println("Unseeded player list " + unseededPlayers.toString());
+        int i=2;
+        while (unseededPlayers.size() > 0) {
+            if (!playerSlotAssignment.containsKey(i)) {
+                playerSlotAssignment.put(i, unseededPlayers.get(0));
+                //System.out.println(String.format("For unseeded, Slot number %d is %d", i, unseededPlayers.get(0).getElo()));
+                unseededPlayers.remove(0);
+            }
+            i++;
+        }
+        System.out.println("All players assigned");
+    }
+    
 }

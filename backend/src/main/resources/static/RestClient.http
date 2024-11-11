@@ -99,7 +99,8 @@ Authorization: Basic admin goodpassword
     "phoneNumber" :"88888888",
     "email" : "alphabravo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1500
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -113,7 +114,8 @@ Authorization: Basic username betatester
     "phoneNumber" :"12345678",
     "email" : "alphabo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1510
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -127,7 +129,8 @@ Authorization: Basic betatester betatester
     "phoneNumber" :"88888882",
     "email" : "alphabravo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1520
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -141,7 +144,8 @@ Authorization: Basic usernames betatester
     "phoneNumber" :"88888888",
     "email" : "alphabravo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1530
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -155,7 +159,8 @@ Authorization: Basic usernames betatester
     "phoneNumber" :"88888821",
     "email" : "alpo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1540
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -169,7 +174,8 @@ Authorization: Basic usernames betatester
     "phoneNumber" :"88882821",
     "email" : "alpo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1550
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -183,7 +189,8 @@ Authorization: Basic usernames betatester
     "phoneNumber" :"88288821",
     "email" : "alpo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1560
 }
 
 ###
@@ -197,8 +204,11 @@ Authorization: Basic usernames betatester
     "phoneNumber" :"88266721",
     "email" : "poasdpoad@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1570
 }
+###
+
 ###
 # Show that player can create 
 POST http://localhost:8080/users/9/players
@@ -206,12 +216,27 @@ Content-Type: application/json
 Authorization: Basic usernames betatester
 
 {
-    "name":"phaswerirhtews",
-    "phoneNumber" :"882883451",
-    "email" : "alpo13498@gmail.com",
-    "age" : 18,
-    "gender" : "Female"
+    "name":"pirate",
+    "phoneNumber" :"812883451",
+    "email" : "pirate133498@gmail.com",
+    "age" : 30,
+    "gender" : "Female",
+    "elo": 1600
 }
+
+# # Show that player can create 
+# POST http://localhost:8080/users/9/players
+# Content-Type: application/json
+# Authorization: Basic usernames betatester
+
+# {
+#     "name":"phaswerirhtews",
+#     "phoneNumber" :"882883451",
+#     "email" : "alpo13498@gmail.com",
+#     "age" : 18,
+#     "gender" : "Female",
+#     "elo": 1580
+# }
 
 ### Showcase user cannot post in admin
 POST http://localhost:8080/users/1/admins
@@ -300,7 +325,7 @@ Authorization: Basic usernamessssss betatester
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
-Authorization: Basic admin goodpassword 
+Authorization: Basic usernamessssss betatester
 
 ### POST DRAW ALGO
 

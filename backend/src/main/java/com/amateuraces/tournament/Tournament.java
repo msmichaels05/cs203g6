@@ -158,6 +158,10 @@ public class Tournament {
         // Final match completed, no more subsequent matches to update
         return null;
     }
+    
+    public Set<Player> getPlayers() {
+        return players;
+    }
 
     // // Corrected initialiseDraw method
     // // public List<Match> initialiseDraw() {
