@@ -18,7 +18,7 @@ const axiosInstance = axios.create({
 // Fetch all tournaments (GET /tournament)
 export const fetchTournaments = async () => {
   try {
-    const response = await axiosInstance.get('/tournament');
+    const response = await axiosInstance.get('/tournaments');
     return response.data;
   } catch (error) {
     console.error('Error fetching tournaments:', error);

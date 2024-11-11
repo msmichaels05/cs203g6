@@ -33,9 +33,17 @@ const RegisterPlayers = () => {
   const [gender, setGender] = useState('');
   const [dob, setDob] = useState('');
   const [nationality, setNationality] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Simple validation
+    if (!/^[a-zA-Z]+$/.test(firstName) || !/^[a-zA-Z]+$/.test(lastName)) {
+      alert("First and Last Name should contain only letters.");
+      return;
+    }
+
     console.log({
       firstName,
       lastName,
@@ -43,64 +51,86 @@ const RegisterPlayers = () => {
       dob,
       nationality,
     });
+
+    setSuccessMessage("Player registered successfully!");
+    // Reset form fields
+    setFirstName('');
+    setLastName('');
+    setGender('');
+    setDob('');
+    setNationality('');
   };
 
   return (
+    <div className="register-page">
     <div className="register-container">
+      <div className="tennis-ball"></div>
       <h2>Register Player</h2>
+      {successMessage && <p className="success-message">{successMessage}</p>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>First Name:</label>
+          <label htmlFor="first-name">First Name:</label>
           <input
+            id="first-name"
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             required
+            aria-label="First Name"
           />
         </div>
 
         <div className="form-group">
-          <label>Last Name:</label>
+          <label htmlFor="last-name">Last Name:</label>
           <input
+            id="last-name"
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             required
+            aria-label="Last Name"
           />
         </div>
 
         <div className="form-group">
           <label>Gender:</label>
-          <select
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-            required
-          >
-            <option value="" disabled>
-              Select Gender
-            </option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
+          <fieldset>
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              required
+              aria-label="Gender"
+            >
+              <option value="" disabled>
+                Select Gender
+              </option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </fieldset>
         </div>
 
         <div className="form-group">
-          <label>Date of Birth:</label>
+          <label htmlFor="dob">Date of Birth:</label>
           <input
+            id="dob"
             type="date"
             value={dob}
             onChange={(e) => setDob(e.target.value)}
             required
+            aria-label="Date of Birth"
           />
         </div>
 
         <div className="form-group">
-          <label>Nationality:</label>
+          <label htmlFor="nationality">Nationality:</label>
           <select
+            id="nationality"
             value={nationality}
             onChange={(e) => setNationality(e.target.value)}
             required
+            aria-label="Nationality"
           >
             <option value="" disabled>
               Select Nationality
@@ -115,6 +145,7 @@ const RegisterPlayers = () => {
         
         <button type="submit">Register Player</button>
       </form>
+    </div>
     </div>
   );
 };

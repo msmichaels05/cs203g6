@@ -1,0 +1,61 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # Change this to your deployment branch if necessary
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Use the Node.js version your app requires
+
+      - name: Install dependencies
+        working-directory: ./frontend 
+        run: npm install
+
+      - name: Build the project
+        working-directory: ./frontend
+        run: CI=false npm run build
+
+      - name: Copy files to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          PEM_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+        run: |
+          echo "$PEM_KEY" > key.pem
+          chmod 400 key.pem
+          # Ensure the app directory exists on EC2
+          ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "mkdir -p /home/ubuntu/app/build"
+          # Copy the build files
+          scp -i key.pem -o StrictHostKeyChecking=no -r ./frontend/build/* $EC2_USER@$EC2_HOST:/home/ubuntu/app/build
+          rm key.pem
+
+      - name: SSH and restart server
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          PEM_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+        run: |
+          echo "$PEM_KEY" > key.pem
+          chmod 400 key.pem
+          ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+            # Install pm2 if not already installed
+            which pm2 || sudo npm install -g pm2
+            # Navigate to app directory
+            cd /home/ubuntu/app
+            # Restart the server with pm2
+            pm2 restart all || pm2 start build/main.js
+          EOF
+          rm key.pem
+#updated
+          
