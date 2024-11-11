@@ -49,8 +49,13 @@ jobs:
           echo "$PEM_KEY" > key.pem
           chmod 400 key.pem
           ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+            # Install pm2 if not already installed
+            which pm2 || sudo npm install -g pm2
+            # Navigate to app directory
             cd /home/ubuntu/app
-            # Restart or start the server with pm2
+            # Restart the server with pm2
             pm2 restart all || pm2 start build/main.js
           EOF
           rm key.pem
+
+          
