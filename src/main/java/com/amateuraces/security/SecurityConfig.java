@@ -58,17 +58,14 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/players/*").permitAll()
-                .requestMatchers(HttpMethod.GET, "/matches").permitAll()
-                .requestMatchers(HttpMethod.GET, "/matches/{id}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/matches").permitAll()//hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/matches/{id}").permitAll()//hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.POST, "/matches/{id}/result").hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/matches/{id}/result/updateScore").hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/matches/{id}/result/updateWinner").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/tournaments/*/matches").permitAll()
+                .requestMatchers(HttpMethod.GET, "/tournaments/*/matches/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/tournaments/*/matches").permitAll()//hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/tournaments/*/matches/{id}").permitAll()//hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/tournaments/*/matches/{id}/result/*").hasAuthority("ROLE_ADMIN")
 
-
-                .requestMatchers("/register", "/login", "/player/register/**").permitAll()
-                .requestMatchers("/home").permitAll()  // home is accessible to those with registered accounts
+                // .requestMatchers("/register", "/login", "/player/register/**").permitAll()
+                // .requestMatchers("/home").permitAll()  // home is accessible to those with registered accounts
                 .requestMatchers("/h2-console/**").permitAll()  // Allow access to H2 Console
                 // note that Spring Security 6 secures all endpoints by default
                 // remove the below line after adding the required rules

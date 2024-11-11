@@ -2,7 +2,7 @@ package com.amateuraces.match;
 
 import java.util.List;
 
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,148 +10,141 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.amateuraces.player.PlayerRepository;
+import com.amateuraces.tournament.Tournament;
+import com.amateuraces.tournament.TournamentNotFoundException;
+import com.amateuraces.tournament.TournamentRepository;
+import com.amateuraces.user.UserRepository;
 
 import jakarta.validation.Valid;
 import com.amateuraces.player.*;
 
 @RestController
 public class MatchController {
+
     private final MatchService matchService;
-    
-    public MatchController(MatchService matchService){
-        this.matchService = matchService ; 
+    private final TournamentRepository tournamentRepository;
+    private final PlayerRepository playerRepository;
+    private final UserRepository userRepository;
+
+    @Autowired
+    public MatchController(MatchService matchService, TournamentRepository tournamentRepository,
+                           PlayerRepository playerRepository, UserRepository userRepository) {
+        this.matchService = matchService;
+        this.tournamentRepository = tournamentRepository;
+        this.playerRepository = playerRepository;
+        this.userRepository = userRepository;
     }
 
-        /**
-     * List all matchs in the system
-     * @return list of all matchs
+    /**
+     * List all matches in the system
+     *
+     * @return list of all matches
      */
-     @GetMapping("/matches")
-        public List<Match> getMatches(){
-            return matchService.listMatches();
-        }
+    @GetMapping("/matches")
+    public List<Match> getMatches() {
+        return matchService.listMatches();
+    }
 
     /**
-     * Search for match with the given id
-     * If there is no match with the given "id", throw a MatchNotFoundException
+     * Get match by ID
+     *
      * @param id
      * @return match with the given id
      */
     @GetMapping("/matches/{id}")
-    public Match getMatch(@PathVariable Long id){
+    public Match getMatch(@PathVariable Long id) {
         Match match = matchService.getMatch(id);
-
-        // Need to handle "match not found" error using proper HTTP status code
-        // In this case it should be HTTP 404
-        if(match == null) throw new MatchNotFoundException(id);
-        return matchService.getMatch(id);
-
+        if (match == null) {
+            throw new MatchNotFoundException(id);
+        }
+        return match;
     }
 
- /**
-     * Add a new match with POST request to "/matchs"
-     * Note the use of @RequestBody
-     * @param match
-     * @return list of all matchs
+    /**
+     * Remove a match
+     *
+     * @param tournamentId
+     * @param matchId
      */
+    @DeleteMapping("/tournaments/{tournamentId}/matches/{matchId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMatch(@PathVariable Long tournamentId,
+                            @PathVariable Long matchId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
+
+        Match match = matchService.getMatch(matchId);
+        if (match == null || !match.getTournament().getId().equals(tournamentId)) {
+            throw new MatchNotFoundException(matchId);
+        }
+
+        matchService.deleteMatch(matchId);
+    }
+
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/matches")
-    public Match addMatch(@RequestBody Match match){
+    @PostMapping("/tournaments/{tournamentId}/matches")
+    public Match addMatch(@PathVariable Long tournamentId,
+                          @Valid @RequestBody Match match) {
+        // Retrieve the tournament and check for existence
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElse(null);
+
+        match.setTournament(tournament);
+
+        // Save and return the new match
         return matchService.addMatch(match);
     }
 
-        /**
-     * If there is no match with the given "id", throw a MatchNotFoundException
-     * @param id
-     * @param newMatchInfo
-     * @return the updated, or newly added book
-     */
-    // @PutMapping("/matches/{id}")
-    // public Match updateMatch(@PathVariable Long id, @Valid @RequestBody Match newMatchInfo){
-    //     Match match = matchService.updateMatch(id, newMatchInfo);
-    //     if(match == null) throw new MatchNotFoundException(id);
-        
-    //     return match;
-    // }
-
-        /**
-     * Remove a match with the DELETE request to "/matchs/{id}"
-     * If there is no match with the given "id", throw a MatchNotFoundException
-     * @param id
-     */
-    @DeleteMapping("/matches/{id}")
-    public void deleteMatch(@PathVariable Long id){
-        try{
-            matchService.deleteMatch(id);
-         }catch(EmptyResultDataAccessException e) {
-            throw new MatchNotFoundException(id);
-         }
-    }
-
-       /**
-     * Record match result with the POST request to "/matches/{id}/result"
-     * If there is no match with the given "id", throw a MatchNotFoundException
-     * If there is no player with the given "id", throw a PlayerNotFoundException
-     * @param id
+    /**
+     * Record match result
+     *
+     * @param tournamentId
+     * @param matchId
      * @param winnerId
      * @param loserId
      * @param score
      */
-    @PostMapping("matches/{id}/result")
-    public Match recordMatchResult(Long id, Long winnerId, Long loserId, String score) {
-        try {
-            Match match = matchService.recordMatchResult(id, winnerId, loserId, score);
-            return match;
-        } catch (MatchNotFoundException e) {
-            throw new MatchNotFoundException(id);
-        } catch (PlayerNotFoundException e) {
-            throw new PlayerNotFoundException(winnerId, loserId);
-        } catch (PlayerNotPartOfMatchException e) {
-            throw new PlayerNotPartOfMatchException(winnerId, loserId, id);
+    @PostMapping("/tournaments/{tournamentId}/matches/{matchId}/result")
+    public Match recordMatchResult(@PathVariable Long tournamentId,
+                                   @PathVariable Long matchId,
+                                   @RequestParam Long winnerId,
+                                   @RequestParam Long loserId,
+                                   @RequestParam String score) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
+
+        Match match = matchService.getMatch(matchId);
+        if (match == null || !match.getTournament().getId().equals(tournamentId)) {
+            throw new MatchNotFoundException(matchId);
         }
+
+        return matchService.recordMatchResult(matchId, winnerId, loserId, score);
     }
 
-       /**
-     * Update match score with the PUT request to "/matches/{id}/result/updateScore"
-     * If there is no match with the given "id", throw a MatchNotFoundException
-     * If there is no player with the given "id", throw a PlayerNotFoundException
-     * @param id
-     * @param winnerId
-     * @param loserId
-     * @param score
+    /**
+     * Update match score
+     *
+     * @param tournamentId
+     * @param matchId
+     * @param newScore
      */
-    @PutMapping("matches/{id}/result/updateScore")
-    public Match updateRecordMatchScore(Long id, String newScore) {
-        try {
-            Match updatedMatch = matchService.updateRecordMatchScore(id, newScore);
-            return updatedMatch;
-        } catch (MatchNotFoundException e) {
-            throw new MatchNotFoundException(id);
-        }
-    }
+    @PutMapping("/tournaments/{tournamentId}/matches/{matchId}")
+    public Match updateRecordMatchScore(@PathVariable Long tournamentId,
+                                        @PathVariable Long matchId,
+                                        @RequestParam String newScore) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
 
-       /**
-     * Update match winner with the PUT request to "/matches/{id}/result/updateWinner"
-     * If there is no match with the given "id", throw a MatchNotFoundException
-     * If there is no player with the given "id", throw a PlayerNotFoundException
-     * @param id
-     * @param winnerId
-     * @param loserId
-     * @param score
-     */
-    @PutMapping("matches/{id}/result/updateWinner")
-    public Match updateRecordMatchWinner(Long id, Long oldWinnerId, Long newWinnerId, String newScore) {
-        try {
-            Match updatedMatch = matchService.updateRecordMatchWinner(id, oldWinnerId, newWinnerId, newScore);
-            return updatedMatch;
-        } catch (MatchNotFoundException e) {
-            throw new MatchNotFoundException(id);
-        } catch (PlayerNotFoundException e) {
-            throw new PlayerNotFoundException(newWinnerId, oldWinnerId);
-        } catch (PlayerNotPartOfMatchException e) {
-            throw new PlayerNotPartOfMatchException(newWinnerId, oldWinnerId, id);
+        Match match = matchService.getMatch(matchId);
+        if (match == null || !match.getTournament().getId().equals(tournamentId)) {
+            throw new MatchNotFoundException(matchId);
         }
+
+        return matchService.updateRecordMatchScore(matchId, newScore);
     }
 }

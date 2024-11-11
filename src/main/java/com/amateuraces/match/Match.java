@@ -36,11 +36,11 @@ public class Match {
     @JoinColumn(name = "tournamentName")
     private Tournament tournament;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "matchPlayer1")
     private Player player1;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "matchPlayer2")
     private Player player2;
 
@@ -56,6 +56,12 @@ public class Match {
 
     @Column(name = "isCompleted", nullable = false)
     private boolean isCompleted = false;
+
+    private String status = "Scheduled";
+
+    public Match(Tournament tournament) {
+        this.tournament = tournament;
+    }
 
     public Match(Tournament tournament, Player player1, Player player2) {
         this.tournament = tournament;

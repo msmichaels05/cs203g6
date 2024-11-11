@@ -1,0 +1,176 @@
+/* Overall page styling within register page */
+.register-page body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #e6f0ff; /* Soft blue background for contrast */
+}
+
+/* Set up the register page container to take the full viewport height */
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #e6f0ff; /* Soft blue background for contrast */
+  margin-top: 150px;
+  margin: 0;
+}
+
+/* Container for the register form */
+.register-container {
+  width: 400px;
+  padding: 40px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  margin-top: 50px;
+  transform: scale(0.8); /* Adjust scale to zoom out */
+  transform-origin: center; /* Ensures scaling from the center */
+}
+
+/* Tennis Ball Styling for Register Page */
+.register-page .tennis-ball {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 30% 30%, #ccff00, #99cc00);
+  border-radius: 50%;
+  position: absolute;
+  overflow: hidden;
+  top: -40px; /* Moves the ball above the form */
+  left: calc(50% - 40px); /* Centers the ball horizontally */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid white;
+}
+
+/* Curved stripes for the tennis ball */
+.register-page .tennis-ball::before,
+.register-page .tennis-ball::after {
+  content: '';
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 100%;
+  border: solid 0.5em #fff;
+  border-radius: 50%;
+  box-sizing: border-box;
+ 
+}
+
+/* Position the first stripe */
+.register-page .tennis-ball::before {
+  right: 70%; /* Adjust this to move the stripe to the right */
+}
+
+/* Position the second stripe */
+.register-page .tennis-ball::after {
+  left: 70%; /* Adjust this to move the stripe to the left */
+}
+
+/* Register page body */
+.register-page body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #e6f0ff; /* Soft blue background for contrast */
+}
+
+/* Register page container settings */
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #e6f0ff; /* Soft blue background for contrast */
+  margin-top: 150px;
+  margin: 0;
+}
+
+/* Header styling */
+.register-page .register-container h2 {
+  color: #004080;
+  font-weight: bold;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+}
+
+/* Form styling */
+.register-page .form-group {
+  width: 100%;
+  text-align: left;
+}
+
+.register-page .form-group label {
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.register-page .form-group input {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Button styling */
+.register-page button {
+  width: 100%;
+  padding: 15px;
+  background-color: #007bb5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 25px;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.register-page button:hover {
+  background-color: #005f87;
+}
+
+/* Link text styling */
+.register-page .additional-options {
+  margin-top: 25px;
+  color: #004080;
+}
+
+.register-page .link-text {
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.95rem;
+  color: #004080;
+}
+
+.register-page .link-text:first-of-type {
+  margin-right: 20px;
+}
+
+.register-page .link-text:hover {
+  color: #002a5c;
+}
+
+/* Error message styling */
+.register-page .error {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+}

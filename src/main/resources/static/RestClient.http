@@ -33,6 +33,61 @@ Content-Type: application/json
     "password": "betatester"   
 }
 
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernamess",
+    "email": "ue@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernamesss",
+    "email": "u@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernamessss",
+    "email": "ude@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernamesssss",
+    "email": "de@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernamessssss",
+    "email": "e@email.com",
+    "password": "betatester"   
+}
+
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
 # Show that cannot create player for admin
 POST http://localhost:8080/users/1/players
@@ -88,6 +143,76 @@ Authorization: Basic usernames betatester
     "age" : 18,
     "gender" : "Male"
 }
+
+### POST PLAYER INFO TO USER AFTER CREATION OF USER
+# Show that player can create 
+POST http://localhost:8080/users/5/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"pha",
+    "phoneNumber" :"88888821",
+    "email" : "alpo@gmail.com",
+    "age" : 18,
+    "gender" : "Female"
+}
+
+### POST PLAYER INFO TO USER AFTER CREATION OF USER
+# Show that player can create 
+POST http://localhost:8080/users/6/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"phad",
+    "phoneNumber" :"88882821",
+    "email" : "alpo@gmail.com",
+    "age" : 18,
+    "gender" : "Female"
+}
+
+### POST PLAYER INFO TO USER AFTER CREATION OF USER
+# Show that player can create 
+POST http://localhost:8080/users/7/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"phass",
+    "phoneNumber" :"88288821",
+    "email" : "alpo@gmail.com",
+    "age" : 18,
+    "gender" : "Female"
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/8/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"phasssasds",
+    "phoneNumber" :"88266721",
+    "email" : "poasdpoad@gmail.com",
+    "age" : 18,
+    "gender" : "Female"
+}
+###
+# Show that player can create 
+POST http://localhost:8080/users/9/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"phaswerirhtews",
+    "phoneNumber" :"882883451",
+    "email" : "alpo13498@gmail.com",
+    "age" : 18,
+    "gender" : "Female"
+}
+
 ### Showcase user cannot post in admin
 POST http://localhost:8080/users/1/admins
 Content-Type: application/json
@@ -134,9 +259,14 @@ Authorization: Basic admin goodpassword
     "maxPlayers":2,
     "location": "Singapore",
     "description":"newbie training session",
-    "startDate": "2024-12-01",
-    "endDate":"2024-12-24"
+    "startDate": "2024-12-29",
+    "endDate":"2024-12-31"
 }
+
+### Tournament
+GET http://localhost:8080/tournaments
+Content-Type: application/json
+Authorization: Basic admin goodpassword
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
@@ -152,8 +282,61 @@ Authorization: Basic usernames betatester
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
-Authorization: Basic username password 
+Authorization: Basic usernamess betatester
 
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic usernamesss betatester
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic usernamessss betatester
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic usernamesssss betatester
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic usernamessssss betatester
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic admin goodpassword 
+
+### POST DRAW ALGO
+
+POST http://localhost:8080/tournaments/1/matches
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+
+}
+
+### Initialise Draw
+POST http://localhost:8080/tournaments/1/initialise-draw
+Content-Type: application/json
+
+
+### Print Draw
+POST http://localhost:8080/tournaments/1/update-next-round
+Content-Type: application/json
+
+###
+POST http://localhost:8080/tournaments/1/matches/1/result
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "winnerId": 2,
+    "loserId": 3,
+    "score": "15-40"
+}
+### GET MATCHES
+
+GET http://localhost:8080/matches
+Authorization: Basic admin goodpassword
 ###
 GET http://localhost:8080/tournaments/1/players
 
@@ -162,9 +345,7 @@ DELETE http://localhost:8080/tournaments/1/players/2
 Authorization: Basic betatester betatester
 
 ### Tournament
-GET http://localhost:8080/tournament
-
-
+GET http://localhost:8080/tournaments
 
 ### GET SPECIFIC PLAYER 
 GET http://localhost:8080/users/2/players

@@ -1,0 +1,92 @@
+/* Ensure the body background color and font are applied */
+body {
+  background-color: #0f121c;
+  font-family: Arial, sans-serif;
+  margin: 0; /* Remove default margin */
+  padding: 0;
+}
+
+/* Center the header for tournament name, or any title */
+h2 {
+  text-align: center;
+  color: white;
+  margin-top: 80px; /* Space below the fixed navbar */
+}
+
+/* Styling for the bracket container */
+.bracket-container {
+  display: flex;
+  justify-content: center; /* Center the bracket horizontally */
+  align-items: flex-start; /* Align the bracket from the top (below the navbar) */
+  width: 100vw; /* Full viewport width */
+  height: calc(100vh - 80px); /* Full viewport height minus the height of the navbar */
+  overflow: auto; /* Make the bracket scrollable if it exceeds viewport height */
+  padding-top: 20px; /* Add padding to the top for a bit of spacing */
+}
+
+/* Styling for the SVG viewer to control size and fit */
+.svg-viewer {
+  width: 100%; /* Full width of its container */
+  height: 100%; /* Full height of its container */
+  max-width: 1200px; /* Maximum width for SVG scaling */
+  max-height: 100vh; /* Maximum height for SVG scaling */
+}
+
+/* Styling for individual match elements */
+.match {
+  padding: 10px;
+  border: 2px solid #292b43;
+  background-color: #1b1d2d;
+  transition: background-color 0.3s, border-color 0.3s;
+  border-radius: 8px; /* Rounded corners for matches */
+}
+
+/* Highlight effect for selected matches */
+.match.highlighted {
+  background-color: #00bfff; /* Light up background */
+  border-color: #00ffff; /* Highlight border */
+  color: #fff; /* Ensure text is readable */
+}
+
+/* Hover effect for matches */
+.match:hover {
+  cursor: pointer;
+  background-color: #505773; /* Slight hover effect */
+  border-color: #00ffff;
+}
+
+/* Styling for teams within a match */
+.team {
+  font-size: 14px;
+  text-align: center;
+  color: white;
+}
+
+/* Bold styling for participant names */
+.participant-name {
+  font-weight: bold;
+}
+
+/* Match container styling (each match box) */
+.match-container {
+  border: 1px solid #292b43;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+/* Add a sticky header for the navbar if needed */
+.player-navbar {
+  position: fixed; /* Keeps the navbar fixed at the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure it's on top of other content */
+  background-color: #333; /* Customize the navbar background color */
+  padding: 15px; /* Adjust padding as necessary */
+}
+
+/* Make sure body content is properly spaced below the navbar */
+body {
+  margin-top: 80px; /* Adjust based on navbar height */
+}
