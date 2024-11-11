@@ -3,43 +3,50 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main
+      - main  # Change this to your deployment branch if necessary
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16'
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Use the Node.js version your app requires
 
-    - name: Install dependencies and build project
-      run: |
-        npm install
-        npm run build
+      - name: Install dependencies
+        run: npm install
 
-    - name: Upload build to EC2
-      env:
-        EC2_HOST: ${{ secrets.EC2_HOST }}
-        EC2_USER: ${{ secrets.EC2_USER }}
-        EC2_KEY: ${{ secrets.EC2_KEY }}
-        EC2_PATH: ${{ secrets.EC2_PATH }}
-      run: |
-        scp -i "$EC2_KEY" -o StrictHostKeyChecking=no -r ./build $EC2_USER@$EC2_HOST:$EC2_PATH
+      - name: Build the project
+        run: npm run build
 
-    - name: SSH into EC2 and restart Nginx
-      env:
-        EC2_HOST: ${{ secrets.EC2_HOST }}
-        EC2_USER: ${{ secrets.EC2_USER }}
-        EC2_KEY: ${{ secrets.EC2_KEY }}
-        EC2_PATH: ${{ secrets.EC2_PATH }}
-      run: |
-        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-          sudo mv ~/build/* $EC2_PATH
-          sudo systemctl restart nginx
-        EOF
+      - name: Copy files to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          PEM_KEY: ${{ secrets.EC2_PEM_KEY }}
+        run: |
+          echo "$PEM_KEY" > key.pem
+          chmod 400 key.pem
+          scp -i key.pem -o StrictHostKeyChecking=no -r ./build $EC2_USER@$EC2_HOST:/home/ubuntu/app/build
+          rm key.pem
+
+      - name: SSH and restart server
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          PEM_KEY: ${{ secrets.EC2_PEM_KEY }}
+        run: |
+          echo "$PEM_KEY" > key.pem
+          chmod 400 key.pem
+          ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+            # Navigate to your app directory
+            cd /home/ubuntu/app
+            # Restart the server (update this based on your server setup)
+            pm2 restart all || pm2 start build/main.js
+          EOF
+          rm key.pem
