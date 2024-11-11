@@ -126,18 +126,26 @@ public class TournamentController {
       }
     }
 
-    @PostMapping("/tournaments/{tournamentId}/initialise-draw")
+    @PostMapping("/tournaments/{tournamentId}/generate")
     @ResponseBody
-    public List<Match> initialiseDraw(@PathVariable Long tournamentId) {
-        List<Match> round1Matches = tournamentService.initialiseDraw(tournamentId);
-        return round1Matches;
+    public List<Match> generateMatches(@PathVariable Long tournamentId) {
+        // Generate matches if the current organizer is authorized
+        List<Match> baseMatches = tournamentService.generateMatches(tournamentId);
+        return baseMatches;
     }
 
-    @PostMapping("/tournaments/{tournamentId}/update-next-round")
-    @ResponseBody
-    public List<Match> updateNextRound(@PathVariable Long tournamentId) {
-        List<Match> updatedMatches = tournamentService.updateNextRound(tournamentId);
-        return updatedMatches;
-    }
+    // @PostMapping("/tournaments/{tournamentId}/initialise-draw")
+    // @ResponseBody
+    // public List<Match> initialiseDraw(@PathVariable Long tournamentId) {
+    //     List<Match> round1Matches = tournamentService.initialiseDraw(tournamentId);
+    //     return round1Matches;
+    // }
+
+    // @PostMapping("/tournaments/{tournamentId}/update-next-round")
+    // @ResponseBody
+    // public List<Match> updateNextRound(@PathVariable Long tournamentId) {
+    //     List<Match> updatedMatches = tournamentService.updateNextRound(tournamentId);
+    //     return updatedMatches;
+    // }
 
 }

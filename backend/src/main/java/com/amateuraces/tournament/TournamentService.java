@@ -34,8 +34,9 @@ public interface TournamentService {
 
     // List<Match> createMatchesForTournament(Long tournamentId);
 
-    List<Match> initialiseDraw(Long tournamentId);
+    // List<Match> initialiseDraw(Long tournamentId);
 
-    List<Match> updateNextRound(Long tournamentId);
+    // List<Match> updateNextRound(Long tournamentId);
 
+    List<Match> generateMatches(Long tournamentId);
 }

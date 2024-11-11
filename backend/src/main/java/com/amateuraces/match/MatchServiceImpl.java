@@ -8,6 +8,8 @@ import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerNotFoundException;
 import com.amateuraces.player.PlayerRepository;
 
+import jakarta.transaction.Transactional;
+
 /*This implementation is meant for business logic,which could be added later*Currently,it does not have much in terms of the business logic yet*/
 
 @Service
@@ -172,4 +174,57 @@ public class MatchServiceImpl implements MatchService {
 
         return matchRepository.save(match);
     }
+
+
+    // @Transactional
+    // public Match updateMatch(Long matchId) {
+    //     // Retrieve the match by matchId
+    //     Match match = matchRepository.findById(matchId)
+    //             .orElseThrow(() -> new MatchNotFoundException("Match not found"));
+
+    //     // Prevent updates if the match is over
+    //     // if (match.isMatchOver()) {
+    //     //     throw new IllegalStateException("Match is over, cannot update match details");
+    //     // }
+
+    //     // Update basic match details
+    //     updateMatchScores(match, matchDetails);
+
+    //     // Handle Elo updates and promotion if the match is over after the update
+    //     if (match.isMatchOver()) {
+    //         updatePlayerElos(match);
+    //         handleMatchPromotion(match, matchId);
+    //     }
+
+    //     // Save and return the updated match
+    //     return matchRepository.save(match);
+    // }
+
+    // private void updateMatchScores(Match match, Match matchDetails) {
+    //     match.setSet1Score(matchDetails.getSet1Score());
+    //     match.setSet2Score(matchDetails.getSet2Score());
+    //     match.setSet3Score(matchDetails.getSet3Score());
+    //     match.setMatchDate(matchDetails.getMatchDate());
+    // }
+
+    // private void updatePlayerElos(Match match) {
+    //     Player player1 = match.getPlayer1();
+    //     Player player2 = match.getPlayer2();
+    //     Player winner = match.getWinner();
+    //     Player loser = player1;
+    //     if (winner == player1) {
+    //         loser = player2;
+    //     }
+
+    //     // Calculate Elo adjustments
+    //     long[] eloAdjustment = eloService.calculateEloAdjustment(match);
+    //     winner.setElo(winner.getElo() + eloAdjustment[0]);
+    //     loser.setElo(Math.max(loser.getElo() + eloAdjustment[1], 0));
+
+    //     // Save Elo adjustments
+    //     match.setWinnerEloGain(eloAdjustment[0]);
+    //     match.setLoserEloLoss(eloAdjustment[1]);
+    //     playerRepository.save(winner);
+    //     playerRepository.save(loser);
+    // }
 }

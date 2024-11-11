@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.amateuraces.player.Player;
 import com.amateuraces.tournament.Tournament;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,7 +34,8 @@ public class Match {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "tournamentName")
+    @JoinColumn(name = "tournament_id")
+    @JsonBackReference
     private Tournament tournament;
 
     @ManyToOne
