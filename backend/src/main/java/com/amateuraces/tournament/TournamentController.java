@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.amateuraces.match.Match;
 import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerNotFoundException;
-
-import jakarta.validation.Valid;
 
 @Controller
 public class TournamentController {
@@ -30,12 +27,12 @@ public class TournamentController {
         this.tournamentService = tournamentService;
     }
 
-    // // Call match algorithm
-    @ResponseBody
-    @PostMapping("/tournaments/{id}/matches")
-    public List<Match> createMatchesForTournament(@PathVariable Long id) {
-        return tournamentService.createMatchesForTournament(id); // Create and save matches for a given tournament
-    }
+    // Call match algorithm
+    // @ResponseBody
+    // @PostMapping("/tournaments/{id}/matches")
+    // public List<Match> createMatchesForTournament(@PathVariable Long id) {
+    //     return tournamentService.createMatchesForTournament(id); // Create and save matches for a given tournament
+    // }
 
     @ResponseBody
     @GetMapping("/tournaments")
@@ -94,15 +91,15 @@ public class TournamentController {
      * @param newTournamentInfo
      * @return the updated, or newly added book
      */
-    @ResponseBody
-    @PutMapping("/tournaments/{id}")
-    public Tournament updateTournament(@PathVariable Long id, @Valid @RequestBody Tournament newTournamentInfo) {
-        Tournament Tournament = tournamentService.updateTournament(id, newTournamentInfo);
-        if (Tournament == null)
-            throw new TournamentNotFoundException(id);
+    // @ResponseBody
+    // @PutMapping("/tournaments/{id}")
+    // public Tournament updateTournament(@PathVariable Long id, @Valid @RequestBody Tournament newTournamentInfo) {
+    //     Tournament Tournament = tournamentService.updateTournament(id, newTournamentInfo);
+    //     if (Tournament == null)
+    //         throw new TournamentNotFoundException(id);
 
-        return Tournament;
-    }
+    //     return Tournament;
+    // }
 
     @ResponseBody
     @PostMapping("/tournaments/{id}/players")
@@ -130,14 +127,17 @@ public class TournamentController {
     }
 
     @PostMapping("/tournaments/{tournamentId}/initialise-draw")
+    @ResponseBody
     public List<Match> initialiseDraw(@PathVariable Long tournamentId) {
         List<Match> round1Matches = tournamentService.initialiseDraw(tournamentId);
         return round1Matches;
     }
 
-    // @PostMapping("/{tournamentId}/update-next-round")
-    // public List<Match> updateNextRound(@PathVariable Long tournamentId) {
-    //     List<Match> nextRoundMatches = tournamentService.updateNextRound(tournamentId);
-    //     return nextRoundMatches;
-    // }
+    @PostMapping("/tournaments/{tournamentId}/update-next-round")
+    @ResponseBody
+    public List<Match> updateNextRound(@PathVariable Long tournamentId) {
+        List<Match> updatedMatches = tournamentService.updateNextRound(tournamentId);
+        return updatedMatches;
+    }
+
 }

@@ -34,7 +34,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class Player {
+public class Player implements Comparable<Player>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -68,7 +68,7 @@ public class Player {
     private User user;
 
     // Single champion Player for a Tournament
-    @OneToMany(mappedBy = "championPlayer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "champion", cascade = CascadeType.ALL)
     private List<Tournament> tournament;
 
     @Override
@@ -149,5 +149,10 @@ public class Player {
             this.matchesWon--;
         }
         this.matchesPlayed--;
+    }
+
+    @Override
+    public int compareTo(Player otherPlayer) {
+        return Integer.compare(otherPlayer.getElo(), getElo());
     }
 }
