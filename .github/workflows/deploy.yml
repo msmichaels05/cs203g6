@@ -37,7 +37,7 @@ jobs:
           # Ensure the app directory exists on EC2
           ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "mkdir -p /home/ubuntu/app/build"
           # Copy the build files
-          scp -i key.pem -o StrictHostKeyChecking=no -r ./frontend/build/* $EC2_USER@$EC2_HOST:/home/ubuntu/app/build
+          scp -i key.pem -o StrictHostKeyChecking=no -r ./frontend/build $EC2_USER@$EC2_HOST:/home/ubuntu/app
           rm key.pem
 
       - name: SSH and restart server
