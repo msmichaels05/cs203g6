@@ -315,7 +315,7 @@ Authorization: Basic admin goodpassword
 ### Initialise Draw
 POST http://localhost:8080/tournaments/1/initialise-draw
 Content-Type: application/json
-
+Authorization: Basic admin goodpassword
 
 ### Print Draw
 POST http://localhost:8080/tournaments/1/update-next-round

@@ -61,7 +61,7 @@ public class TournamentServiceTest {
 
     //     assertNotNull(savedTournament);
     //     assertEquals(tournament.getName(), savedTournament.getName());
-    //     assertEquals(tournament.getELOrequirement(), savedTournament.getELOrequirement());
+    //     assertEquals(tournament.getELORequirement(), savedTournament.getELORequirement());
 
     //     verify(tournamentRepository).save(tournament);
     // }
@@ -84,11 +84,11 @@ public class TournamentServiceTest {
         Tournament existingTournament = new Tournament();
         existingTournament.setId(1L);
         existingTournament.setName("Old Tournament");
-        existingTournament.setELOrequirement(1000);
+        existingTournament.setELORequirement(1000);
 
         Tournament newTournamentInfo = new Tournament();
         newTournamentInfo.setName("Updated Tournament");
-        newTournamentInfo.setELOrequirement(1200);
+        newTournamentInfo.setELORequirement(1200);
 
         when(tournamentRepository.findById(1L)).thenReturn(Optional.of(existingTournament));
         when(tournamentRepository.save(any(Tournament.class))).thenReturn(existingTournament);
@@ -97,7 +97,7 @@ public class TournamentServiceTest {
 
         assertNotNull(updatedTournament);
         assertEquals("Updated Tournament", updatedTournament.getName());
-        assertEquals(1200, updatedTournament.getELOrequirement());
+        assertEquals(1200, updatedTournament.getELORequirement());
 
         verify(tournamentRepository).save(existingTournament);
     }
@@ -107,11 +107,11 @@ public class TournamentServiceTest {
         Tournament existingTournament = new Tournament();
         existingTournament.setId(1L);
         existingTournament.setName("Tournament");
-        existingTournament.setELOrequirement(1000);
+        existingTournament.setELORequirement(1000);
 
         Tournament newTournamentInfo = new Tournament();
         newTournamentInfo.setName("Tournament");
-        newTournamentInfo.setELOrequirement(1200);
+        newTournamentInfo.setELORequirement(1200);
 
         when(tournamentRepository.findById(1L)).thenReturn(Optional.of(existingTournament));
         when(tournamentRepository.save(any(Tournament.class))).thenReturn(existingTournament);
@@ -119,7 +119,7 @@ public class TournamentServiceTest {
         Tournament updatedTournament = tournamentService.updateTournament(1L, newTournamentInfo);
 
         assertNotNull(updatedTournament);
-        assertEquals(1200, updatedTournament.getELOrequirement());
+        assertEquals(1200, updatedTournament.getELORequirement());
 
         verify(tournamentRepository).save(existingTournament);
     }
