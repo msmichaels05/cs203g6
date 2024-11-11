@@ -19,9 +19,11 @@ jobs:
           node-version: '16'  # Use the Node.js version your app requires
 
       - name: Install dependencies
+        working-directory: ./frontend
         run: npm install
 
       - name: Build the project
+        working-directory: ./frontend
         run: npm run build
 
       - name: Copy files to EC2
