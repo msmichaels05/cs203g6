@@ -47,4 +47,6 @@ public interface MatchService {
      * @return
      */
     Match updateRecordMatchWinner(Long matchId, Long oldWinnerId, Long newWinnerId, String newScore);
+
+    Match updateMatch(Long matchId, Match updatedMatchInfo);
 }

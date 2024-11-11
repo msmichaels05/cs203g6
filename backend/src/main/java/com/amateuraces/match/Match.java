@@ -61,6 +61,10 @@ public class Match {
 
     private String status = "Scheduled";
 
+    @ManyToOne
+    @JoinColumn(name = "next_match_id")
+    private Match nextMatch;
+
     public Match(Tournament tournament) {
         this.tournament = tournament;
     }

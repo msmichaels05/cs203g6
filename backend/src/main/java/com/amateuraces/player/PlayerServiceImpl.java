@@ -51,6 +51,7 @@ public class PlayerServiceImpl implements PlayerService {
             player.setName(newPlayerInfo.getName());
             player.setGender(newPlayerInfo.getGender());
             player.setAge(newPlayerInfo.getAge());
+            player.setElo(newPlayerInfo.getElo());
             return playerRepository.save(player);
         }).orElse(null);
     }
