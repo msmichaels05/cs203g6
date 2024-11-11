@@ -35,10 +35,9 @@ const PlayerTournament = () => {
     }
   ];
 
-  const isRegistered = (startDate, registrationEndDate) => {
-    // Check if the current date is within the registration period
-    const registrationStart = new Date(registrationEndDate);
-    return currentDate >= registrationStart && currentDate <= new Date(startDate);
+  const isRegistrationClosed = (registrationEndDate) => {
+    // Check if the registration end date has passed
+    return currentDate > new Date(registrationEndDate);
   };
 
   const canViewMatch = (startDate) => {
@@ -46,15 +45,23 @@ const PlayerTournament = () => {
     return currentDate >= new Date(startDate);
   };
 
+  const handleRegister = (tournament) => {
+    // Open the modal to confirm registration
+    setSelectedTournament(tournament);
+    setShowModal(true);
+  };
+
+  const handleConfirmRegistration = () => {
+    // Simulate registration success and close the modal
+    alert(`Successfully registered for ${selectedTournament.name}`);
+    setShowModal(false);
+    setSelectedTournament(null);
+  };
+
   useEffect(() => {
     // Use hardcoded tournament data
     setTournaments(hardcodedTournaments);
   }, []);
-
-  const handleOpenModal = (tournament) => {
-    setSelectedTournament(tournament);
-    setShowModal(true);
-  };
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -77,12 +84,9 @@ const PlayerTournament = () => {
                 <Card.Text><strong>Registration End Date:</strong> {tournament.registrationEndDate}</Card.Text>
 
                 <div className="btn-container d-flex justify-content-between">
-                  {isRegistered(tournament.startDate, tournament.registrationEndDate) ? (
-                    <Button variant="primary" className="register-btn" disabled>
-                      Registration Closed
-                    </Button>
-                  ) : (
-                    <Button variant="primary" className="register-btn">
+                  {/* Only show the Register button if the registration period is still open */}
+                  {!isRegistrationClosed(tournament.registrationEndDate) && (
+                    <Button variant="primary" className="register-btn" onClick={() => handleRegister(tournament)}>
                       Register
                     </Button>
                   )}
@@ -112,7 +116,7 @@ const PlayerTournament = () => {
             <Button variant="secondary" onClick={handleCloseModal}>
               Close
             </Button>
-            <Button variant="primary" onClick={() => alert('Registration Successful')}>
+            <Button variant="primary" onClick={handleConfirmRegistration}>
               Confirm Registration
             </Button>
           </Modal.Footer>
