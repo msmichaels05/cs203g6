@@ -1,11 +1,11 @@
 // PlayerTournament.js
-
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Card } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import '../tournaments/tournaments.css';
+import '../tournaments/tournaments.css'; // Make sure this path is correct
 import PlayerNavbar from '../navbar/PlayerNavbar';
-import { fetchTournaments, joinTournament } from '../../api/tournamentApi';
+import { fetchTournaments } from '../../api/tournamentApi';
+import { joinTournament } from '../../api/player_tournamentAPI';
 
 const PlayerTournament = () => {
   const [tournaments, setTournaments] = useState([]);
@@ -48,7 +48,7 @@ const PlayerTournament = () => {
       setSelectedTournament(null);
     } catch (error) {
       console.error("Error registering for tournament:", error);
-      alert("Registration Successful.");
+      alert("Registration unsuccessful. Please try again.");
     }
   };
 
@@ -58,7 +58,7 @@ const PlayerTournament = () => {
   };
 
   return (
-    <div>
+    <div className="player-tournament">
       <PlayerNavbar />
       <div className="container mt-4">
         <div className="tournament-grid">

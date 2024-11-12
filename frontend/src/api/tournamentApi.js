@@ -69,15 +69,6 @@ export const deleteTournament = async (id) => {
   }
 };
 
-// Add a player to a tournament (POST /tournaments/{id}/players)
-export const joinTournament = async (id) => {
-  try {
-    await axiosInstance.post(`/tournaments/${id}/players`);
-  } catch (error) {
-    console.error(`Error joining tournament with ID ${id}:`, error);
-    throw error;
-  }
-};
 
 // Get players in a tournament (GET /tournaments/{id}/players)
 export const getPlayersInTournament = async (id) => {
