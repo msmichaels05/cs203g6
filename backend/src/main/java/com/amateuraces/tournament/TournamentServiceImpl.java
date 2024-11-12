@@ -341,7 +341,7 @@ public class TournamentServiceImpl implements TournamentService {
         int totalPlayers = tournament.getPlayerCount();
         // List<Player> players = new ArrayList<>(tournament.getPlayers()); // Convert the set to a list
         // Collections.shuffle(players); // Optional: Shuffle players for random pairing
-
+        //System.out.println("Total number of players: " + totalPlayers);
         int totalSlots = (int) Math.pow(2, Math.ceil(Math.log(totalPlayers) / Math.log(2)));
         System.out.println("Total slots is " + totalSlots);
         int totalSeededPlayers = calculateNumberOfSeeds(totalSlots);
@@ -366,8 +366,12 @@ public class TournamentServiceImpl implements TournamentService {
             Player player1 = playerSlotAssignment.get(i);
             Player player2 = playerSlotAssignment.get(i+1);
 
-            if (player1 != null) System.out.println("Slot number " + i + " is for player " + player1.getElo());
-            if (player2 != null) System.out.println("Slot number " + (i+1) + " is for player " + player2.getElo());
+            //VARIABLES TO SEE ON TERMINAL
+            int p1 = -1;
+            int p2 = -1;
+
+            if (player1 != null) p1 = player1.getElo(); 
+            if (player2 != null) p2 = player2.getElo();
             System.out.println();
 
             Match match = new Match(tournament, player1, player2);
@@ -376,13 +380,12 @@ public class TournamentServiceImpl implements TournamentService {
             }
             if (player1 == null) {
                 match.setWinner(player2);
-                System.out.println("Slot number " + i + " is for bye");
             }
             if (player2 == null) {
                 match.setWinner(player1);
-                System.out.println("Slot number " + (i+1) + " is for bye");
             }
-
+            System.out.println(String.format("Slots %d & Slots %d", i, i+1));
+            System.out.println(String.format("Player %d vs Player %d \n", p1, p2));
             firstRoundMatches.add(match);
         }
 
@@ -535,7 +538,7 @@ public class TournamentServiceImpl implements TournamentService {
         assignSeededPlayers(unseededPlayers, seededPlayers, totalSeededPlayers, totalSlots, playerSlotAssignment);
 
         // // Place unseeded players in the remaining slots
-        fillRemainingSlots(playerSlotAssignment, unseededPlayers, totalPlayers * 2);
+        fillRemainingSlots(playerSlotAssignment, unseededPlayers, totalSlots);
     }
 
     private void assignTop4Seeds(Map<Integer, Player> playerSlotAssignment, Player[] seededPlayers, int totalSlots) {
@@ -544,8 +547,8 @@ public class TournamentServiceImpl implements TournamentService {
         playerSlotAssignment.put(0, seededPlayers[0]); // Assign seeded 1 to top of the draw
         playerSlotAssignment.put(totalSlots - 1, seededPlayers[1]); // Assign seeded 2 to bottom of the draw
         if (seededPlayers.length == 2) return; // Only if there are only 2 seeded players
-        playerSlotAssignment.put(mid - 1, seededPlayers[2]); // Assign seeded 3 to middle of the draw
-        playerSlotAssignment.put(mid, seededPlayers[3]); // Assign seeded 4 to middle of the draw
+        playerSlotAssignment.put(mid - 1, seededPlayers[3]); // Assign seeded 3 to middle of the draw
+        playerSlotAssignment.put(mid, seededPlayers[2]); // Assign seeded 4 to middle of the draw
     }
     
     private void assignSeededPlayers(List<Player> unseededPlayers, Player[] seededPlayers, int numberOfSeeds, int totalSlots, Map<Integer, Player> playerSlotAssignment) {
@@ -616,14 +619,26 @@ public class TournamentServiceImpl implements TournamentService {
 
     private void fillRemainingSlots(Map<Integer, Player> playerSlotAssignment, List<Player> unseededPlayers, int totalSlots) {
         //System.out.println("Unseeded player list " + unseededPlayers.toString());
-        int i=2;
-        while (unseededPlayers.size() > 0) {
-            if (!playerSlotAssignment.containsKey(i)) {
-                playerSlotAssignment.put(i, unseededPlayers.get(0));
-                //System.out.println(String.format("For unseeded, Slot number %d is %d", i, unseededPlayers.get(0).getElo()));
-                unseededPlayers.remove(0);
+        int i = 2 ;
+        while (unseededPlayers.size() > 0 && i < totalSlots) {
+            if (!playerSlotAssignment.containsKey(i)) { //Makes sure that slot is not taken
+                playerSlotAssignment.put(i, unseededPlayers.remove(0));
+                //if (playerSlotAssignment.get(i) != null) System.out.println("Slot number " + i + " assigned to player" + playerSlotAssignment.get(i));
+                //else System.out.println("Slot number " + i + ": BYE");
+                //System.out.println("Unseeded players left: " + unseededPlayers.toString() + "\n");
             }
-            i++;
+            i += 2;
+        }
+        i = 3;
+        while (unseededPlayers.size() > 0 && i < totalSlots) {
+            if (!playerSlotAssignment.containsKey(i)) { //Makes sure that slot is not taken
+                playerSlotAssignment.put(i, unseededPlayers.remove(0));
+                //if (playerSlotAssignment.get(i) != null) System.out.println("Slot number " + i + " assigned to player" + playerSlotAssignment.get(i));
+                //else System.out.println("Slot number " + i + ": BYE");
+                //System.out.println("Unseeded players left: " + unseededPlayers.toString() + "\n");
+            
+            }
+            i += 2;
         }
         System.out.println("All players assigned");
     }

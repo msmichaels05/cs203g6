@@ -151,6 +151,10 @@ public class Player implements Comparable<Player>{
         this.matchesPlayed--;
     }
 
+    public String toString() {
+        return String.format("Name: %s, ELO: %d", name, elo);
+    }
+
     @Override
     public int compareTo(Player otherPlayer) {
         return Integer.compare(otherPlayer.getElo(), getElo());

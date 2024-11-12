@@ -45,7 +45,7 @@ public class Tournament {
 
     private int ELORequirement;
 
-    private int maxPlayers = 32;
+    private int maxPlayers = 64;
 
     private int playerCount = 0;
 

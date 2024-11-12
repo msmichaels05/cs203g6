@@ -88,6 +88,325 @@ Content-Type: application/json
     "password": "betatester"   
 }
 
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernamesssssss",
+    "email": "efdas@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernamessssssss",
+    "email": "lfdas@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username10",
+    "email": "u10@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username11",
+    "email": "u11s@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username12",
+    "email": "u12@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username13",
+    "email": "u13@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username14",
+    "email": "u14@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username15",
+    "email": "u15@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username16",
+    "email": "u16@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username17",
+    "email": "u17@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username18",
+    "email": "u18@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username19",
+    "email": "u19@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username20",
+    "email": "u20@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username21",
+    "email": "u21@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username22",
+    "email": "u22@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username23",
+    "email": "u23@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username24",
+    "email": "u24@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username25",
+    "email": "u25@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username26",
+    "email": "u26@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username27",
+    "email": "u27@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username28",
+    "email": "u28@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username29",
+    "email": "u29@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username30",
+    "email": "u30@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username31",
+    "email": "u31@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username32",
+    "email": "u32@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username33",
+    "email": "u33@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username34",
+    "email": "u34@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username35",
+    "email": "u35@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "username36",
+    "email": "u36@email.com",
+    "password": "betatester"   
+}
+
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
 # Show that cannot create player for admin
 POST http://localhost:8080/users/1/players
@@ -141,7 +460,7 @@ Authorization: Basic usernames betatester
 
 {
     "name":"Alphabravo",
-    "phoneNumber" :"88888888",
+    "phoneNumber" :"12332144",
     "email" : "alphabravo@gmail.com",
     "age" : 18,
     "gender" : "Female",
@@ -224,6 +543,410 @@ Authorization: Basic usernames betatester
     "elo": 1600
 }
 
+###
+# Show that player can create 
+POST http://localhost:8080/users/10/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppilate",
+    "phoneNumber" :"42883451",
+    "email" : "pilate133498@gmail.com",
+    "age" : 32,
+    "gender" : "Female",
+    "elo": 1601
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/11/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl10",
+    "phoneNumber" :"212883451",
+    "email" : "ppl10@gmail.com",
+    "age" : 32,
+    "gender" : "Female",
+    "elo": 1601
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/12/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl11",
+    "phoneNumber" :"11111111",
+    "email" : "ppl11@gmail.com",
+    "age" : 33,
+    "gender" : "Female",
+    "elo": 1616
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/13/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl12",
+    "phoneNumber" :"12121212",
+    "email" : "ppl12@gmail.com",
+    "age" : 34,
+    "gender" : "Female",
+    "elo": 1515
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/14/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl13",
+    "phoneNumber" :"13131313",
+    "email" : "ppl13@gmail.com",
+    "age" : 29,
+    "gender" : "Female",
+    "elo": 1717
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/15/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl14",
+    "phoneNumber" :"14141114",
+    "email" : "ppl14@gmail.com",
+    "age" : 29,
+    "gender" : "Female",
+    "elo": 1700
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/16/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl15",
+    "phoneNumber" :"15151515",
+    "email" : "ppl15@gmail.com",
+    "age" : 40,
+    "gender" : "Female",
+    "elo": 1570
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/17/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl16",
+    "phoneNumber" :"16161616",
+    "email" : "ppl16@gmail.com",
+    "age" : 29,
+    "gender" : "Female",
+    "elo": 1690
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/18/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl17",
+    "phoneNumber" :"18181818",
+    "email" : "ppl17@gmail.com",
+    "age" : 49,
+    "gender" : "Female",
+    "elo": 1543
+}
+###
+# Show that player can create 
+POST http://localhost:8080/users/19/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl18",
+    "phoneNumber" :"17171717",
+    "email" : "ppl18@gmail.com",
+    "age" : 44,
+    "gender" : "Female",
+    "elo": 1660
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/20/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl19",
+    "phoneNumber" :"19191919",
+    "email" : "ppl19@gmail.com",
+    "age" : 49,
+    "gender" : "Female",
+    "elo": 1680
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/21/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl20",
+    "phoneNumber" :"20202020",
+    "email" : "ppl20@gmail.com",
+    "age" : 47,
+    "gender" : "Female",
+    "elo": 1880
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/22/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl21",
+    "phoneNumber" :"21212121",
+    "email" : "ppl21@gmail.com",
+    "age" : 39,
+    "gender" : "Female",
+    "elo": 1810
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/23/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl22",
+    "phoneNumber" :"22222222",
+    "email" : "ppl22@gmail.com",
+    "age" : 22,
+    "gender" : "Female",
+    "elo": 1822
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/24/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl23",
+    "phoneNumber" :"23232323",
+    "email" : "ppl23@gmail.com",
+    "age" : 48,
+    "gender" : "Female",
+    "elo": 1919
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/25/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl25",
+    "phoneNumber" :"25252525",
+    "email" : "ppl25@gmail.com",
+    "age" : 33,
+    "gender" : "Female",
+    "elo": 1840
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/26/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl24",
+    "phoneNumber" :"24242424",
+    "email" : "ppl25@gmail.com",
+    "age" : 32,
+    "gender" : "Female",
+    "elo": 1860
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/27/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl26",
+    "phoneNumber" :"26262626",
+    "email" : "ppl26@gmail.com",
+    "age" : 31,
+    "gender" : "Female",
+    "elo": 1830
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/28/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl27",
+    "phoneNumber" :"27272727",
+    "email" : "ppl27@gmail.com",
+    "age" : 39,
+    "gender" : "Female",
+    "elo": 1900
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/29/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl28",
+    "phoneNumber" :"28282828",
+    "email" : "ppl28@gmail.com",
+    "age" : 39,
+    "gender" : "Female",
+    "elo": 2000
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/30/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl29",
+    "phoneNumber" :"29292929",
+    "email" : "ppl29@gmail.com",
+    "age" : 39,
+    "gender" : "Female",
+    "elo": 1990
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/31/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl30",
+    "phoneNumber" :"303303033",
+    "email" : "ppl30@gmail.com",
+    "age" : 39,
+    "gender" : "Female",
+    "elo": 1509
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/32/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl31",
+    "phoneNumber" :"31313131",
+    "email" : "ppl31@gmail.com",
+    "age" : 39,
+    "gender" : "Female",
+    "elo": 1777
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/33/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl32",
+    "phoneNumber" :"32323232",
+    "email" : "ppl32@gmail.com",
+    "age" : 39,
+    "gender" : "Female",
+    "elo": 1657
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/34/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl33",
+    "phoneNumber" :"33333333",
+    "email" : "ppl33@gmail.com",
+    "age" : 39,
+    "gender" : "Female",
+    "elo": 1789
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/35/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl34",
+    "phoneNumber" :"34343434",
+    "email" : "ppl34@gmail.com",
+    "age" : 39,
+    "gender" : "Female",
+    "elo": 1967
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/36/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"ppl35",
+    "phoneNumber" :"35353535",
+    "email" : "ppl35@gmail.com",
+    "age" : 39,
+    "gender" : "Female",
+    "elo": 1590
+}
+
 # # Show that player can create 
 # POST http://localhost:8080/users/9/players
 # Content-Type: application/json
@@ -279,7 +1002,7 @@ Authorization: Basic admin goodpassword
     "name": "test1",
     "gender": "Female",
     "elorequirement": 100,
-    "maxPlayers":8,
+    "maxPlayers":64,
     "location": "Singapore",
     "description":"newbie training session",
     "startDate": "2024-12-29",
@@ -291,41 +1014,150 @@ GET http://localhost:8080/tournaments
 Content-Type: application/json
 Authorization: Basic admin goodpassword
 
-### POST Player to tournament
+### POST Player 1 to tournament
 POST http://localhost:8080/tournaments/1/players
 Authorization: Basic username betatester 
 
-### POST Player to tournament
+### POST Player 2 to tournament
 POST http://localhost:8080/tournaments/1/players
 Authorization: Basic betatester betatester 
 
-### POST Player to tournament
+### POST Player 3 to tournament
 POST http://localhost:8080/tournaments/1/players
 Authorization: Basic usernames betatester 
 
-### POST Player to tournament
+### POST Player 4 to tournament
 POST http://localhost:8080/tournaments/1/players
 Authorization: Basic usernamess betatester
 
-### POST Player to tournament
+### POST Player 5 to tournament
 POST http://localhost:8080/tournaments/1/players
 Authorization: Basic usernamesss betatester
 
-### POST Player to tournament
+### POST Player 6 to tournament
 POST http://localhost:8080/tournaments/1/players
 Authorization: Basic usernamessss betatester
 
-### POST Player to tournament
+### POST Player 7  to tournament
 POST http://localhost:8080/tournaments/1/players
 Authorization: Basic usernamesssss betatester
 
-### POST Player to tournament
+### POST Player 8 to tournament
 POST http://localhost:8080/tournaments/1/players
 Authorization: Basic usernamessssss betatester
 
-### POST Player to tournament
+### POST Player 9 to tournament
 POST http://localhost:8080/tournaments/1/players
-Authorization: Basic usernamessssss betatester
+Authorization: Basic usernamesssssss betatester
+
+### POST Player 10 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic usernamessssssss betatester
+
+### POST Player 11 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username10 betatester
+
+### POST Player 12 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username11 betatester
+
+### POST Player 13 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username12 betatester
+
+
+### POST Player 14 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username13 betatester
+
+### POST Player 15 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username14 betatester
+
+### POST Player 16 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username15 betatester
+
+### POST Player 17 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username16 betatester
+
+### POST Player 18 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username17 betatester
+
+### POST Player 19 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username18 betatester
+
+### POST Player 20 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username19 betatester
+
+### POST Player 21 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username20 betatester
+
+### POST Player 22 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username21 betatester
+
+### POST Player 23 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username22 betatester
+
+### POST Player 24 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username23 betatester
+
+### POST Player 25 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username24 betatester
+
+### POST Player 26 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username25 betatester
+
+### POST Player 28 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username26 betatester
+
+### POST Player 28 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username27 betatester
+
+### POST Player 29 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username28 betatester
+
+### POST Player 30 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username29 betatester
+
+### POST Player 31 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username30 betatester
+
+### POST Player 32 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username31 betatester
+
+### POST Player 33 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username32 betatester
+
+### POST Player 34 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username33 betatester
+
+### POST Player 35 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username34 betatester
+
+### POST Player 36 to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic username35 betatester
 
 ### POST DRAW ALGO
 
