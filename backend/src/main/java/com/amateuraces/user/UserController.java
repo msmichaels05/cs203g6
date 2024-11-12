@@ -78,4 +78,12 @@ public class UserController {
         userService.deleteUser(id);
     }
 
+    // // Get the user role back to frontend 
+    // @ResponseBody
+    // @GetMapping("/api/user/role")
+    // public ResponseEntity<String> getUserRole(Authentication authentication) {
+    //     User user = (User) authentication.getPrincipal();
+    //     return ResponseEntity.ok(user.getAuthorities().stream().findFirst().get().getAuthority());
+    // }
+
 }

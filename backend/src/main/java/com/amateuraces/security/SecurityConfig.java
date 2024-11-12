@@ -53,12 +53,23 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/tournaments/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/players/*").permitAll()
+<<<<<<< HEAD
                 .requestMatchers(HttpMethod.GET, "/tournaments/*/matches").permitAll()
                 .requestMatchers(HttpMethod.GET, "/tournaments/*/matches/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/matches").permitAll() // hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/tournaments/*/matches/{id}").permitAll() // hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/matches/{id}/result/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/h2-console/**").permitAll() // Allow access to H2 Console
+=======
+
+
+
+                // .requestMatchers("/register", "/login", "/player/register/**").permitAll()
+                // .requestMatchers("/home").permitAll()  // home is accessible to those with registered accounts
+                .requestMatchers("/h2-console/**").permitAll()  // Allow access to H2 Console
+                // note that Spring Security 6 secures all endpoints by default
+                // remove the below line after adding the required rules
+>>>>>>> 27c27e39ce6a14bbcf8709d4c59c6e7552c0ce12
                 .anyRequest().permitAll()  // All other requests require authentication
             )
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless for REST APIs
