@@ -2,9 +2,6 @@ package com.amateuraces.admin;
 
 import java.util.List;
 
-import com.amateuraces.match.Match;
-import com.amateuraces.tournament.Tournament;
-
 public interface AdminService {
     /**
      * Retrieve all admins.
@@ -40,5 +37,4 @@ public interface AdminService {
      * @return status of the delete operation (1 for success, 0 for failure)
      */
     void deleteAdmin(Long id);
-
 }

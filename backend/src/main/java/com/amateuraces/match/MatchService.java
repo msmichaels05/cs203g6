@@ -18,5 +18,11 @@ public interface MatchService {
      */
     void deleteMatch(Long id);
 
+    /**
+     * Updates match results, moves the winner to the next round(if there is), and update players' ELOs
+     * @param id
+     */
     Match updateMatch(Long matchId, Match updatedMatchInfo, Long tournamentId);
+
+    void promoteWinnerToNextMatch(Match match, Long tournamentId);
 }

@@ -66,7 +66,7 @@ public class MatchServiceImpl implements MatchService {
         // Update match details
         String score = updatedMatchInfo.getScore();
         match.setScore(score);
-        match.setCompleted(updatedMatchInfo.isCompleted());
+        match.setStatus("Completed");
 
         Player winner = match.getPlayer1();
         if (Integer.parseInt(score.split("-")[0]) < Integer.parseInt(score.split("-")[1])) winner = match.getPlayer2();
@@ -76,7 +76,7 @@ public class MatchServiceImpl implements MatchService {
         matchRepository.save(match);
 
         // Promote winner if match is completed
-        if (match.isCompleted() && match.getWinner() != null) {
+        if (match.getStatus().equals("Completed") && match.getWinner() != null) {
             updatePlayerElos(match);
             promoteWinnerToNextMatch(match, tournamentId);
         }
@@ -87,7 +87,7 @@ public class MatchServiceImpl implements MatchService {
     @Transactional
     public void promoteWinnerToNextMatch(Match match, Long tournamentId) {
 
-        if (!match.isCompleted() || match.getWinner() == null) {
+        if (!match.getStatus().equals("Completed") || match.getWinner() == null) {
             throw new IllegalArgumentException("Match is not completed or winner is not set.");
         }
 

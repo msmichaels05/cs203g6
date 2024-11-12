@@ -21,7 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class SecurityConfig {
     
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     public SecurityConfig(UserDetailsService userDetailsService){
         this.userDetailsService = userDetailsService;
@@ -61,8 +61,8 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll() // Allow access to H2 Console
                 .anyRequest().hasAuthority("ROLE_ADMIN") // All other requests require authentication
             )
-            .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless for REST APIs
-            .httpBasic(Customizer.withDefaults()) // Basic HTTP authentication for stateless APIs (JWT or similar auth will be used in headers)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless for REST APIs
+            .httpBasic(Customizer.withDefaults()) // Basic HTTP authentication for stateless APIs
             .csrf(csrf -> csrf.disable()) // CSRF protection is disabled for REST APIs
             .headers(headers -> headers.disable()) // Disable headers since this is for API usage
             .authenticationProvider(authenticationProvider());

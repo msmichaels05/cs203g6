@@ -37,7 +37,6 @@ Content-Type: application/json
 POST http://localhost:8080/users
 Content-Type: application/json
 
-
 {
     "username": "usernamess",
     "email": "ue@email.com",
@@ -47,7 +46,6 @@ Content-Type: application/json
 ###
 POST http://localhost:8080/users
 Content-Type: application/json
-
 
 {
     "username": "usernamesss",
@@ -262,7 +260,7 @@ Authorization: Basic admin goodpassword
 }
 
 ### Tournament
-GET http://localhost:8080/tournaments
+GET http://localhost:8080/tournaments/1
 Content-Type: application/json
 Authorization: Basic admin goodpassword
 

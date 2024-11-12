@@ -41,9 +41,12 @@ function App() {
       {role === 'ROLE_ADMIN' ? <AdminNavbar /> : role === 'ROLE_USER' && <PlayerNavbar />}
       
       <Routes>
-        <Route path="/home" element={<Home />} />
-        <Route path="/authen_home" element={<Authen_home role={role} />} /> {/* Pass role as prop */}
-        <Route path="/" element={<Login />} />
+        {/* add more routes here */}
+        <Route path="/" element={<Home />} />
+        <Route path="/authen_home" element={<Authen_home />} />
+
+
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register/players" element={<RegisterPlayers />} />
         <Route path="/profile" element={<Profile />} />

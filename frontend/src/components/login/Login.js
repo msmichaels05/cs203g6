@@ -4,17 +4,17 @@ import { useNavigate } from "react-router-dom";
 import "./login.css";
 
 const Login = () => {
-  const [email, setEmail] = useState(""); // Assuming email is the username here
+  const [username, setUsername] = useState(""); // Changed from email to username
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.body.classList.add('login-background');
-    
+    document.body.classList.add("login-background");
+
     return () => {
-      document.body.classList.remove('login-background'); // Cleanup on unmount
+      document.body.classList.remove("login-background"); // Cleanup on unmount
     };
   }, []);
 
@@ -22,20 +22,26 @@ const Login = () => {
     event.preventDefault();
     setIsLoading(true);
     setError(""); // Clear previous errors before making a new request
-
+  
     try {
-      const userInfo = await loginAPI(email, password); // Call the backend API
+      const userInfo = await loginAPI(username, password); // Call the backend API with username
       if (userInfo) {
-        // Assuming userInfo contains valid user data, handle success
-        navigate("/register/players"); // Navigate to the next page after successful login
+        // Assuming userInfo contains valid user data and a token, handle success
+        localStorage.setItem("token", userInfo.token); // Store token for session management
+        navigate("/authen_home"); // Navigate to the authen_home page after successful login
       } else {
         setError("Invalid credentials. Please try again.");
       }
     } catch (error) {
-      setError("An error occurred. Please try again later.");
+      if (error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message); // Show specific backend message
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
     }
     setIsLoading(false);
   };
+  
 
   return (
     <div className="login-page">
@@ -44,13 +50,17 @@ const Login = () => {
         <h2>Welcome Back, Player!</h2>
         <form onSubmit={handleLogin}>
           <div className="form-group">
-            <label>Email Address:</label>
+            <label>Username:</label> {/* Changed label to Username */}
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              type="text" // Changed from email type to text
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setError(""); // Clear error on input change
+              }}
+              placeholder="Enter your username"
               required
+              disabled={isLoading} // Disable input while loading
             />
           </div>
           <div className="form-group">
@@ -58,9 +68,13 @@ const Login = () => {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError(""); // Clear error on input change
+              }}
               placeholder="Enter your password"
               required
+              disabled={isLoading} // Disable input while loading
             />
           </div>
           {error && <div className="error">{error}</div>}
@@ -74,7 +88,7 @@ const Login = () => {
           <span onClick={() => navigate("/register")} className="link-text">
             Register here
           </span>
-          <span onClick={() => navigate("/home")} className="link-text">
+          <span onClick={() => navigate("/")} className="link-text">
             Continue as Guest
           </span>
         </div>
