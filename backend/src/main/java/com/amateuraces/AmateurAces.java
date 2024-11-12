@@ -5,11 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-<<<<<<< HEAD
-import com.amateuraces.highlight.Highlight;
-import com.amateuraces.highlight.HighlightRepository;
-=======
->>>>>>> 9a18cd91b4908f622a3c6165399a34e45d7d628a
 import com.amateuraces.user.User;
 import com.amateuraces.user.UserRepository;
 
