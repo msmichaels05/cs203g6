@@ -61,14 +61,15 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll() // Allow access to H2 Console
                 .anyRequest().hasAuthority("ROLE_ADMIN") // All other requests require authentication
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless for REST APIs
-            .httpBasic(Customizer.withDefaults()) // Basic HTTP authentication for stateless APIs
-            .csrf(csrf -> csrf.disable()) // CSRF protection is disabled for REST APIs
-            .headers(headers -> headers.disable()) // Disable headers since this is for API usage
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
+            .httpBasic(Customizer.withDefaults()) 
+            .csrf(csrf -> csrf.disable()) 
+            .headers(headers -> headers.disable()) 
             .authenticationProvider(authenticationProvider());
-
+    
         return http.build();
     }
+    
 
     // For REACT
     @Bean
