@@ -1,11 +1,13 @@
 package com.amateuraces.security;
 
-import com.amateuraces.user.*;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.amateuraces.user.User;
+import com.amateuraces.user.UserRepository;
 
 @Service
 public class AuthenticationService {
@@ -42,6 +44,4 @@ public class AuthenticationService {
         return userRepository.findByUsername(username).orElseThrow(() -> 
             new BadCredentialsException("User not found"));
     }
-
-    // If using JWTs or other methods, you could add additional methods for token generation, etc.
 }

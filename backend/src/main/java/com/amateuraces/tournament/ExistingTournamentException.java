@@ -11,5 +11,4 @@ public class ExistingTournamentException extends RuntimeException {
     public ExistingTournamentException(String message) {
         super(message);
     }
-
 }

@@ -111,48 +111,10 @@ public class Tournament {
         this.location = location;
     }
 
-    // Methods to manage players
-    public boolean addPlayer(Player player) {
-        boolean added = players.add(player);
-        if (added) {
-            playerCount++;
-            player.addToTournamentHistory(this); // Ensure the bi-directional relationship is maintained
-        }
-        return added;
-    }
-
     public void removePlayer(Player player) {
         if (players.remove(player)) {
             player.removeFromTournamentHistory(this); // Also remove this tournament from the player's list
             playerCount--;
         }
     }
-
-    // // Method to update to the next round
-    // public List<Match> updateNextRound() {
-    //     int totalRounds = (int) Math.ceil(Math.log(playerCount) / Math.log(2)); // Total number of rounds 
-        
-    //     int nextRoundIndex = 0;
-    //     for (int i = totalRounds - 1; i > 0; i--) { // Start from round 2 onwards
-    //         nextRoundIndex += (int) Math.pow(2, i);
-    //         if (matches.get(nextRoundIndex).getStatus().equals("Scheduled")) { // First match of the next round
-
-    //             int currentRoundIndex = nextRoundIndex - (int) Math.pow(2, i); // Get index of the first match of the current round
-                
-    //             for (int j = currentRoundIndex; j < nextRoundIndex; j += 2) {
-    //                 Player player1 = matches.get(j).getWinner();
-    //                 Player player2 = matches.get(j + 1).getWinner();
-        
-    //                 matches.get(nextRoundIndex).setPlayer1(player1);
-    //                 matches.get(nextRoundIndex).setPlayer2(player2);
-    //             }
-
-    //             setMatches(matches);
-    //             return matches; // Next round all updated
-    //         }
-    //     }
-
-    //     // Final match completed, no more subsequent matches to update
-    //     return null;
-    // }
 }

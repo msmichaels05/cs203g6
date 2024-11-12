@@ -51,13 +51,7 @@ public class Match {
 
     @Column(name = "matchScore")
     private String score;
-
-    @Column(name = "changedElo")
-    private double elo;
-
-    @Column(name = "isCompleted", nullable = false)
-    private boolean isCompleted = false;
-
+    
     private String status = "Scheduled";
 
     @ManyToOne
@@ -77,12 +71,6 @@ public class Match {
     public Match(Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
-    }
-
-    public void setMatchResult(Player winner, String score) {
-        this.winner = winner;
-        this.score = score;
-        this.isCompleted = true;
     }
 
     public boolean isPlayerInvolved(Player player) {
