@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Table } from 'react-bootstrap';
 import PlayerNavbar from '../navbar/PlayerNavbar';
 import './profile.css';
-import { fetchPlayerDetails } from '../../api/playersAPI'; // Import the API function
+import { fetchPlayerDetails } from '../../api/playersAPI';
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [playerDetails, setPlayerDetails] = useState({
     name: "Player Name",
     username: "username",
@@ -18,38 +20,46 @@ const Profile = () => {
     age: 0,
     profilePicture: "https://via.placeholder.com/150",
   });
-
-  const [matchHistory] = useState([
-    { date: "28-11-2023", tournament: "JJk1", result: "W", opponent: "Geto", score: "6-3" },
-    { date: "28-11-2023", tournament: "JJK2", result: "W", opponent: "Toji", score: "4-2" },
-  ]);
+  const [matchHistory, setMatchHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user'));
-  
-    // Fetch player details if user data exists
-    if (userData && userData.userId) {
-      fetchPlayerDetails(userData.userId)
-        .then((data) => {
-          setPlayerDetails((prevDetails) => ({
-            ...prevDetails,
-            name: data.name || "Player Name",
-            username: data.user.username || "username",
-            email: data.user.email || "email@example.com",
-            age: data.age || 0,
-            gender: data.gender || "N/A",
-            elo: data.elo || 0,
-            gamesPlayed: data.matchesPlayed || 0,
-            wins: data.matchesWon || 0,
-            losses: data.matchesPlayed - data.matchesWon || 0,
-            profilePicture: data.profilePicture || prevDetails.profilePicture,
-          }));
-        })
-        .catch((error) => {
-          console.error('Error fetching player details:', error);
-        });
+
+    // Check if `id` exists instead of `userId`
+    if (!userData || !userData.id) {
+      console.warn("User ID not found in localStorage. Redirecting to login.");
+      setError("User data not found. Please log in.");
+      setLoading(false);
+      navigate('/login'); // Redirect to login if user data is missing
+      return;
     }
-  }, []);
+
+    fetchPlayerDetails(userData.id)  // Use `id` here instead of `userId`
+      .then((data) => {
+        setPlayerDetails((prevDetails) => ({
+          ...prevDetails,
+          name: data.name || "Player Name",
+          username: data.user.username || "username",
+          email: data.user.email || "email@example.com",
+          age: data.age || 0,
+          gender: data.gender || "N/A",
+          elo: data.elo || 0,
+          gamesPlayed: data.matchesPlayed || 0,
+          wins: data.matchesWon || 0,
+          losses: data.matchesPlayed - data.matchesWon || 0,
+          profilePicture: data.profilePicture || prevDetails.profilePicture,
+        }));
+        setMatchHistory(data.matchHistory || []);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching player details:", error);
+        setError("Failed to load player details.");
+        setLoading(false);
+      });
+  }, [navigate]);
 
   const handlePhotoUpload = (event) => {
     const file = event.target.files[0];
@@ -64,6 +74,9 @@ const Profile = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <>
