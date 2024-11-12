@@ -6,6 +6,7 @@ import com.amateuraces.match.Match;
 import com.amateuraces.tournament.Tournament;
 import com.amateuraces.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -33,7 +34,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Player implements Comparable<Player>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,7 +70,8 @@ public class Player implements Comparable<Player>{
 
     // Single champion Player for a Tournament
     @OneToMany(mappedBy = "champion", cascade = CascadeType.ALL)
-    private List<Tournament> tournament;
+    @JsonIgnore
+    private List<Tournament> tournamentsWon;
 
     @Override
     public boolean equals(Object o) {

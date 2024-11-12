@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,16 +26,18 @@ public class MatchController {
 
     private final MatchService matchService;
     private final TournamentRepository tournamentRepository;
+    private final MatchRepository matchRepository;
     private final PlayerRepository playerRepository;
     private final UserRepository userRepository;
 
     @Autowired
     public MatchController(MatchService matchService, TournamentRepository tournamentRepository,
-                           PlayerRepository playerRepository, UserRepository userRepository) {
+                           PlayerRepository playerRepository, UserRepository userRepository, MatchRepository matchRepository) {
         this.matchService = matchService;
         this.tournamentRepository = tournamentRepository;
         this.playerRepository = playerRepository;
         this.userRepository = userRepository;
+        this.matchRepository = matchRepository;
     }
 
     /**
@@ -56,12 +57,25 @@ public class MatchController {
      * @return match with the given id
      */
     @GetMapping("/matches/{id}")
-    public Match getMatch(@PathVariable Long id) {
+    public Match getMatches(@PathVariable Long id) {
         Match match = matchService.getMatch(id);
         if (match == null) {
             throw new MatchNotFoundException(id);
         }
         return match;
+    }
+
+    // @GetMapping("/tournaments/{tournamentId}/matches")
+    // public List<Match> getMatchesInTournament(@PathVariable Long tournamentId,
+    //                       @Valid @RequestBody List<Match> match) {
+
+    //     Object matches = matchRepository.findByTournamentId(tournamentId);
+    //     return (List<Match>) matches;
+    // }
+
+    @GetMapping("/tournaments/{tournamentId}/matches")
+    public List<Match> getMatchesInTournament(@PathVariable Long tournamentId) {
+        return matchRepository.findByTournamentId(tournamentId);
     }
 
     /**
@@ -99,61 +113,11 @@ public class MatchController {
         return matchService.addMatch(match);
     }
 
-    /**
-     * Record match result
-     *
-     * @param tournamentId
-     * @param matchId
-     * @param winnerId
-     * @param loserId
-     * @param score
-     */
-    @PostMapping("/tournaments/{tournamentId}/matches/{matchId}/result")
-    public Match recordMatchResult(@PathVariable Long tournamentId,
-                                   @PathVariable Long matchId,
-                                   @RequestParam Long winnerId,
-                                   @RequestParam Long loserId,
-                                   @RequestParam String score) {
-        Tournament tournament = tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
-
-        Match match = matchService.getMatch(matchId);
-        if (match == null || !match.getTournament().getId().equals(tournamentId)) {
-            throw new MatchNotFoundException(matchId);
-        }
-
-        return matchService.recordMatchResult(matchId, winnerId, loserId, score);
-    }
-
-    /**
-     * Update match score
-     *
-     * @param tournamentId
-     * @param matchId
-     * @param newScore
-     */
-    // @PutMapping("/tournaments/{tournamentId}/matches/{matchId}")
-    // public Match updateRecordMatchScore(@PathVariable Long tournamentId,
-    //                                     @PathVariable Long matchId,
-    //                                     @RequestParam String newScore) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
-
-    //     Match match = matchService.getMatch(matchId);
-    //     if (match == null || !match.getTournament().getId().equals(tournamentId)) {
-    //         throw new MatchNotFoundException(matchId);
-    //     }
-
-    //     return matchService.updateRecordMatchScore(matchId, newScore);
-    // }
     @PutMapping("/tournaments/{tournamentId}/matches/{matchId}")
     public Match updateMatch(@PathVariable Long tournamentId,
                                         @PathVariable Long matchId,
                                         @RequestBody Match updatedMatchInfo) {
-                                            
-        Tournament tournament = tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
         
-        return matchService.updateMatch(matchId, updatedMatchInfo);
+        return matchService.updateMatch(matchId, updatedMatchInfo, tournamentId);
     }
 }

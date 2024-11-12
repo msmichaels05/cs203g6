@@ -18,35 +18,5 @@ public interface MatchService {
      */
     void deleteMatch(Long id);
 
-    /**
-     * Records the match result, updating both players' statistics.
-     *
-     * @param matchId 
-     * @param winnerId
-     * @param score 
-     * @return
-     */
-    Match recordMatchResult(Long matchId, Long winnerId, Long loserId, String score);
-
-    /**
-     * Records the match result, updating both players' statistics.
-     *
-     * @param matchId 
-     * @param newScore
-     * @return
-     */
-    Match updateRecordMatchScore(Long matchId, String newScore);
-
-    /**
-     * Records the match result, updating both players' statistics.
-     *
-     * @param matchId 
-     * @param oldWinnerId
-     * @param newWinnerId 
-     * @param newScore 
-     * @return
-     */
-    Match updateRecordMatchWinner(Long matchId, Long oldWinnerId, Long newWinnerId, String newScore);
-
-    Match updateMatch(Long matchId, Match updatedMatchInfo);
+    Match updateMatch(Long matchId, Match updatedMatchInfo, Long tournamentId);
 }

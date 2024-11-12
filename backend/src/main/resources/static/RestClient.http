@@ -275,6 +275,11 @@ GET http://localhost:8080/tournaments
 Content-Type: application/json
 Authorization: Basic admin goodpassword
 
+### Get Matches
+GET http://localhost:8080/tournaments/1/matches
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
 Authorization: Basic username betatester 
@@ -327,29 +332,14 @@ Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 ###
-PUT http://localhost:8080/tournaments/1/matches/2
+PUT http://localhost:8080/tournaments/1/matches/3
 Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 {
-  "score": "6-4",
-  "completed": true,
-  "winner": {
-    "id": 2,
-    "name": "Alpha",
-    "phoneNumber": "12345678",
-    "gender": "Female"
-  }
+  "score": "2-3",
+  "completed": true
 }
-
-### Initialise Draw
-POST http://localhost:8080/tournaments/1/initialise-draw
-Content-Type: application/json
-Authorization: Basic admin goodpassword
-
-### Print Draw
-POST http://localhost:8080/tournaments/1/update-next-round
-Content-Type: application/json
 
 ###
 POST http://localhost:8080/tournaments/1/matches/1/result
