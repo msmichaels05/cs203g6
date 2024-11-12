@@ -66,6 +66,8 @@ public class SecurityConfig {
                 .anyRequest().permitAll()  
 
                 
+
+                
                 
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
