@@ -1,21 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Table, Button, Form, Modal } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import AdminNavbar from '../navbar/AdminNavbar';
 import PlayerNavbar from '../navbar/PlayerNavbar';
+import { fetchPlayers, addPlayer, editPlayer, deletePlayer } from '../../api/playersAPI'; // Import API functions
 
 const Players = () => {
-  const [players, setPlayers] = useState([
-    { id: 1, name: 'jamie', email: 'jamiewet3030@gmail.com', phoneNumber: '96677482', age: 22, gender: 'male', matchesPlayed: 22, matchesWon: 12 },
-    { id: 2, name: 'johnny', email: 'jeffrey@gmail.com', phoneNumber: '96677482', age: 24, gender: 'male', matchesPlayed: 22, matchesWon: 21 },
-    { id: 3, name: 'michael', email: 'chaselim96@gmail.com', phoneNumber: '96677482', age: 23, gender: 'male', matchesPlayed: 24, matchesWon: 23 },
-  ]);
-
+  const [players, setPlayers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(''); // 'add' or 'edit'
   const [currentPlayer, setCurrentPlayer] = useState({});
-  const currentUser = { role: "admin" };
+  const currentUser = { role: "players" };
+
+  // Fetch players when the component mounts
+  useEffect(() => {
+    const loadPlayers = async () => {
+      try {
+        const playersData = await fetchPlayers();
+        setPlayers(playersData); // Set players state from backend data
+      } catch (error) {
+        console.error('Error fetching players:', error);
+      }
+    };
+
+    loadPlayers();
+  }, []);
 
   const handleSearch = (event) => setSearchTerm(event.target.value);
 
@@ -38,18 +48,29 @@ const Players = () => {
   };
 
   // Delete Player
-  const handleDeletePlayer = (id) => {
-    setPlayers(players.filter(player => player.id !== id));
+  const handleDeletePlayer = async (id) => {
+    try {
+      await deletePlayer(id); // Call the API to delete the player
+      setPlayers(players.filter(player => player.id !== id)); // Update local state
+    } catch (error) {
+      console.error('Error deleting player:', error);
+    }
   };
 
   // Save Player (for both adding and editing)
-  const handleSavePlayer = () => {
-    if (modalType === 'add') {
-      setPlayers([...players, { ...currentPlayer, id: Date.now() }]);
-    } else {
-      setPlayers(players.map(p => (p.id === currentPlayer.id ? currentPlayer : p)));
+  const handleSavePlayer = async () => {
+    try {
+      if (modalType === 'add') {
+        const newPlayer = await addPlayer(currentPlayer); // Add player via API
+        setPlayers([...players, newPlayer]); // Add new player to local state
+      } else {
+        const updatedPlayer = await editPlayer(currentPlayer.id, currentPlayer); // Update player via API
+        setPlayers(players.map(p => (p.id === updatedPlayer.id ? updatedPlayer : p))); // Update player in local state
+      }
+      setShowModal(false);
+    } catch (error) {
+      console.error('Error saving player:', error);
     }
-    setShowModal(false);
   };
 
   return (

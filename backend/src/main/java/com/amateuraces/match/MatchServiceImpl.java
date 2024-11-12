@@ -4,19 +4,26 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.amateuraces.player.Player;
 import com.amateuraces.player.PlayerRepository;
+import com.amateuraces.tournament.Tournament;
+import com.amateuraces.tournament.TournamentNotFoundException;
+import com.amateuraces.tournament.TournamentRepository;
 
-/*This implementation is meant for business logic,which could be added later*Currently,it does not have much in terms of the business logic yet*/
+import jakarta.transaction.Transactional;
+
 
 @Service
 public class MatchServiceImpl implements MatchService {
 
     private MatchRepository matchRepository;
     private PlayerRepository playerRepository;
+    private TournamentRepository tournamentRepository;
 
-    public MatchServiceImpl(MatchRepository matchRepository, PlayerRepository playerRepository) {
+    public MatchServiceImpl(MatchRepository matchRepository, PlayerRepository playerRepository, TournamentRepository tournamentRepository) {
         this.matchRepository = matchRepository;
         this.playerRepository = playerRepository;
+        this.tournamentRepository = tournamentRepository;
     }
 
     @Override
@@ -34,14 +41,6 @@ public class MatchServiceImpl implements MatchService {
         return matchRepository.save(match);
     }
 
-    // @Override
-    // public Match updateMatch(Long id, Match newMatchInfo) {
-    //     return matchRepository.findById(id).map(match -> {
-    //         match.setWinner(newMatchInfo.getWinner());
-    //         return matchRepository.save(match);
-    //     }).orElse(null);
-    // }
-
     /**
      * Remove a match with the given id
      * Spring Data JPA does not return a value for delete operation
@@ -56,5 +55,90 @@ public class MatchServiceImpl implements MatchService {
 
         // If the match exists, delete them
         matchRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Match updateMatch(Long matchId, Match updatedMatchInfo, Long tournamentId) {
+        Match match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new MatchNotFoundException(matchId));
+
+
+        // Update match details
+        String score = updatedMatchInfo.getScore();
+        match.setScore(score);
+        match.setCompleted(updatedMatchInfo.isCompleted());
+
+        Player winner = match.getPlayer1();
+        if (Integer.parseInt(score.split("-")[0]) < Integer.parseInt(score.split("-")[1])) winner = match.getPlayer2();
+        match.setWinner(winner);
+
+        // Save the updated match
+        matchRepository.save(match);
+
+        // Promote winner if match is completed
+        if (match.isCompleted() && match.getWinner() != null) {
+            updatePlayerElos(match);
+            promoteWinnerToNextMatch(match, tournamentId);
+        }
+
+        return match;
+    }
+
+    @Transactional
+    public void promoteWinnerToNextMatch(Match match, Long tournamentId) {
+
+        if (!match.isCompleted() || match.getWinner() == null) {
+            throw new IllegalArgumentException("Match is not completed or winner is not set.");
+        }
+
+        Player winner = match.getWinner();
+        Match nextMatch = match.getNextMatch();
+
+        if (nextMatch != null) {
+            if (nextMatch.getPlayer1() == null) {
+                nextMatch.setPlayer1(winner);
+            } else if (nextMatch.getPlayer2() == null) {
+                nextMatch.setPlayer2(winner);
+            } else {
+                throw new IllegalStateException("Next match already has both players assigned.");
+            }
+            matchRepository.save(nextMatch);
+        } else {
+            // This is the final match; update the tournament winner
+            Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
+            tournament.setChampion(winner);
+            tournamentRepository.save(tournament);
+        }
+    }
+
+    private void updatePlayerElos(Match match) {
+        Player winner = match.getWinner();
+        Player loser = match.getPlayer1();
+        
+        if (winner == match.getPlayer1()) loser = match.getPlayer2();
+
+        winner.setMatchesPlayed(winner.getMatchesPlayed() + 1);
+        winner.setMatchesWon(winner.getMatchesWon() + 1);
+        loser.setMatchesPlayed(loser.getMatchesPlayed() + 1);
+
+        // Calculate Elo adjustments
+        int eloGain = calculateEloGain(winner, loser);
+        winner.setElo(winner.getElo() + eloGain);
+        loser.setElo(Math.max(loser.getElo() - eloGain, 0));
+
+        // Save Elo adjustments
+        playerRepository.save(winner);
+        playerRepository.save(loser);
+    }
+
+    private int calculateEloGain(Player winner, Player loser) {
+        int K = 32; // K-factor in Elo rating system
+        double eloDifference = loser.getElo() - winner.getElo();
+        double expectedScore = 1 / (1 + Math.pow(10, eloDifference / 400.0));
+
+        double actualScore = 1.0; // Winner gets a score of 1
+        int eloGain = (int) Math.round(K * (actualScore - expectedScore));
+        return eloGain;
     }
 }

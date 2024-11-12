@@ -69,12 +69,22 @@ Content-Type: application/json
 ###
 POST http://localhost:8080/users
 Content-Type: application/json
-Authorization: Basic admin goodpassword
 
 
 {
-    "username": "admin2",
-    "email": "admin2@email.com",
+    "username": "usernamesssss",
+    "email": "de@email.com",
+    "password": "betatester"   
+}
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+
+{
+    "username": "usernamessssss",
+    "email": "e@email.com",
     "password": "betatester"   
 }
 
@@ -89,7 +99,8 @@ Authorization: Basic admin goodpassword
     "phoneNumber" :"88888888",
     "email" : "alphabravo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1500
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -103,7 +114,8 @@ Authorization: Basic username betatester
     "phoneNumber" :"12345678",
     "email" : "alphabo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1510
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -117,7 +129,8 @@ Authorization: Basic betatester betatester
     "phoneNumber" :"88888882",
     "email" : "alphabravo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1520
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -131,7 +144,8 @@ Authorization: Basic usernames betatester
     "phoneNumber" :"88888888",
     "email" : "alphabravo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1530
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -145,7 +159,8 @@ Authorization: Basic usernames betatester
     "phoneNumber" :"88888821",
     "email" : "alpo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1540
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -159,7 +174,8 @@ Authorization: Basic usernames betatester
     "phoneNumber" :"88882821",
     "email" : "alpo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1550
 }
 
 ### POST PLAYER INFO TO USER AFTER CREATION OF USER
@@ -173,7 +189,37 @@ Authorization: Basic usernames betatester
     "phoneNumber" :"88288821",
     "email" : "alpo@gmail.com",
     "age" : 18,
-    "gender" : "Female"
+    "gender" : "Female",
+    "elo": 1560
+}
+
+###
+# Show that player can create 
+POST http://localhost:8080/users/8/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"phasssasds",
+    "phoneNumber" :"88266721",
+    "email" : "poasdpoad@gmail.com",
+    "age" : 18,
+    "gender" : "Female",
+    "elo": 1570
+}
+###
+# Show that player can create 
+POST http://localhost:8080/users/9/players
+Content-Type: application/json
+Authorization: Basic usernames betatester
+
+{
+    "name":"phaswerirhtews",
+    "phoneNumber" :"882883451",
+    "email" : "alpo13498@gmail.com",
+    "age" : 18,
+    "gender" : "Female",
+    "elo": 1580
 }
 
 ### Showcase user cannot post in admin
@@ -220,9 +266,19 @@ Authorization: Basic admin goodpassword
     "maxPlayers":8,
     "location": "Singapore",
     "description":"newbie training session",
-    "startDate": "2024-12-22",
-    "endDate":"2024-12-24"
+    "startDate": "2024-12-29",
+    "endDate":"2024-12-31"
 }
+
+### Tournament
+GET http://localhost:8080/tournaments
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+### Get Matches
+GET http://localhost:8080/tournaments/1/matches
+Content-Type: application/json
+Authorization: Basic admin goodpassword
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
@@ -250,13 +306,42 @@ Authorization: Basic usernamessss betatester
 
 ### POST Player to tournament
 POST http://localhost:8080/tournaments/1/players
+Authorization: Basic usernamesssss betatester
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
+Authorization: Basic usernamessssss betatester
+
+### POST Player to tournament
+POST http://localhost:8080/tournaments/1/players
 Authorization: Basic admin goodpassword 
 
-### POST DRAW ALGO
 
-POST http://localhost:8080/tournaments/1/matches
+### Initialise Draw
+POST http://localhost:8080/tournaments/1/generate
+Content-Type: application/json
 Authorization: Basic admin goodpassword
 
+###
+PUT http://localhost:8080/tournaments/1/matches/3
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+  "score": "2-3",
+  "completed": true
+}
+
+###
+POST http://localhost:8080/tournaments/1/matches/1/result
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+    "winnerId": 2,
+    "loserId": 3,
+    "score": "15-40"
+}
 ### GET MATCHES
 
 GET http://localhost:8080/matches
@@ -270,8 +355,6 @@ Authorization: Basic betatester betatester
 
 ### Tournament
 GET http://localhost:8080/tournaments
-
-
 
 ### GET SPECIFIC PLAYER 
 GET http://localhost:8080/users/2/players

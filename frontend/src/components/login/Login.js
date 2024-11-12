@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { login } from "../../services/authService";
+import { loginAPI } from "../../api/loginAPI"; // Import the loginAPI function
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(""); // Assuming email is the username here
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -21,10 +21,13 @@ const Login = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
     setIsLoading(true);
+    setError(""); // Clear previous errors before making a new request
+
     try {
-      const response = await login(email, password);
-      if (response.success) {
-        navigate("/register/players");
+      const userInfo = await loginAPI(email, password); // Call the backend API
+      if (userInfo) {
+        // Assuming userInfo contains valid user data, handle success
+        navigate("/register/players"); // Navigate to the next page after successful login
       } else {
         setError("Invalid credentials. Please try again.");
       }

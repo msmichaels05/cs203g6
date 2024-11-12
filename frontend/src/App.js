@@ -10,6 +10,7 @@ import Bracket from './components/bracket/bracket';
 import Profile from './components/profile/profile';
 import Players from './components/players/players';
 import Admins from './components/admins/admins';
+import Player_tournament from './components/player_tournament/player_tournament';
 
 
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/players" element={<Players />} />
         <Route path="/admins" element={<Admins />} />
         <Route path="/tournaments" element={<Tournaments />} />
+        <Route path="/player_tournament" element={<Player_tournament />} />
         <Route path="/tournament/view" element={<Bracket />} />
 
 

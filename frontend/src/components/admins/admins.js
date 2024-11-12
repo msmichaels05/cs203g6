@@ -1,19 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchAdmins, addAdmin, editAdmin, deleteAdmin } from '../../api/adminsAPI';
 import { Container, Row, Col, Card, Table, Button, Form, Modal } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import AdminNavbar from '../navbar/AdminNavbar';
 
 const Admins = () => {
-  const [admins, setAdmins] = useState([
-    { id: 1, name: 'Jamie', email: 'jamiewet3030@gmail.com' },
-    { id: 2, name: 'Johnny', email: 'jeffrey@gmail.com' },
-    { id: 3, name: 'Michael', email: 'chaselim96@gmail.com' },
-  ]);
-
+  const [admins, setAdmins] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(''); // 'add' or 'edit'
-  const [currentAdmin, setCurrentAdmin] = useState({});
+  const [currentAdmin, setCurrentAdmin] = useState({ name: '', phone: '' });
+
+  useEffect(() => {
+    const getAdmins = async () => {
+      try {
+        const data = await fetchAdmins();
+        setAdmins(data);
+      } catch (error) {
+        console.error('Failed to fetch admins:', error);
+      }
+    };
+    getAdmins();
+  }, []);
 
   const handleSearch = (event) => setSearchTerm(event.target.value);
 
@@ -21,33 +29,40 @@ const Admins = () => {
     admin.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Add Admin Modal
   const handleAddAdmin = () => {
     setModalType('add');
-    setCurrentAdmin({ name: '', email: '' });
+    setCurrentAdmin({ name: '', phone: '' });
     setShowModal(true);
   };
 
-  // Edit Admin Modal
   const handleEditAdmin = (admin) => {
     setModalType('edit');
     setCurrentAdmin(admin);
     setShowModal(true);
   };
 
-  // Delete Admin
-  const handleDeleteAdmin = (id) => {
-    setAdmins(admins.filter(admin => admin.id !== id));
+  const handleDeleteAdmin = async (id) => {
+    try {
+      await deleteAdmin(id);
+      setAdmins(admins.filter(admin => admin.id !== id));
+    } catch (error) {
+      console.error('Failed to delete admin:', error);
+    }
   };
 
-  // Save Admin (for both adding and editing)
-  const handleSaveAdmin = () => {
-    if (modalType === 'add') {
-      setAdmins([...admins, { ...currentAdmin, id: Date.now() }]);
-    } else {
-      setAdmins(admins.map(a => (a.id === currentAdmin.id ? currentAdmin : a)));
+  const handleSaveAdmin = async () => {
+    try {
+      if (modalType === 'add') {
+        const newAdmin = await addAdmin(currentAdmin);
+        setAdmins([...admins, newAdmin]);
+      } else {
+        const updatedAdmin = await editAdmin(currentAdmin.id, currentAdmin);
+        setAdmins(admins.map(a => (a.id === currentAdmin.id ? updatedAdmin : a)));
+      }
+      setShowModal(false);
+    } catch (error) {
+      console.error('Failed to save admin:', error);
     }
-    setShowModal(false);
   };
 
   return (
@@ -55,10 +70,23 @@ const Admins = () => {
       <AdminNavbar />
 
       <Container className="mt-4">
-        <Row>
-          <Col className="d-flex justify-content-between align-items-center mb-3">
+        <Row className="align-items-center mb-3">
+          <Col>
             <h4>All Admins - AmateurAces</h4>
-            <Button variant="success" onClick={handleAddAdmin}>Add New Admin</Button>
+          </Col>
+          <Col xs="auto">
+            <Button
+              variant="success"
+              onClick={handleAddAdmin}
+              style={{
+                padding: '6px 12px',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                borderRadius: '5px'
+              }}
+            >
+              Add New Admin
+            </Button>
           </Col>
         </Row>
         <Row>
@@ -81,18 +109,18 @@ const Admins = () => {
               <Table striped bordered hover responsive>
                 <thead>
                   <tr>
-                    <th>Admin Name</th>
-                    <th>Email</th>
-                    <th>Actions</th>
+                    <th className="text-center">Admin Name</th>
+                    <th className="text-center">Phone Number</th>
+                    <th className="text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredAdmins.length > 0 ? (
                     filteredAdmins.map((admin) => (
                       <tr key={admin.id}>
-                        <td>{admin.name}</td>
-                        <td>{admin.email}</td>
-                        <td>
+                        <td className="text-center">{admin.name}</td>
+                        <td className="text-center">{admin.phone}</td>
+                        <td className="text-center">
                           <Button variant="warning" size="sm" className="me-2" onClick={() => handleEditAdmin(admin)}>
                             <FaEdit />
                           </Button>
@@ -130,12 +158,13 @@ const Admins = () => {
                   onChange={(e) => setCurrentAdmin({ ...currentAdmin, name: e.target.value })}
                 />
               </Form.Group>
-              <Form.Group controlId="email">
-                <Form.Label>Email</Form.Label>
+              <Form.Group controlId="phone">
+                <Form.Label>Phone Number</Form.Label>
                 <Form.Control
-                  type="email"
-                  value={currentAdmin.email}
-                  onChange={(e) => setCurrentAdmin({ ...currentAdmin, email: e.target.value })}
+                  type="text"
+                  value={currentAdmin.phone}
+                  onChange={(e) => setCurrentAdmin({ ...currentAdmin, phone: e.target.value })}
+                  placeholder="Enter phone number"
                 />
               </Form.Group>
             </Form>

@@ -1,8 +1,9 @@
-// import React, { useState, useEffect } from 'react';
-// import { Modal, Button, Form, Card } from 'react-bootstrap';
-// import './tournaments.css';
-// import CustomNavbar from '../navbar/CustomNavbar';
-// import { Link } from "react-router-dom";
+
+import React, { useState, useEffect } from 'react';
+import { Modal, Button, Form, Card } from 'react-bootstrap';
+import './tournaments.css';
+import CustomNavbar from '../navbar/CustomNavbar';
+import { Link } from "react-router-dom";
 
 // // Import API functions
 // import { fetchTournaments, addTournament, editTournament, deleteTournament } from '../../api/tournamentApi';

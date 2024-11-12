@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TournamentRepository extends JpaRepository<Tournament, Long> {
     // Custom query methods can be defined here if needed
-Optional<Tournament> findByName(String name);
+    Optional<Tournament> findByName(String name);
 
 }

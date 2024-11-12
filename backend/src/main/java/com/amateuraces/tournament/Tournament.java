@@ -1,19 +1,32 @@
 package com.amateuraces.tournament;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
+import com.amateuraces.match.Match;
 import com.amateuraces.player.Player;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -30,29 +43,35 @@ public class Tournament {
     @Size(min = 1, max = 100)
     private String name;
 
-    private int ELOrequirement;
-    @NotNull
-    private int maxPlayers;
+    private int ELORequirement;
+
+    private int maxPlayers = 32;
 
     private int playerCount = 0;
-    @NotNull
-    private LocalDate startDate;
-    @NotNull
-    private LocalDate endDate;
-    @NotNull
-    private String gender;
 
-    private LocalDate registrationEndDate;
+    private LocalDate startDate;
+    
+    private LocalDate endDate;
 
     private String location;
 
     private String description;
 
+    private String gender;
+
+    private LocalDate registrationEndDate;
+
+    @OneToMany(mappedBy = "tournament", 
+        orphanRemoval = true,
+        cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Match> matches = null;
+
     // The champion player of a tournament
     @ManyToOne
     @JoinColumn(name = "player_id")
-    private Player championPlayer;
-
+    private Player champion;
+    
     @ManyToMany
     @JoinTable(
         name = "tournament_players",
@@ -60,66 +79,80 @@ public class Tournament {
         inverseJoinColumns = @JoinColumn(name = "player_id")
     )
     @JsonIgnore
-    private Set<Player> players = new HashSet<>();
+    private Set<Player> players = new TreeSet<>();
 
-    // Custom setter to enforce even maxPlayers
+    // Custom setter to enforce maxPlayers constraints
     public void setMaxPlayers(int maxPlayers) {
         if (maxPlayers < 0) {
             throw new IllegalArgumentException("max players cannot be negative.");
         }
-        if (maxPlayers >64){
+        if (maxPlayers > 64){
             throw new IllegalArgumentException("max players cannot be more than 64");
-        }
-        if (!(isPowerOfTwo(maxPlayers))) {
-            throw new IllegalArgumentException("max players must be a power of 2.");
         }
         this.maxPlayers = maxPlayers;
     }
 
-    private boolean isPowerOfTwo(int maxPlayers) {
-        double temp = (double) maxPlayers;
-        while (temp >= 4) {
-            temp /= 2;
-        }
-        if (temp % 2 != 0) return false;
-        return true;
-    }
-
-
-    public Tournament(String name,String gender, int maxPlayers, String location, int ELOrequirement, String description,
-        LocalDate startDate, LocalDate endDate) {
-        this.ELOrequirement = ELOrequirement;
-        this.gender = gender;
+    // Constructors
+    public Tournament(String name, int maxPlayers, String location, int ELORequirement, String description, String gender) {
+        this.ELORequirement = ELORequirement;
         this.name = name;
         this.maxPlayers = maxPlayers;
         this.location = location;
         this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.gender = gender;
     }
 
     public Tournament(String name) {
         this.name = name;
     }
 
-    public Tournament(String name,String location){
+    public Tournament(String name, String location) {
         this.name = name;
         this.location = location;
     }
 
+    // Methods to manage players
     public boolean addPlayer(Player player) {
         boolean added = players.add(player);
         if (added) {
             playerCount++;
-            player.getTournaments().add(this); // Ensure the bi-directional relationship is maintained
+            player.addToTournamentHistory(this); // Ensure the bi-directional relationship is maintained
         }
         return added;
     }
 
     public void removePlayer(Player player) {
-        players.remove(player);
-        player.getTournaments().remove(this); // Also remove this tournament from the player's list
+        if (players.remove(player)) {
+            player.removeFromTournamentHistory(this); // Also remove this tournament from the player's list
+            playerCount--;
+        }
     }
 
-}
+    // // Method to update to the next round
+    // public List<Match> updateNextRound() {
+    //     int totalRounds = (int) Math.ceil(Math.log(playerCount) / Math.log(2)); // Total number of rounds 
+        
+    //     int nextRoundIndex = 0;
+    //     for (int i = totalRounds - 1; i > 0; i--) { // Start from round 2 onwards
+    //         nextRoundIndex += (int) Math.pow(2, i);
+    //         if (matches.get(nextRoundIndex).getStatus().equals("Scheduled")) { // First match of the next round
 
+    //             int currentRoundIndex = nextRoundIndex - (int) Math.pow(2, i); // Get index of the first match of the current round
+                
+    //             for (int j = currentRoundIndex; j < nextRoundIndex; j += 2) {
+    //                 Player player1 = matches.get(j).getWinner();
+    //                 Player player2 = matches.get(j + 1).getWinner();
+        
+    //                 matches.get(nextRoundIndex).setPlayer1(player1);
+    //                 matches.get(nextRoundIndex).setPlayer2(player2);
+    //             }
+
+    //             setMatches(matches);
+    //             return matches; // Next round all updated
+    //         }
+    //     }
+
+    //     // Final match completed, no more subsequent matches to update
+    //     return null;
+    // }
+}

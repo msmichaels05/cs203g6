@@ -1,0 +1,60 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # Change this to your deployment branch if necessary
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Use the Node.js version your app requires
+
+      - name: Install dependencies
+        working-directory: ./frontend 
+        run: npm install
+
+      - name: Build the project
+        working-directory: ./frontend
+        run: CI=false npm run build
+
+      - name: Copy files to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          PEM_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+        run: |
+          echo "$PEM_KEY" > key.pem
+          chmod 400 key.pem
+          # Ensure the app directory exists on EC2
+          ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "mkdir -p /home/ubuntu/app/build"
+          # Copy the build files
+          scp -i key.pem -o StrictHostKeyChecking=no -r ./frontend/build $EC2_USER@$EC2_HOST:/home/ubuntu/app
+          rm key.pem
+
+      - name: SSH and restart server
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          PEM_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+        run: |
+          echo "$PEM_KEY" > key.pem
+          chmod 400 key.pem
+          ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+            # Copy build files to the app directory
+            rm -rf /home/ubuntu/app/build/*
+            cp -r /home/ubuntu/app/frontend/build/* /home/ubuntu/app/build
+            # Restart Nginx to load the new build
+            sudo systemctl restart nginx
+          EOF
+          rm key.pem
+#updated/test2
+          
