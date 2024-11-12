@@ -74,20 +74,3 @@
     padding: 6px 10px;
   }
 }
-.tournament-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-}
-
-.tournament-card {
-  width: 300px;  /* Adjust this to the preferred card size */
-  margin: 10px;
-}
-
-.btn-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}

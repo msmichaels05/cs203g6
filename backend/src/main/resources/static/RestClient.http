@@ -37,7 +37,6 @@ Content-Type: application/json
 POST http://localhost:8080/users
 Content-Type: application/json
 
-
 {
     "username": "usernamess",
     "email": "ue@email.com",
@@ -47,7 +46,6 @@ Content-Type: application/json
 ###
 POST http://localhost:8080/users
 Content-Type: application/json
-
 
 {
     "username": "usernamesss",
@@ -92,7 +90,6 @@ Content-Type: application/json
 # Show that cannot create player for admin
 POST http://localhost:8080/users/1/players
 Content-Type: application/json
-Authorization: Basic admin goodpassword
 
 {
     "name":"Alphabravo",
@@ -107,7 +104,6 @@ Authorization: Basic admin goodpassword
 # Show that player can create 
 POST http://localhost:8080/users/2/players
 Content-Type: application/json
-Authorization: Basic username betatester
 
 {
     "name":"Alpha",
@@ -122,7 +118,6 @@ Authorization: Basic username betatester
 # Show that player can create 
 POST http://localhost:8080/users/3/players
 Content-Type: application/json
-Authorization: Basic betatester betatester
 
 {
     "name":"Alphabravos",
@@ -137,11 +132,10 @@ Authorization: Basic betatester betatester
 # Show that player can create 
 POST http://localhost:8080/users/4/players
 Content-Type: application/json
-Authorization: Basic usernames betatester
 
 {
-    "name":"Alphabravo",
-    "phoneNumber" :"88888888",
+    "name":"Alpabravo",
+    "phoneNumber" :"84637823",
     "email" : "alphabravo@gmail.com",
     "age" : 18,
     "gender" : "Female",
@@ -152,7 +146,6 @@ Authorization: Basic usernames betatester
 # Show that player can create 
 POST http://localhost:8080/users/5/players
 Content-Type: application/json
-Authorization: Basic usernames betatester
 
 {
     "name":"pha",
@@ -167,7 +160,6 @@ Authorization: Basic usernames betatester
 # Show that player can create 
 POST http://localhost:8080/users/6/players
 Content-Type: application/json
-Authorization: Basic usernames betatester
 
 {
     "name":"phad",
@@ -182,7 +174,6 @@ Authorization: Basic usernames betatester
 # Show that player can create 
 POST http://localhost:8080/users/7/players
 Content-Type: application/json
-Authorization: Basic usernames betatester
 
 {
     "name":"phass",
@@ -197,7 +188,6 @@ Authorization: Basic usernames betatester
 # Show that player can create 
 POST http://localhost:8080/users/8/players
 Content-Type: application/json
-Authorization: Basic usernames betatester
 
 {
     "name":"phasssasds",
@@ -211,7 +201,6 @@ Authorization: Basic usernames betatester
 # Show that player can create 
 POST http://localhost:8080/users/9/players
 Content-Type: application/json
-Authorization: Basic usernames betatester
 
 {
     "name":"phaswerirhtews",
@@ -271,7 +260,7 @@ Authorization: Basic admin goodpassword
 }
 
 ### Tournament
-GET http://localhost:8080/tournaments
+GET http://localhost:8080/tournaments/1
 Content-Type: application/json
 Authorization: Basic admin goodpassword
 
@@ -316,15 +305,6 @@ Authorization: Basic usernamessssss betatester
 POST http://localhost:8080/tournaments/1/players
 Authorization: Basic admin goodpassword 
 
-### POST DRAW ALGO
-
-POST http://localhost:8080/tournaments/1/matches
-Content-Type: application/json
-Authorization: Basic admin goodpassword
-
-{
-
-}
 
 ### Initialise Draw
 POST http://localhost:8080/tournaments/1/generate
@@ -332,7 +312,7 @@ Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 ###
-PUT http://localhost:8080/tournaments/1/matches/3
+PUT http://localhost:8080/tournaments/1/matches/1
 Content-Type: application/json
 Authorization: Basic admin goodpassword
 
@@ -427,6 +407,11 @@ Authorization: Basic username password
 }
 
 
+### GET USER ROLE 
+GET http://localhost:8080/api/user/role
+Content-Type: application/json
+
+
 
 
 ###
@@ -503,8 +488,14 @@ Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 {
-    "name" : "US OPEN",
-    "elorequirement" : 1500
+    "name": "US OPEN",
+    "elorequirement": 1500,
+    "maxPlayers": 32,
+    "gender": "Male",
+    "location": "New York",
+    "description": "Grand Slam Tournament",
+    "startDate": "2024-12-10",
+    "endDate": "2024-12-12"
      
 }
 

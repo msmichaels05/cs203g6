@@ -26,12 +26,6 @@ public class SecurityConfig {
     public SecurityConfig(UserDetailsService userDetailsService){
         this.userDetailsService = userDetailsService;
     }
-    
-    /**
-     * Exposes a bean of DaoAuthenticationProvider, a type of AuthenticationProvider
-     * Attaches the user details and the password encoder   
-     * @return
-     */
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -45,31 +39,27 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(Customizer.withDefaults()) // Enable CORS using the custom configuration source
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/error").permitAll() // the default error page
-                .requestMatchers("/login").permitAll()  // Allow access to the login endpoint
+            .authorizeHttpRequests((authz) -> authz
+                // the default error page
+                .requestMatchers("/error").permitAll()
+                
+                // Users security
                 .requestMatchers(HttpMethod.GET, "/users", "/users/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/users/*/players").hasRole("USER")  
-                .requestMatchers(HttpMethod.POST, "/users/*/admins").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/player/delete/*").permitAll()
-                .requestMatchers(HttpMethod.GET, "/players").permitAll()
-                .requestMatchers(HttpMethod.GET, "/admins").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/*/players").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/users/*").hasAuthority("ROLE_ADMIN")
+
+                // Players security
+                .requestMatchers(HttpMethod.GET, "/players").permitAll()
+
+                // Tournaments security
                 .requestMatchers(HttpMethod.GET, "/tournaments", "/tournaments/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/tournaments").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/tournaments/*").hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.POST, "/tournaments/*/players/*").permitAll()
-                .requestMatchers(HttpMethod.GET, "/tournaments/*/matches").permitAll()
-                .requestMatchers(HttpMethod.GET, "/tournaments/*/matches/{id}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/tournaments/*/matches").permitAll() // hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/tournaments/*/matches/{id}").permitAll() // hasAuthority("ROLE_ADMIN")
-                .requestMatchers(HttpMethod.POST, "/tournaments/*/matches/{id}/result/*").hasAuthority("ROLE_ADMIN")
-                .requestMatchers("/login").permitAll() // Allow access to the login endpoint
+                .requestMatchers(HttpMethod.POST, "/tournaments/*/players").hasRole("USER")
+                .requestMatchers(HttpMethod.DELETE, "/tournaments/*/players/*").hasAnyRole("USER","ADMIN")
+
+
                 .requestMatchers("/h2-console/**").permitAll() // Allow access to H2 Console
-                .anyRequest().permitAll()  // All other requests require authentication
+                .anyRequest().hasAuthority("ROLE_ADMIN") // All other requests require authentication
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless for REST APIs
             .httpBasic(Customizer.withDefaults()) // Basic HTTP authentication for stateless APIs
@@ -80,6 +70,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // For REACT
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

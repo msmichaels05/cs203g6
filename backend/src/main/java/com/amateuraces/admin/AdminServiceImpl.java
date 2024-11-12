@@ -1,6 +1,7 @@
 package com.amateuraces.admin;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -47,5 +48,4 @@ public class AdminServiceImpl implements AdminService {
     public void deleteAdmin(Long id) {
         adminRepository.deleteById(id);
     }
-
 }

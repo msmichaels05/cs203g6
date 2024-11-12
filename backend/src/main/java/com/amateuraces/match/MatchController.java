@@ -32,7 +32,7 @@ public class MatchController {
 
     @Autowired
     public MatchController(MatchService matchService, TournamentRepository tournamentRepository,
-                           PlayerRepository playerRepository, UserRepository userRepository, MatchRepository matchRepository) {
+            PlayerRepository playerRepository, UserRepository userRepository, MatchRepository matchRepository) {
         this.matchService = matchService;
         this.tournamentRepository = tournamentRepository;
         this.playerRepository = playerRepository;
@@ -50,29 +50,6 @@ public class MatchController {
         return matchService.listMatches();
     }
 
-    /**
-     * Get match by ID
-     *
-     * @param id
-     * @return match with the given id
-     */
-    @GetMapping("/matches/{id}")
-    public Match getMatches(@PathVariable Long id) {
-        Match match = matchService.getMatch(id);
-        if (match == null) {
-            throw new MatchNotFoundException(id);
-        }
-        return match;
-    }
-
-    // @GetMapping("/tournaments/{tournamentId}/matches")
-    // public List<Match> getMatchesInTournament(@PathVariable Long tournamentId,
-    //                       @Valid @RequestBody List<Match> match) {
-
-    //     Object matches = matchRepository.findByTournamentId(tournamentId);
-    //     return (List<Match>) matches;
-    // }
-
     @GetMapping("/tournaments/{tournamentId}/matches")
     public List<Match> getMatchesInTournament(@PathVariable Long tournamentId) {
         return matchRepository.findByTournamentId(tournamentId);
@@ -87,7 +64,7 @@ public class MatchController {
     @DeleteMapping("/tournaments/{tournamentId}/matches/{matchId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMatch(@PathVariable Long tournamentId,
-                            @PathVariable Long matchId) {
+            @PathVariable Long matchId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
 
@@ -102,7 +79,7 @@ public class MatchController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/tournaments/{tournamentId}/matches")
     public Match addMatch(@PathVariable Long tournamentId,
-                          @Valid @RequestBody Match match) {
+            @Valid @RequestBody Match match) {
         // Retrieve the tournament and check for existence
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElse(null);
@@ -115,9 +92,9 @@ public class MatchController {
 
     @PutMapping("/tournaments/{tournamentId}/matches/{matchId}")
     public Match updateMatch(@PathVariable Long tournamentId,
-                                        @PathVariable Long matchId,
-                                        @RequestBody Match updatedMatchInfo) {
-        
+            @PathVariable Long matchId,
+            @RequestBody Match updatedMatchInfo) {
+
         return matchService.updateMatch(matchId, updatedMatchInfo, tournamentId);
     }
 }

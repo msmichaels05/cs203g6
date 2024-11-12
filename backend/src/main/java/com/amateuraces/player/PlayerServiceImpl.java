@@ -3,18 +3,9 @@ package com.amateuraces.player;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.amateuraces.tournament.Tournament;
-import com.amateuraces.user.*;
-
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-
-/*This implementation is meant for business logic,which could be added later*Currently,it does not have much in terms of the business logic yet*/
 
 @Service
 public class PlayerServiceImpl implements PlayerService {

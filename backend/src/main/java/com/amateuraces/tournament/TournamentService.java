@@ -32,11 +32,5 @@ public interface TournamentService {
 
     void removePlayerFromTournament(Long tournamentId, Long playerId);
 
-    // List<Match> createMatchesForTournament(Long tournamentId);
-
-    // List<Match> initialiseDraw(Long tournamentId);
-
-    // List<Match> updateNextRound(Long tournamentId);
-
     List<Match> generateMatches(Long tournamentId);
 }

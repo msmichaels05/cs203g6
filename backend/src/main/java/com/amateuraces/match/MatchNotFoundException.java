@@ -13,5 +13,4 @@ public class MatchNotFoundException extends RuntimeException{
     MatchNotFoundException(Long id) {
         super("Could not find match " + id);
     }
-    
 }
