@@ -35,9 +35,14 @@ const Register = () => {
       });
 
       if (response.status === 201) {  // Check for HTTP 201 Created
+        const userData = await response.json(); // Assuming the server returns user data including the user ID
+        const userId = userData.id;
+
         setSuccessMessage("Registration successful!");
         setError('');
-        navigate('/register/players'); // Redirect to players_register page after successful registration
+        
+        // Navigate to RegisterPlayers page with userId, username, and password as state parameters
+        navigate('/register/players', { state: { userId, username, password } });
       } else {
         setError('Registration failed. Please try again.');
       }

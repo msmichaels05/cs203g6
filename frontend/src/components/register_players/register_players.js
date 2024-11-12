@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
 import './register_players.css';
 
-const RegisterPlayers = ({ userId }) => {
+const RegisterPlayers = () => {
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [age, setAge] = useState('');
@@ -13,17 +13,42 @@ const RegisterPlayers = ({ userId }) => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Destructure userId, username, and password from location.state
+  const { userId, username, password } = location.state || {};
+
+  // Ensure the required state values are available
+  useEffect(() => {
+    if (!userId || !username || !password) {
+      setError("Missing user credentials. Please log in again.");
+    }
+  }, [userId, username, password]);
 
   const handleRegisterPlayer = async (event) => {
     event.preventDefault();
-  
+    
+    // Validate form fields
+    if (!name || !phoneNumber || !age || !gender) {
+      setError("Please fill in all the fields.");
+      return;
+    }
+
     try {
-      const token = localStorage.getItem('authToken'); // Replace 'authToken' with the actual key if different
+      // Ensure username and password are securely provided
+      if (!username || !password) {
+        setError("API credentials are missing.");
+        return;
+      }
+
+      // Use Basic Auth with credentials
+      const basicAuth = 'Basic ' + btoa(`${username}:${password}`);
+
       const response = await fetch(`http://localhost:8080/users/${userId}/players`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Include token in Authorization header
+          'Authorization': basicAuth,
         },
         body: JSON.stringify({
           name,
@@ -35,11 +60,11 @@ const RegisterPlayers = ({ userId }) => {
           matchesWon: parseInt(matchesWon, 10),
         }),
       });
-  
+
       if (response.ok) {
         setSuccessMessage("Player registration successful!");
         setError('');
-        navigate('/');
+        navigate('/login'); // Redirect to login page after successful registration
       } else if (response.status === 409) {
         setError("A player with this phone number or name already exists.");
       } else {
@@ -51,7 +76,6 @@ const RegisterPlayers = ({ userId }) => {
       setError('An error occurred. Please try again later.');
     }
   };
-  
 
   return (
     <div className="register-page">
