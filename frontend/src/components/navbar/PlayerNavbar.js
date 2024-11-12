@@ -20,7 +20,7 @@ const PlayerNavbar = () => {
             <Nav.Link href="/profile" style={profileLinkStyle}>
               <FaUserCircle style={profileIconStyle} /> My Profile
             </Nav.Link>
-            <Button variant="outline-light" href="/home" style={{ marginLeft: '10px' }}>Logout</Button>
+            <Button variant="outline-light" href="/" style={{ marginLeft: '10px' }}>Logout</Button>
           </Nav>
         </Navbar.Collapse>
       </Container>

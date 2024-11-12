@@ -1,29 +1,28 @@
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080'; // Your backend URL
-const authHeader = 'Basic ' + btoa('admin:goodpassword'); // Basic Authentication credentials
 
-// Create an axios instance with default headers
-const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': authHeader, // Use this for basic authentication
-  },
-});
-
-// Login API: Authenticates user and returns user information
 export const loginAPI = async (username, password) => {
+  // Encode the credentials for Basic Auth
+  const authHeader = 'Basic ' + btoa(`${username}:${password}`);  // Using username instead of email
+  
   try {
-    const response = await axiosInstance.post('/', {
-      username,
-      password,
-    });
+    // Make the POST request to login
+    const response = await axios.post(
+      `${API_BASE_URL}/login`, // Ensure the endpoint is correct on your backend
+      {}, // Pass an empty object as the body if no data is needed in the request body
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authHeader, // Basic Auth header with username and password
+        },
+      }
+    );
 
-    // Assuming the response includes user info like a token or user details
-    return response.data;  // Return the data received from the backend
+    // Handle response data (assuming the backend sends user data or a token)
+    return response.data;
   } catch (error) {
     console.error('Error logging in:', error);
-    throw error; // Propagate error for frontend to handle
+    throw error;
   }
 };
