@@ -116,7 +116,6 @@ const Tournament = () => {
 
   return (
     <div>
-      <CustomNavbar />
       {isAdmin ? <AdminNavbar /> : <PlayerNavbar />}
       <div className="container mt-4">
         {isAdmin && (
