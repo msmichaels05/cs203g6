@@ -1,19 +1,35 @@
-import React from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Spinner } from 'react-bootstrap';
 import AdminNavbar from '../navbar/AdminNavbar';  // Import AdminNavbar
 import PlayerNavbar from '../navbar/PlayerNavbar';  // Import PlayerNavbar
 import './home.css';
 
 const Authen_home = () => {
-  // Mock user role (In the future, this should come from your backend or global state, like Redux or Context API)
-  const user = {
-    role: 'players',  // Change this to 'admin' for admin view
-  };
+  const [role, setRole] = useState(null);  // Store the user's role
+  const [loading, setLoading] = useState(true);  // Loading state
+
+  useEffect(() => {
+    // Simulating loading state for user role
+    const storedRole = localStorage.getItem('role');  // Retrieve role from localStorage
+    if (storedRole) {
+      setRole(storedRole);  // Set the role if it exists
+    }
+    setLoading(false);  // After fetching role, stop loading
+  }, []);  // Empty dependency array means this runs only once, when the component mounts
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <Spinner animation="border" variant="primary" />
+        <span> Loading...</span>
+      </div>
+    );  // Show a loading spinner until the role is fetched
+  }
 
   return (
     <>
       {/* Conditionally render the Navbar based on user role */}
-      {user.role === 'admin' ? <AdminNavbar /> : <PlayerNavbar />}
+      {role === 'ROLE_ADMIN' ? <AdminNavbar /> : <PlayerNavbar />}
       
       <Container className="mt-4">
         <Row>

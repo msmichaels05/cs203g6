@@ -11,7 +11,7 @@ function CustomNavbar() {
           <Nav className="me-auto">
             <Nav.Link href="/" style={navLinkStyle}>Home</Nav.Link>
             <Nav.Link href="/players" style={navLinkStyle}>Players</Nav.Link>
-            <Nav.Link href="/player_tournament" style={navLinkStyle}>Tournaments</Nav.Link>
+            <Nav.Link href="/tournaments" style={navLinkStyle}>Tournaments</Nav.Link>
           </Nav>
           <Nav className="ml-auto">
             <Button variant="outline-light" href="/login" style={{ marginRight: '10px' }}>Login</Button>
