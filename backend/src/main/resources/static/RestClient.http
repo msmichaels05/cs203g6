@@ -261,7 +261,7 @@ Authorization: Basic admin goodpassword
     "name": "test1",
     "gender": "Female",
     "elorequirement": 100,
-    "maxPlayers":8,
+    "maxPlayers": 8,
     "location": "Singapore",
     "description":"newbie training session",
     "startDate": "2024-12-29",
@@ -330,7 +330,7 @@ Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 ###
-PUT http://localhost:8080/tournaments/1/matches/3
+PUT http://localhost:8080/tournaments/1/matches/1
 Content-Type: application/json
 Authorization: Basic admin goodpassword
 

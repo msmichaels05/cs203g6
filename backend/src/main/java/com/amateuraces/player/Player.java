@@ -103,7 +103,7 @@ public class Player implements Comparable<Player>{
     }
 
     // Get losses (derived from matches played and matches won)
-    public int getLosses() {
+    public int getMatchesLost() {
         return this.matchesPlayed - this.matchesWon;
     }
 
