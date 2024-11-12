@@ -317,7 +317,17 @@ Content-Type: application/json
 Authorization: Basic admin goodpassword
 
 {
-  "score": "2-3",
+  "score": "5-3",
+  "completed": true
+}
+
+###
+PUT http://localhost:8080/tournaments/1/matches/3
+Content-Type: application/json
+Authorization: Basic admin goodpassword
+
+{
+  "score": "2-5",
   "completed": true
 }
 
@@ -331,6 +341,7 @@ Authorization: Basic admin goodpassword
     "loserId": 3,
     "score": "15-40"
 }
+
 ### GET MATCHES
 
 GET http://localhost:8080/matches

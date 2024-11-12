@@ -54,7 +54,7 @@ function App() {
         <Route path="/admins" element={<Admins role={role} />} /> {/* Pass role as prop */}
         <Route path="/tournaments" element={<Tournaments />} />
         <Route path="/player_tournament" element={<Player_tournament />} />
-        <Route path="/tournament/view" element={<Bracket />} />
+        <Route path="/tournament/:tournamentId" element={<Bracket />} />
       </Routes>
     </Router>
   );
