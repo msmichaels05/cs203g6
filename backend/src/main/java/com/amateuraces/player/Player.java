@@ -56,8 +56,8 @@ public class Player implements Comparable<Player>{
     private String gender;
 
     private int elo = 1500; // Starting ELO
-    private int matchesPlayed;
-    private int matchesWon;
+    private int matchesPlayed = 0;
+    private int matchesWon = 0;
 
     @ManyToMany(mappedBy = "players", cascade = CascadeType.PERSIST)
     @JsonIgnore
