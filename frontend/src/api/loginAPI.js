@@ -20,7 +20,7 @@ export const loginAPI = async (username, password) => {
 
     // Handle response data
     const data = response.data;
-    
+
     // Extract the role from authorities array (assuming there is only one role)
     const role = data.authorities && data.authorities.length > 0 
       ? data.authorities[0].authority // Extract the first role (ROLE_USER, ROLE_ADMIN, etc.)
@@ -29,10 +29,10 @@ export const loginAPI = async (username, password) => {
     // Store role and user info in localStorage
     if (role) {
       localStorage.setItem('role', role);  // Store role
-      localStorage.setItem('user', JSON.stringify(data));  // Store the full user data
+      localStorage.setItem('user', JSON.stringify(data));  // Store the full user data (user details)
     }
 
-    return data;  // Return the user data (including role)
+    return data;  // Return the user data (including role and details)
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;

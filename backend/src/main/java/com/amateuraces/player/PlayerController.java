@@ -3,6 +3,7 @@ package com.amateuraces.player;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -88,5 +89,27 @@ public class PlayerController {
 
             return playerRepository.save(player);
         }).orElseThrow(() -> new PlayerNotFoundException(playerId));
+    }
+
+
+    /**
+     * Delete a player by player ID
+     * 
+     * @param userId The ID of the user who owns the player
+     * @param playerId The ID of the player to be deleted
+     * @return A confirmation message
+     */
+    @ResponseBody
+    @DeleteMapping("/users/{userId}/players/{playerId}")
+    public String deletePlayer(@PathVariable(value = "userId") Long userId,
+                               @PathVariable(value = "playerId") Long playerId) {
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException(userId);  // Ensure user exists before deleting player
+        }
+
+        return playerRepository.findByIdAndUserId(playerId, userId).map(player -> {
+            playerRepository.delete(player);  // Delete the player
+            return "Player deleted successfully";  // Return confirmation message
+        }).orElseThrow(() -> new PlayerNotFoundException(playerId));  // Error if player not found
     }
 }

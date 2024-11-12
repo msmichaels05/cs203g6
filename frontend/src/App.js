@@ -20,21 +20,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   const [role, setRole] = useState(null); // State variable to store the role
 
-  useEffect(() => {
-    // Fetch user role from backend
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get('/api/user/role');
-        setRole(response.data); // Store the role in state
-      } catch (error) {
-        console.error("Error fetching user role:", error);
-      }
-    };
+  // useEffect(() => {
+  //   // Fetch user role from backend
+  //   const fetchUserRole = async () => {
+  //     try {
+  //       const response = await axios.get('/api/user/role');
+  //       setRole(response.data); // Store the role in state
+  //     } catch (error) {
+  //       console.error("Error fetching user role:", error);
+  //     }
+  //   };
 
-    fetchUserRole();
-  }, []);
+  //   fetchUserRole();
+  // }, []);
 
-  console.log("User Role:", role); // This will log the role to the console
+  // console.log("User Role:", role); // This will log the role to the console
 
   return (
     <Router>

@@ -64,7 +64,21 @@ const RegisterPlayers = () => {
       if (response.ok) {
         setSuccessMessage("Player registration successful!");
         setError('');
-        navigate('/login'); // Redirect to login page after successful registration
+
+        // Store player data in localStorage for Profile page
+        const playerData = {
+          name,
+          phoneNumber,
+          age: parseInt(age, 10),
+          gender,
+          elo: parseInt(elo, 10),
+          matchesPlayed: parseInt(matchesPlayed, 10),
+          matchesWon: parseInt(matchesWon, 10),
+        };
+        localStorage.setItem('player', JSON.stringify(playerData));
+
+        // Redirect to login page after successful registration
+        navigate('/login');
       } else if (response.status === 409) {
         setError("A player with this phone number or name already exists.");
       } else {

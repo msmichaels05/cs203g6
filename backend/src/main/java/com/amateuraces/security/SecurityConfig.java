@@ -38,7 +38,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(Customizer.withDefaults()) 
+            .cors(Customizer.withDefaults())  // Use the CorsConfiguration bean below
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/error").permitAll()
                 .requestMatchers("/login").permitAll()  
@@ -63,12 +63,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/matches/{id}/result/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
-                .anyRequest().permitAll()  
-
-                
-
-                
-                
+                .anyRequest().permitAll()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
             .httpBasic(Customizer.withDefaults()) 
@@ -78,26 +73,20 @@ public class SecurityConfig {
     
         return http.build();
     }
-    
 
-    // For REACT
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Allow only React frontend URL
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true); // Allow credentials such as cookies, authorization headers
+public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Allow only React frontend URL
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+    configuration.setAllowedHeaders(List.of("*"));
+    configuration.setAllowCredentials(true); // Allow credentials such as cookies, authorization headers
+    
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+}
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
-    /**
-     * @Bean annotation is used to declare a PasswordEncoder bean in the Spring application context. 
-     * Any calls to encoder() will then be intercepted to return the bean instance.
-     */
     @Bean
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder(); // Password encoder for hashing passwords
