@@ -13,39 +13,46 @@ const Tournament = () => {
   const [modalType, setModalType] = useState('');
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
-
   const currentUser = { role: "admin" };
   const isAdmin = currentUser.role === "admin";
-
+  
   const isPowerOfTwo = (num) => Math.log2(num) % 1 === 0;
 
   useEffect(() => {
-    // Commenting out backend call
     const fetchData = async () => {
-      const data = await fetchTournaments();
-      setTournaments(data);
+      try {
+        const data = await fetchTournaments();
+        setTournaments(data);
+      } catch (error) {
+        console.error("Error fetching tournaments:", error);
+      }
     };
     fetchData();
   }, []);
 
-  const handleAddTournament = () => {
-    const newTournament = {
-      // id: Date.now(), // Temporary unique ID for frontend purposes
-      name: selectedTournament?.name || '',
-      elorequirement: selectedTournament?.elorequirement || '',
-      maxPlayers: selectedTournament?.maxPlayers || '',
-      playerCount: 0,
-      startDate: selectedTournament?.startDate || '',
-      endDate: selectedTournament?.endDate || '',
-      gender: selectedTournament?.gender || '',
-      registrationEndDate: selectedTournament?.registrationEndDate || '',
-      location: selectedTournament?.location || '',
-      description: selectedTournament?.description || '',
-      coverImage: coverImage ? URL.createObjectURL(coverImage) : null,
-    };
-    setTournaments([...tournaments, newTournament]);
-    setCoverImage(null);
-    setShowModal(false);
+  const handleAddTournament = async () => {
+    const formData = new FormData();
+    formData.append('name', selectedTournament.name);
+    formData.append('elorequirement', selectedTournament.elorequirement);
+    formData.append('maxPlayers', selectedTournament.maxPlayers);
+    formData.append('startDate', selectedTournament.startDate);
+    formData.append('endDate', selectedTournament.endDate);
+    formData.append('gender', selectedTournament.gender);
+    formData.append('registrationEndDate', selectedTournament.registrationEndDate);
+    formData.append('location', selectedTournament.location);
+    formData.append('description', selectedTournament.description);
+    
+    if (coverImage) {
+      formData.append('coverImage', coverImage); // Image upload
+    }
+    
+    try {
+      const newTournament = await addTournament(formData);
+      setTournaments([...tournaments, newTournament]);
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error adding tournament:", error);
+    }
   };
 
   const handleOpenModal = (type, tournament = null) => {
@@ -70,26 +77,41 @@ const Tournament = () => {
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedTournament(null);
+    setCoverImage(null);
   };
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     if (modalType === 'edit') {
       if (!isPowerOfTwo(selectedTournament.maxPlayers)) {
         alert('Max players must be a power of 2 (e.g., 2, 4, 8, 16, etc.)');
         return;
       }
-      setTournaments(
-        tournaments.map((t) => (t.id === selectedTournament.id ? selectedTournament : t))
-      );
+      try {
+        await editTournament(selectedTournament.id, selectedTournament);
+        setTournaments(
+          tournaments.map((t) => (t.id === selectedTournament.id ? selectedTournament : t))
+        );
+        handleCloseModal();
+      } catch (error) {
+        console.error("Error editing tournament:", error);
+      }
     } else if (modalType === 'add') {
       handleAddTournament();
     }
-    handleCloseModal();
   };
 
-  const handleDeleteTournament = () => {
-    setTournaments(tournaments.filter((t) => t.id !== selectedTournament.id));
-    handleCloseModal();
+  const handleDeleteTournament = async () => {
+    try {
+      await deleteTournament(selectedTournament.id);
+      setTournaments(tournaments.filter((t) => t.id !== selectedTournament.id));
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error deleting tournament:", error);
+    }
+  };
+
+  const handleCoverImageChange = (e) => {
+    setCoverImage(e.target.files[0]);
   };
 
   return (
@@ -113,19 +135,13 @@ const Tournament = () => {
                 <Card.Text><strong>Max Players:</strong> {tournament.maxPlayers}</Card.Text>
 
                 <div className="btn-container d-flex justify-content-between">
-                  {isAdmin ? (
-                    <>
-                      <Button variant="info">
-                        <Link to="/tournament/view" state={{ tournamentId: tournament.id }} className="text-white text-decoration-none">
-                          View
-                        </Link>
-                      </Button>
-                      <Button variant="warning" onClick={() => handleOpenModal('edit', tournament)}>Edit</Button>
-                      <Button variant="danger" onClick={() => handleOpenModal('delete', tournament)}>Delete</Button>
-                    </>
-                  ) : (
-                    <Button variant="primary" className="register-btn">Register</Button>
-                  )}
+                  <Button variant="info">
+                    <Link to={`/tournament/${tournament.id}`} className="text-white text-decoration-none">
+                      View
+                    </Link>
+                  </Button>
+                  <Button variant="warning" onClick={() => handleOpenModal('edit', tournament)}>Edit</Button>
+                  <Button variant="danger" onClick={() => handleOpenModal('delete', tournament)}>Delete</Button>
                 </div>
               </Card.Body>
             </Card>
@@ -163,14 +179,6 @@ const Tournament = () => {
                     onChange={(e) => setSelectedTournament({ ...selectedTournament, maxPlayers: parseInt(e.target.value) })}
                   />
                 </Form.Group>
-                <Form.Group controlId="formGender" className="mb-3">
-                  <Form.Label>Gender</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={selectedTournament?.gender || ''}
-                    onChange={(e) => setSelectedTournament({ ...selectedTournament, gender: e.target.value })}
-                  />
-                </Form.Group>
                 <Form.Group controlId="formLocation" className="mb-3">
                   <Form.Label>Location</Form.Label>
                   <Form.Control
@@ -186,6 +194,13 @@ const Tournament = () => {
                     rows={3}
                     value={selectedTournament?.description || ''}
                     onChange={(e) => setSelectedTournament({ ...selectedTournament, description: e.target.value })}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formCoverImage" className="mb-3">
+                  <Form.Label>Cover Image</Form.Label>
+                  <Form.Control
+                    type="file"
+                    onChange={handleCoverImageChange}
                   />
                 </Form.Group>
                 <Form.Group controlId="formStartDate" className="mb-3">
