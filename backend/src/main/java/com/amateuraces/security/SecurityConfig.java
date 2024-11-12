@@ -21,7 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class SecurityConfig {
     
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     public SecurityConfig(UserDetailsService userDetailsService){
         this.userDetailsService = userDetailsService;
@@ -45,8 +45,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(Customizer.withDefaults()) // Enable CORS using the custom configuration source
-            .authorizeHttpRequests((authz) -> authz
+            .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/error").permitAll() // the default error page
+                .requestMatchers("/login").permitAll()  // Allow access to the login endpoint
                 .requestMatchers(HttpMethod.GET, "/users", "/users/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users/*/players").hasRole("USER")  
                 .requestMatchers(HttpMethod.POST, "/users/*/admins").hasRole("ADMIN")
@@ -66,11 +67,12 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/matches").permitAll() // hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/tournaments/*/matches/{id}").permitAll() // hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/tournaments/*/matches/{id}/result/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/login").permitAll() // Allow access to the login endpoint
                 .requestMatchers("/h2-console/**").permitAll() // Allow access to H2 Console
                 .anyRequest().permitAll()  // All other requests require authentication
             )
-            .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless for REST APIs
-            .httpBasic(Customizer.withDefaults()) // Basic HTTP authentication for stateless APIs (JWT or similar auth will be used in headers)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless for REST APIs
+            .httpBasic(Customizer.withDefaults()) // Basic HTTP authentication for stateless APIs
             .csrf(csrf -> csrf.disable()) // CSRF protection is disabled for REST APIs
             .headers(headers -> headers.disable()) // Disable headers since this is for API usage
             .authenticationProvider(authenticationProvider());

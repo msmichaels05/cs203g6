@@ -17,7 +17,7 @@ const AdminNavbar = () => {
 
           </Nav>
           <Nav className="ml-auto">
-            <Button variant="outline-light" href="/home" style={{ marginRight: '10px' }}>Logout</Button>
+            <Button variant="outline-light" href="/" style={{ marginRight: '10px' }}>Logout</Button>
           </Nav>
         </Navbar.Collapse>
       </Container>

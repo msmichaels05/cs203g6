@@ -24,11 +24,11 @@ function App() {
     <Router>
       <Routes>
         {/* add more routes here */}
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/authen_home" element={<Authen_home />} />
 
 
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register/players" element={<RegisterPlayers />} />
         <Route path="/profile" element={<Profile />} />

@@ -72,7 +72,7 @@ const Register = () => {
           <span onClick={() => navigate("/")} className="link-text">
             Login here
           </span>
-          <span onClick={() => navigate("/home")} className="link-text">
+          <span onClick={() => navigate("/")} className="link-text">
             Continue as Guest
           </span>
         </div>
