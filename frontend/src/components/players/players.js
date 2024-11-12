@@ -11,7 +11,17 @@ const Players = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(''); // 'add' or 'edit'
   const [currentPlayer, setCurrentPlayer] = useState({});
-  const currentUser = { role: "players" };
+  const [role, setRole] = useState(null);  // Store the user's role
+  const [loading, setLoading] = useState(true);  // Loading state
+
+  // Fetch user role from localStorage on component mount
+  useEffect(() => {
+    const storedRole = localStorage.getItem('role');  // Retrieve role from localStorage
+    if (storedRole) {
+      setRole(storedRole);  // Set the role if it exists
+    }
+    setLoading(false);  // Stop loading after fetching role
+  }, []);
 
   // Fetch players when the component mounts
   useEffect(() => {
@@ -73,15 +83,19 @@ const Players = () => {
     }
   };
 
+  if (loading) {
+    return <div>Loading...</div>;  // Loading indicator until role is fetched
+  }
+
   return (
     <>
-      {currentUser.role === "admin" ? <AdminNavbar /> : <PlayerNavbar />}
+      {role === "ROLE_ADMIN" ? <AdminNavbar /> : <PlayerNavbar />}
 
       <Container className="mt-4">
         <Row>
           <Col className="d-flex justify-content-between align-items-center mb-3">
             <h4>All Players - AmateurAces</h4>
-            {currentUser.role === "admin" && (
+            {role === "ROLE_ADMIN" && (
               <Button variant="success" onClick={handleAddPlayer}>Add New Player</Button>
             )}
           </Col>
@@ -113,7 +127,7 @@ const Players = () => {
                     <th>Gender</th>
                     <th>Matches Played</th>
                     <th>Matches Won</th>
-                    {currentUser.role === "admin" && <th>Actions</th>}
+                    {role === "ROLE_ADMIN" && <th>Actions</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -127,7 +141,7 @@ const Players = () => {
                         <td>{player.gender}</td>
                         <td>{player.matchesPlayed}</td>
                         <td>{player.matchesWon}</td>
-                        {currentUser.role === "admin" && (
+                        {role === "ROLE_ADMIN" && (
                           <td>
                             <Button variant="warning" size="sm" className="me-2" onClick={() => handleEditPlayer(player)}>
                               <FaEdit />
@@ -141,7 +155,7 @@ const Players = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={currentUser.role === "admin" ? "8" : "7"} className="text-center">
+                      <td colSpan={role === "ROLE_ADMIN" ? "8" : "7"} className="text-center">
                         No players found
                       </td>
                     </tr>

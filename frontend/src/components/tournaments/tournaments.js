@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Card } from 'react-bootstrap';
 import './tournaments.css';
-import CustomNavbar from '../navbar/CustomNavbar';
+import CustomNavbar from '../navbar/AdminNavbar';
 import { Link } from "react-router-dom";
 
 // Import API functions
