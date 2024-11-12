@@ -38,37 +38,47 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(Customizer.withDefaults()) // Enable CORS using the custom configuration source
-            .authorizeHttpRequests((authz) -> authz
-                // the default error page
+            .cors(Customizer.withDefaults()) 
+            .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/error").permitAll()
-                
-                // Users security
+                .requestMatchers("/login").permitAll()  
                 .requestMatchers(HttpMethod.GET, "/users", "/users/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                .requestMatchers(HttpMethod.POST, "/users/*/players").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyRole("USER", "ADMIN")
-
-                // Players security
+                .requestMatchers(HttpMethod.POST, "/users/*/players").hasAuthority("ROLE_USER")  
+                .requestMatchers(HttpMethod.POST, "/users/*/admins").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/player/delete/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/players").permitAll()
-
-                // Tournaments security
+                .requestMatchers(HttpMethod.GET, "/admins").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/users/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/tournaments", "/tournaments/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/tournaments/*/players").hasRole("USER")
-                .requestMatchers(HttpMethod.DELETE, "/tournaments/*/players/*").hasAnyRole("USER","ADMIN")
+                .requestMatchers(HttpMethod.POST, "/tournaments").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/tournaments/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/tournaments/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/tournaments/*/players/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/tournaments/*/matches").permitAll()
+                .requestMatchers(HttpMethod.GET, "/tournaments/*/matches/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/tournaments/*/matches").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/tournaments/*/matches/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/tournaments/*/matches/{id}/result/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                .anyRequest().permitAll()  
 
+                
 
-                .requestMatchers("/h2-console/**").permitAll() // Allow access to H2 Console
-                .anyRequest().hasAuthority("ROLE_ADMIN") // All other requests require authentication
+                
+                
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless for REST APIs
-            .httpBasic(Customizer.withDefaults()) // Basic HTTP authentication for stateless APIs
-            .csrf(csrf -> csrf.disable()) // CSRF protection is disabled for REST APIs
-            .headers(headers -> headers.disable()) // Disable headers since this is for API usage
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
+            .httpBasic(Customizer.withDefaults()) 
+            .csrf(csrf -> csrf.disable()) 
+            .headers(headers -> headers.disable()) 
             .authenticationProvider(authenticationProvider());
-
+    
         return http.build();
     }
+    
 
     // For REACT
     @Bean

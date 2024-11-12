@@ -12,7 +12,7 @@ const PlayerNavbar = () => {
           <Nav>
             <Nav.Link href="/authen_home" style={navLinkStyle}>Home</Nav.Link>
             <Nav.Link href="/players" style={navLinkStyle}>Players</Nav.Link>
-            <Nav.Link href="/tournaments" style={navLinkStyle}>Tournaments</Nav.Link>
+            <Nav.Link href="/player_tournament" style={navLinkStyle}>Tournaments</Nav.Link>
           </Nav>
 
           {/* Profile and Logout Links on the right side */}

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Card } from 'react-bootstrap';
 import './tournaments.css';
-import CustomNavbar from '../navbar/AdminNavbar';
+import AdminNavbar from '../navbar/AdminNavbar';
+import PlayerNavbar from '../navbar/PlayerNavbar';
+
 import { Link } from "react-router-dom";
 import { fetchTournaments, addTournament, editTournament, deleteTournament } from '../../api/tournamentApi';
 
@@ -115,6 +117,7 @@ const Tournament = () => {
   return (
     <div>
       <CustomNavbar />
+      {isAdmin ? <AdminNavbar /> : <PlayerNavbar />}
       <div className="container mt-4">
         {isAdmin && (
           <Button variant="success" onClick={() => handleOpenModal('add')} className="add-tournament-btn mb-4">
