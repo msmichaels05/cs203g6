@@ -174,6 +174,10 @@ public class TournamentServiceImpl implements TournamentService {
             Tournament tournament = tournamentRepository.findById(tournamentId)
                     .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
 
+            if(!tournament.getPlayers().contains(player)){
+                throw new IllegalArgumentException("Player has already been removed from the tournament");
+            }
+
             tournament.getPlayers().remove(player);
             tournament.setPlayerCount(tournament.getPlayerCount() - 1);
             tournamentRepository.save(tournament);

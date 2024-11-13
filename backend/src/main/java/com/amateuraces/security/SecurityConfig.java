@@ -46,7 +46,8 @@ public class SecurityConfig {
                 // Users security
                 .requestMatchers(HttpMethod.GET, "/users", "/users/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                .requestMatchers(HttpMethod.POST, "/users/*/players").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/*/players").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/users/*/admins").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/users/*").hasAnyRole("USER", "ADMIN")
 
                 // Players security

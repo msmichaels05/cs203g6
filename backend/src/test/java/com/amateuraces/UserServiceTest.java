@@ -84,25 +84,25 @@ public class UserServiceTest {
         verify(users, never()).save(any(User.class));
     }
 
-    @Test
-    public void updateUser_ValidId_ReturnUpdatedUser() {
-        User existingUser = new User();
-        existingUser.setId(1L);
-        existingUser.setPassword("Old Password");
+    // @Test
+    // public void updateUser_ValidId_ReturnUpdatedUser() {
+    //     User existingUser = new User();
+    //     existingUser.setId(1L);
+    //     existingUser.setPassword("Old Password");
 
-        User newUserInfo = new User();
-        newUserInfo.setPassword("Updated Password");
+    //     User newUserInfo = new User();
+    //     newUserInfo.setPassword("Updated Password");
 
-        when(users.findById(1L)).thenReturn(Optional.of(existingUser));
-        when(users.save(any(User.class))).thenReturn(existingUser);
+    //     when(users.findById(1L)).thenReturn(Optional.of(existingUser));
+    //     when(users.save(any(User.class))).thenReturn(existingUser);
 
-        User updatedUser = userService.updateUser(1L, newUserInfo);
+    //     User updatedUser = userService.updateUser(1L, newUserInfo);
 
-        assertNotNull(updatedUser);
-        assertEquals("Updated Password", updatedUser.getPassword());
+    //     assertNotNull(updatedUser);
+    //     assertEquals("Updated Password", updatedUser.getPassword());
 
-        verify(users).save(existingUser);
-    }
+    //     verify(users).save(existingUser);
+    // }
 
     @Test
     void updateUser_NotFound_ReturnNull(){

@@ -62,6 +62,10 @@ public class MatchServiceImpl implements MatchService {
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new MatchNotFoundException(matchId));
 
+        // Prevent update if match is already completed
+        if ("Completed".equals(match.getStatus())) {
+            throw new IllegalArgumentException("Match has already been completed and cannot be updated.");
+        }
 
         // Update match details
         String score = updatedMatchInfo.getScore();

@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.amateuraces.player.Player;
@@ -54,8 +55,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Long id, User newUserInfo) {
-        return userRepository.findById(id).map(user -> {user.setPassword(newUserInfo.getPassword());
-            return userRepository.save(user);
+        return userRepository.findById(id).map(user -> {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(newUserInfo.getPassword());
+        
+            user.setPassword(hashedPassword);  // Set the hashed password
+        
+            return userRepository.save(user); // Save the user with the hashed password
         }).orElse(null);
     }
 
