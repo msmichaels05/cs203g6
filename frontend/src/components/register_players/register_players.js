@@ -64,7 +64,21 @@ const RegisterPlayers = () => {
       if (response.ok) {
         setSuccessMessage("Player registration successful!");
         setError('');
-        navigate('/login'); // Redirect to login page after successful registration
+
+        // Store player data in localStorage for Profile page
+        const playerData = {
+          name,
+          phoneNumber,
+          age: parseInt(age, 10),
+          gender,
+          elo: parseInt(elo, 10),
+          matchesPlayed: parseInt(matchesPlayed, 10),
+          matchesWon: parseInt(matchesWon, 10),
+        };
+        localStorage.setItem('player', JSON.stringify(playerData));
+
+        // Redirect to login page after successful registration
+        navigate('/login');
       } else if (response.status === 409) {
         setError("A player with this phone number or name already exists.");
       } else {
@@ -120,8 +134,8 @@ const RegisterPlayers = () => {
             <label>Gender:</label>
             <select value={gender} onChange={(e) => setGender(e.target.value)} required>
               <option value="" disabled>Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
               <option value="other">Other</option>
             </select>
           </div>

@@ -99,10 +99,10 @@ const Register = () => {
           <button type="submit">Register</button>
         </form>
         <div className="additional-options">
-          <span onClick={() => navigate("/")} className="link-text">
+          <span onClick={() => navigate("/login")} className="link-text">
             Login here
           </span>
-          <span onClick={() => navigate("/home")} className="link-text">
+          <span onClick={() => navigate("/")} className="link-text">
             Continue as Guest
           </span>
         </div>

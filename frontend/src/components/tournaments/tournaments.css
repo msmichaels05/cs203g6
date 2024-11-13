@@ -74,3 +74,21 @@
     padding: 6px 10px;
   }
 }
+
+/* tournaments.css */
+.tournament-card {
+  width: 250px; /* Adjust the width */
+  height: 350px; /* Adjust the height */
+  margin: 10px; /* Space between cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add some shadow for styling */
+}
+
+.tournament-card img {
+  height: 150px; /* Adjust the image height */
+  object-fit: cover; /* Maintain aspect ratio */
+}
+
+.tournament-card .card-body {
+  padding: 15px; /* Adjust padding for better spacing */
+}
+

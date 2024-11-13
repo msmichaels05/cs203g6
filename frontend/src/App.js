@@ -14,27 +14,30 @@ import Profile from './components/profile/profile';
 import Players from './components/players/players';
 import Admins from './components/admins/admins';
 import Player_tournament from './components/player_tournament/player_tournament';
+import GuestTournament from './components/guest_tournament/guest_tournament';
+import GuestPlayers from './components/guest_players/guest_players';
+
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [role, setRole] = useState(null); // State variable to store the role
 
-  useEffect(() => {
-    // Fetch user role from backend
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get('/api/user/role');
-        setRole(response.data); // Store the role in state
-      } catch (error) {
-        console.error("Error fetching user role:", error);
-      }
-    };
+  // useEffect(() => {
+  //   // Fetch user role from backend
+  //   const fetchUserRole = async () => {
+  //     try {
+  //       const response = await axios.get('/api/user/role');
+  //       setRole(response.data); // Store the role in state
+  //     } catch (error) {
+  //       console.error("Error fetching user role:", error);
+  //     }
+  //   };
 
-    fetchUserRole();
-  }, []);
+  //   fetchUserRole();
+  // }, []);
 
-  console.log("User Role:", role); // This will log the role to the console
+  // console.log("User Role:", role); // This will log the role to the console
 
   return (
     <Router>
@@ -54,7 +57,11 @@ function App() {
         <Route path="/admins" element={<Admins role={role} />} /> {/* Pass role as prop */}
         <Route path="/tournaments" element={<Tournaments />} />
         <Route path="/player_tournament" element={<Player_tournament />} />
-        <Route path="/tournament/view" element={<Bracket />} />
+        <Route path="/guest_tournament" element={<GuestTournament />} />
+        <Route path="/guest_players" element={<GuestPlayers />} />
+
+
+        <Route path="/tournament/:tournamentId" element={<Bracket />} />
       </Routes>
     </Router>
   );

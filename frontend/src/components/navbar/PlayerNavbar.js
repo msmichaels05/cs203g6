@@ -7,15 +7,15 @@ const PlayerNavbar = () => {
     <Navbar expand="lg" style={{ backgroundColor: '#004080', padding: '10px 0' }}>
       <Container>
         <Navbar.Brand href="/" style={{ color: 'white' }}>AmateurAces - Player</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Toggle aria-controls="basic-tnavbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" style={{ justifyContent: 'center', alignItems: 'center' }}>
           <Nav>
             <Nav.Link href="/authen_home" style={navLinkStyle}>Home</Nav.Link>
             <Nav.Link href="/players" style={navLinkStyle}>Players</Nav.Link>
-            <Nav.Link href="/tournaments" style={navLinkStyle}>Tournaments</Nav.Link>
+            <Nav.Link href="/player_tournament" style={navLinkStyle}>Tournaments</Nav.Link>
           </Nav>
 
-          {/* Profile and Logout Links on the right side */}
+          {/* Profile and Logout Links on the righ side */}
           <Nav className="ml-auto" style={{ alignItems: 'center' }}>
             <Nav.Link href="/profile" style={profileLinkStyle}>
               <FaUserCircle style={profileIconStyle} /> My Profile

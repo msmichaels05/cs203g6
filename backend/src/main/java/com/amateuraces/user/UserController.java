@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -78,12 +79,12 @@ public class UserController {
         userService.deleteUser(id);
     }
 
-    // // Get the user role back to frontend 
-    // @ResponseBody
-    // @GetMapping("/api/user/role")
-    // public ResponseEntity<String> getUserRole(Authentication authentication) {
-    //     User user = (User) authentication.getPrincipal();
-    //     return ResponseEntity.ok(user.getAuthorities().stream().findFirst().get().getAuthority());
-    // }
+    // Get the user role back to frontend 
+    @ResponseBody
+    @GetMapping("/api/user/role")
+    public ResponseEntity<String> getUserRole(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(user.getAuthorities().stream().findFirst().get().getAuthority());
+    }
 
 }
