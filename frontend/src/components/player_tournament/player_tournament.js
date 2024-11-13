@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import '../tournaments/tournaments.css'; // Make sure this path is correct
 import PlayerNavbar from '../navbar/PlayerNavbar';
 import { fetchTournaments } from '../../api/tournamentApi';
-import { joinTournament } from '../../api/player_tournamentAPI';
+import { joinTournament, withdrawFromTournament } from '../../api/player_tournamentAPI';
 
 const PlayerTournament = () => {
   const [tournaments, setTournaments] = useState([]);
@@ -39,14 +39,44 @@ const PlayerTournament = () => {
     setShowModal(true);
   };
 
+  const handleWithdraw = async (tournamentId) => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    const playerId = userData.id; // Extract the player ID
+
+    try {
+      await withdrawFromTournament(tournamentId, playerId); // Use playerId here
+      alert('Successfully withdrew from the tournament');
+
+      // Update the tournament registration status in the state without removing the tournament card
+      setTournaments((prevTournaments) =>
+        prevTournaments.map((tournament) =>
+          tournament.id === tournamentId
+            ? { ...tournament, playerRegistered: false } // Mark the player as not registered
+            : tournament
+        )
+      );
+    } catch (error) {
+      console.error("Error withdrawing from tournament:", error.response ? error.response.data : error.message);
+      alert(error.response ? error.response.data.message : "Withdrawal unsuccessful. Please try again.");
+    }
+  };
+
   const handleConfirmRegistration = async () => {
     try {
       await joinTournament(selectedTournament.id); // API function call with the authorization header
       alert(`Successfully registered for ${selectedTournament.name}`);
       setShowModal(false);
       setSelectedTournament(null);
+
+      // Update the tournament registration status in the state
+      setTournaments((prevTournaments) =>
+        prevTournaments.map((tournament) =>
+          tournament.id === selectedTournament.id
+            ? { ...tournament, playerRegistered: true } // Mark the player as registered
+            : tournament
+        )
+      );
     } catch (error) {
-      // Handle different types of error (e.g., network, authorization)
       console.error("Error registering for tournament:", error.response ? error.response.data : error.message);
       alert(error.response ? error.response.data.message : "Registration unsuccessful. Please try again.");
     }
@@ -73,12 +103,21 @@ const PlayerTournament = () => {
                 <Card.Text><strong>Registration End Date:</strong> {tournament.registrationEndDate}</Card.Text>
 
                 <div className="btn-container d-flex justify-content-between">
-                  {!isRegistrationClosed(tournament.registrationEndDate) && (
+                  {/* Register Button */}
+                  {!isRegistrationClosed(tournament.registrationEndDate) && !tournament.playerRegistered && (
                     <Button variant="primary" className="register-btn" onClick={() => handleRegister(tournament)}>
                       Register
                     </Button>
                   )}
 
+                  {/* Withdraw Button */}
+                  {tournament.playerRegistered && (
+                    <Button variant="danger" onClick={() => handleWithdraw(tournament.id)}>
+                      Withdraw
+                    </Button>
+                  )}
+
+                  {/* View Match Button */}
                   {canViewMatch(tournament.startDate) && (
                     <Button variant="info">
                       <Link to={`/tournament/view/${tournament.id}`} className="text-white text-decoration-none">

@@ -68,3 +68,44 @@ export const joinTournament = async (id) => {
     throw error; // Re-throw the error to propagate it
   }
 };
+
+// Function to withdraw a player from a tournament by sending a DELETE request
+export const withdrawFromTournament = async (tournamentId, playerId) => {
+  try {
+    const authHeader = getAuthHeader(); // Get the authorization header
+    const response = await axiosInstance.delete(`/tournaments/${tournamentId}/players/${playerId}`, {
+      headers: {
+        'Authorization': authHeader,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    // Handle specific error cases
+    if (error.response) {
+      switch (error.response.status) {
+        case 400:
+          console.error('Bad Request:', error.response.data);
+          alert('Bad Request: Please check the data you provided.');
+          break;
+        case 401:
+          console.error('Unauthorized:', error.response.data);
+          alert('Unauthorized: You must log in first.');
+          break;
+        case 404:
+          console.error('Tournament or Player Not Found:', error.response.data);
+          alert('Tournament or player not found. Please try again.');
+          break;
+        default:
+          console.error('Error:', error.response.data);
+          alert('An unexpected error occurred. Please try again later.');
+      }
+    } else if (error.request) {
+      console.error('Network Error:', error.request);
+      alert('Network error: Unable to reach the server. Please try again later.');
+    } else {
+      console.error('Request Error:', error.message);
+      alert('An error occurred. Please try again.');
+    }
+    throw error; // Re-throw the error to propagate it
+  }
+};
