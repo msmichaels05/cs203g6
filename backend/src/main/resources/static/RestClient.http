@@ -90,6 +90,7 @@ Content-Type: application/json
 # Show that cannot create player for admin
 POST http://localhost:8080/users/1/players
 Content-Type: application/json
+Authorization: Basic betatester betatester
 
 {
     "name":"Alphabravo",
@@ -104,6 +105,7 @@ Content-Type: application/json
 # Show that player can create 
 POST http://localhost:8080/users/2/players
 Content-Type: application/json
+Authorization: username betatester
 
 {
     "name":"Alpha",

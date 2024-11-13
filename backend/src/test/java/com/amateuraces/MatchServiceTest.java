@@ -1,5 +1,7 @@
 package com.amateuraces;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,23 +57,24 @@ public class MatchServiceTest {
         verify(matchRepository).save(match);
     }
 
-    // @Test
-    // public void updateMatchWinner_ValidId_ReturnUpdatedMatch() {
-    //     Match existingMatch = new Match(new Tournament("test tournament"), new Player("adam"), new Player("bob"));
+    @Test
+    public void updateMatch_ValidId_ReturnUpdatedMatch() {
+        Match existingMatch = new Match(new Tournament("test tournament"), new Player("adam"), new Player("bob"));
 
-    //     Match newMatchInfo = existingMatch;
-    //     newMatchInfo.setWinner(existingMatch.getPlayer1());
+        Match newMatchInfo = existingMatch;
+        newMatchInfo.setWinner(existingMatch.getPlayer1());
+        newMatchInfo.setScore("6-9");
 
-    //     when(matchRepository.findById(1L)).thenReturn(Optional.of(existingMatch));
-    //     when(matchRepository.save(any(Match.class))).thenReturn(existingMatch);
+        when(matchRepository.findById(1L)).thenReturn(Optional.of(existingMatch));
+        when(matchRepository.save(any(Match.class))).thenReturn(existingMatch);
 
-    //     Match updatedMatch = matchService.updateMatch(newMatchInfo);
+        Match updatedMatch = matchService.updateMatch(1L, newMatchInfo, 1L);
 
-    //     assertNotNull(updatedMatch);
-    //     assertEquals(newMatchInfo.getWinner(), updatedMatch.getWinner());
+        assertNotNull(updatedMatch);
+        assertEquals(newMatchInfo.getWinner(), updatedMatch.getWinner());
 
-    //     verify(matchRepository).save(existingMatch);
-    // }
+        verify(matchRepository).save(existingMatch);
+    }
 
     // @Test
     // void updateMatch_NotFound_ReturnNull(){

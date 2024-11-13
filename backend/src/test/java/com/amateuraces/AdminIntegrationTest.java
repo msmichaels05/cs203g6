@@ -16,9 +16,10 @@
 // import org.springframework.http.ResponseEntity;
 // import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-// import com.amateuraces.user.User;
-// import com.amateuraces.user.UserRepository;
-// import com.amateuraces.admin.*;
+// import com.amateuraces.admin.Admin;
+// import com.amateuraces.admin.AdminRepository;
+// import com.amateuraces.admin.Admin;
+// import com.amateuraces.admin.AdminRepository;
 
 // /** Start an actual HTTP server listening at a random port */
 // @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -39,11 +40,8 @@
 // 	 */
 // 	private TestRestTemplate restTemplate;
 
-// 	@Autowired
-// 	private UserRepository users;
-    
 //     @Autowired
-//     private AdminRepository admins;
+//     private AdminRepository adminRepository;
 
 // 	@Autowired
 // 	private BCryptPasswordEncoder encoder;
@@ -51,97 +49,95 @@
 // 	@AfterEach
 // 	void tearDown() {
 // 		// clear the database after each test
-// 		users.deleteAll();
-//         admins.deleteAll();
+//         adminRepository.deleteAll();
 // 	}
 
 // 	public void getAdmins_Success() throws Exception {
-//         URI uri = new URI(baseUrl + port + "/admins");
-// 		users.save(new User("timothy@gmail.com", "Timothy", "password"));
-// 		users.save(new User("jayuss@gmail.com", "Jayuss", "password2"));
+//         URI uri = new URI(baseUrl + port + "/adminRepository");
+// 		adminRepository.save(new Admin("Timothy", "12345678"));
+// 		adminRepository.save(new Admin("Timothys", "123456789"));
 
-// 		ResponseEntity<User[]> result = restTemplate.getForEntity(uri, User[].class);
-// 		User[] users = result.getBody();
+// 		ResponseEntity<Admin[]> result = restTemplate.getForEntity(uri, Admin[].class);
+// 		Admin[] adminRepository = result.getBody();
 
 // 		assertEquals(200, result.getStatusCode().value());
-// 		assertEquals(1, users.length);		
+// 		assertEquals(1, adminRepository.length);		
 //     }
 	
 // 	@Test
-// 	public void getUser_ValidUserId_Success() throws Exception {
-// 		User user = new User("timothy@gmail.com", "Timothy", "password");
-// 		Long id = users.save(user).getId();
+// 	public void getAdmin_ValidAdminId_Success() throws Exception {
+// 		Admin admin = new Admin("Timothy", "12345678");
+// 		Long id = adminRepository.save(admin).getId();
 // 		URI uri = new URI(baseUrl + port + "/users/" + id);
-// 		ResponseEntity<User> result = restTemplate.getForEntity(uri, User.class);
+// 		ResponseEntity<Admin> result = restTemplate.getForEntity(uri, Admin.class);
 
 // 		assertEquals(200, result.getStatusCode().value());
-// 		assertEquals(user.getUsername(), result.getBody().getUsername());
+// 		assertEquals(admin.getName(), result.getBody().getName());
 // 	}
 
 // 	@Test
-// 	public void getUser_InvalidUserId_Failure() throws Exception {
+// 	public void getAdmin_InvalidAdminId_Failure() throws Exception {
 // 		URI uri = new URI(baseUrl + port + "/users/1");
-// 		ResponseEntity<User> result = restTemplate.getForEntity(uri, User.class);
+// 		ResponseEntity<Admin> result = restTemplate.getForEntity(uri, Admin.class);
 
 // 		assertEquals(404, result.getStatusCode().value());
 // 	}
 
 // 	@Test
-// 	public void addUser_Success() throws Exception {
+// 	public void addAdmin_Success() throws Exception {
 // 		URI uri = new URI(baseUrl + port + "/users");
 		
-// 		User user = new User("timothy@gmail.com", "Timothy", "password");
-// 		users.save(new User("admin@gmail.com", "admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+// 		Admin admin = new Admin("Timothy", "12345678");
 
-// 		ResponseEntity<User> result = restTemplate.withBasicAuth("admin", "goodpassword")
-// 				.postForEntity(uri, user, User.class);
+// 		ResponseEntity<Admin> result = restTemplate.withBasicAuth("admin", "goodpassword")
+// 				.postForEntity(uri, admin, Admin.class);
 
 // 		assertEquals(201, result.getStatusCode().value());
-// 		assertEquals(user.getUsername(), result.getBody().getUsername());
+// 		assertEquals(admin.getName(), result.getBody().getName());
 // 	}
 
 //     @Test
-// 	public void deleteUser_ValidUserId_Success() throws Exception {
-// 		User user = users.save(new User("timothy@gmail.com", "Timothy", "password"));
-// 		URI uri = new URI(baseUrl + port + "/users/" + user.getId());
-// 		users.save(new User("admin@gmail.com", "admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+// 	public void deleteAdmin_ValidAdminId_Success() throws Exception {
+// 		Admin admin = adminRepository.save(new Admin("Timothy", "12345678"));
+// 		URI uri = new URI(baseUrl + port + "/adminRepository/" + admin.getId());
+// 		adminRepository.save(new Admin("admin@gmail.com", "admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
 
 // 		ResponseEntity<Void> result = restTemplate.withBasicAuth("admin", "goodpassword")
 // 				.exchange(uri, HttpMethod.DELETE, null, Void.class);
 // 		assertEquals(200, result.getStatusCode().value());
 
-// 		Optional<User> emptyValue = Optional.empty();
-// 		assertEquals(emptyValue, users.findById(user.getId()));
+// 		Optional<Admin> emptyValue = Optional.empty();
+// 		assertEquals(emptyValue, adminRepository.findById(admin.getId()));
 // 	}
 
 // 	@Test
-// 	public void deleteUser_InvalidUserId_Failure() throws Exception {
-// 		URI uri = new URI(baseUrl + port + "/users/1");
-// 		users.save(new User("admin@gmail.com", "admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+// 	public void deleteAdmin_InvalidAdminId_Failure() throws Exception {
+// 		URI uri = new URI(baseUrl + port + "/adminRepository/1");
+// 		adminRepository.save(new Admin("admin@gmail.com", "admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
 // 		ResponseEntity<Void> result = restTemplate.withBasicAuth("admin", "goodpassword")
 // 				.exchange(uri, HttpMethod.DELETE, null, Void.class);
 // 		assertEquals(404, result.getStatusCode().value());
 // 	}
 
 // 	@Test
-// 	public void updateUser_ValidUserId_Success() throws Exception {
-// 		User user = users.save(new User("jayuss@gmail.com", "Jayuss", "12345678"));
-// 		URI uri = new URI(baseUrl + port + "/users/" + user.getId().longValue());
-// 		User newUserInfo = new User("jayuss@gmail.com", "Jayuss", "87654321");
-// 		users.save(new User("admin@gmail.com", "admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
-// 		ResponseEntity<User> result = restTemplate.withBasicAuth("admin", "goodpassword")
-// 				.exchange(uri, HttpMethod.PUT, new HttpEntity<>(newUserInfo), User.class);
+// 	public void updateAdmin_ValidAdminId_Success() throws Exception {
+// 		Admin admin = adminRepository.save(new Admin("jayuss@gmail.com", "Jayuss", "12345678"));
+// 		URI uri = new URI(baseUrl + port + "/adminRepository/" + admin.getId().longValue());
+// 		Admin newAdminInfo = new Admin("jayuss@gmail.com", "Jayuss", "87654321");
+// 		adminRepository.save(new Admin("admin@gmail.com", "admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+// 		ResponseEntity<Admin> result = restTemplate.withBasicAuth("admin", "goodpassword")
+// 				.exchange(uri, HttpMethod.PUT, new HttpEntity<>(newAdminInfo), Admin.class);
 // 		assertEquals(200, result.getStatusCode().value());
-// 		assertEquals(newUserInfo.getUsername(), result.getBody().getUsername());
+// 		assertEquals(newAdminInfo.getAdminname(), result.getBody().getAdminname());
 // 	}
 
 // 	@Test
-// 	public void updateUser_InvalidUserId_Failure() throws Exception {
-// 		URI uri = new URI(baseUrl + port + "/users/1");
-// 		User newUserInfo = new User("jackie@gmail.com", "Jackie", "1029384757");
-// 		users.save(new User("admin@gmail.com", "admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
-// 		ResponseEntity<User> result = restTemplate.withBasicAuth("admin", "goodpassword")
-// 				.exchange(uri, HttpMethod.PUT, new HttpEntity<>(newUserInfo), User.class);
+// 	public void updateAdmin_InvalidAdminId_Failure() throws Exception {
+// 		URI uri = new URI(baseUrl + port + "/adminRepository/1");
+// 		Admin newAdminInfo = new Admin("jackie@gmail.com", "Jackie", "1029384757");
+// 		adminRepository.save(new Admin("admin@gmail.com", "admin", encoder.encode("goodpassword"), "ROLE_ADMIN"));
+// 		ResponseEntity<Admin> result = restTemplate.withBasicAuth("admin", "goodpassword")
+// 				.exchange(uri, HttpMethod.PUT, new HttpEntity<>(newAdminInfo), Admin.class);
 // 		assertEquals(404, result.getStatusCode().value());
 // 	}
 // }
