@@ -27,7 +27,7 @@ const Profile = () => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user'));
 
-    // Check if `id` exists instead of `userId`
+    
     if (!userData || !userData.id) {
       console.warn("User ID not found in localStorage. Redirecting to login.");
       setError("User data not found. Please log in.");
@@ -36,7 +36,7 @@ const Profile = () => {
       return;
     }
 
-    fetchPlayerDetails(userData.id)  // Use `id` here instead of `userId`
+    fetchPlayerDetails(userData.id)  
       .then((data) => {
         setPlayerDetails((prevDetails) => ({
           ...prevDetails,
