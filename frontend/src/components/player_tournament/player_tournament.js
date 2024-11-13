@@ -1,4 +1,3 @@
-// PlayerTournament.js
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Card } from 'react-bootstrap';
 import { Link } from "react-router-dom";
@@ -42,13 +41,14 @@ const PlayerTournament = () => {
 
   const handleConfirmRegistration = async () => {
     try {
-      await joinTournament(selectedTournament.id);
+      await joinTournament(selectedTournament.id); // API function call with the authorization header
       alert(`Successfully registered for ${selectedTournament.name}`);
       setShowModal(false);
       setSelectedTournament(null);
     } catch (error) {
-      console.error("Error registering for tournament:", error);
-      alert("Registration unsuccessful. Please try again.");
+      // Handle different types of error (e.g., network, authorization)
+      console.error("Error registering for tournament:", error.response ? error.response.data : error.message);
+      alert(error.response ? error.response.data.message : "Registration unsuccessful. Please try again.");
     }
   };
 

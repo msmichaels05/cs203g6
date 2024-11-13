@@ -26,10 +26,12 @@ export const loginAPI = async (username, password) => {
       ? data.authorities[0].authority // Extract the first role (ROLE_USER, ROLE_ADMIN, etc.)
       : null;
 
-    // Store role and user info in localStorage
+    // Store role, username, password, and user info in localStorage
     if (role) {
       localStorage.setItem('role', role);  // Store role
       localStorage.setItem('user', JSON.stringify(data));  // Store the full user data (user details)
+      localStorage.setItem('username', username);  // Store username
+      localStorage.setItem('password', password);  // Store password (be cautious with this)
     }
 
     return data;  // Return the user data (including role and details)
