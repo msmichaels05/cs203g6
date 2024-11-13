@@ -14,6 +14,9 @@ import Profile from './components/profile/profile';
 import Players from './components/players/players';
 import Admins from './components/admins/admins';
 import Player_tournament from './components/player_tournament/player_tournament';
+import GuestTournament from './components/guest_tournament/guest_tournament';
+import GuestPlayers from './components/guest_players/guest_players';
+
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -54,6 +57,10 @@ function App() {
         <Route path="/admins" element={<Admins role={role} />} /> {/* Pass role as prop */}
         <Route path="/tournaments" element={<Tournaments />} />
         <Route path="/player_tournament" element={<Player_tournament />} />
+        <Route path="/guest_tournament" element={<GuestTournament />} />
+        <Route path="/guest_players" element={<GuestPlayers />} />
+
+
         <Route path="/tournament/:tournamentId" element={<Bracket />} />
       </Routes>
     </Router>
