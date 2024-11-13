@@ -20,6 +20,7 @@ import jakarta.transaction.Transactional;
 @Service
 public class TournamentServiceImpl implements TournamentService {
 
+    private Map<Integer, Integer> slotToSeed;
     private TournamentRepository tournamentRepository;
     private PlayerRepository playerRepository;
     private MatchRepository matchRepository;
@@ -535,29 +536,40 @@ public class TournamentServiceImpl implements TournamentService {
         }
 
         // Place seeded players in predefined positions
-        assignSeededPlayers(unseededPlayers, seededPlayers, totalSeededPlayers, totalSlots, playerSlotAssignment);
+        Map<Integer, Integer> seedMap = new HashMap<>();
 
+        assignSeededPlayers(unseededPlayers, seededPlayers, totalSeededPlayers, totalSlots, playerSlotAssignment, seedMap);
+        System.out.println("Slot to seed assignment");
+        slotToSeed = seedMap;
         // // Place unseeded players in the remaining slots
         fillRemainingSlots(playerSlotAssignment, unseededPlayers, totalSlots);
     }
 
-    private void assignTop4Seeds(Map<Integer, Player> playerSlotAssignment, Player[] seededPlayers, int totalSlots) {
+    private void assignTop4Seeds(Map<Integer, Player> playerSlotAssignment, Player[] seededPlayers, int totalSlots, Map<Integer, Integer> seedMap) {
         int mid = totalSlots / 2;
         System.out.println("Total slots is " + totalSlots);
         playerSlotAssignment.put(0, seededPlayers[0]); // Assign seeded 1 to top of the draw
+        slotToSeed(seedMap, 0, 1);
         playerSlotAssignment.put(totalSlots - 1, seededPlayers[1]); // Assign seeded 2 to bottom of the draw
+        slotToSeed(seedMap, totalSlots - 1, 2);
         if (seededPlayers.length == 2) return; // Only if there are only 2 seeded players
         playerSlotAssignment.put(mid - 1, seededPlayers[3]); // Assign seeded 3 to middle of the draw
+        slotToSeed(seedMap, mid - 1, 4);
         playerSlotAssignment.put(mid, seededPlayers[2]); // Assign seeded 4 to middle of the draw
+        slotToSeed(seedMap, mid, 3);
+    }
+
+    public void slotToSeed(Map<Integer, Integer> slotToSeed, int slotIndex, int seed) {
+        if (!slotToSeed.containsKey(slotIndex)) slotToSeed.put(slotIndex, seed);
     }
     
-    private void assignSeededPlayers(List<Player> unseededPlayers, Player[] seededPlayers, int numberOfSeeds, int totalSlots, Map<Integer, Player> playerSlotAssignment) {
+    private void assignSeededPlayers(List<Player> unseededPlayers, Player[] seededPlayers, int numberOfSeeds, int totalSlots, Map<Integer, Player> playerSlotAssignment, Map<Integer, Integer> seedMap) {
         int mid = totalSlots / 2;
         int seededPlayersSize = seededPlayers.length;
     
         System.out.println("Total slots is " + totalSlots);
         // Assign top 4 seeds to their slots
-        assignTop4Seeds(playerSlotAssignment, seededPlayers, totalSlots);
+        assignTop4Seeds(playerSlotAssignment, seededPlayers, totalSlots, seedMap);
         System.out.println("Slot number 0" + playerSlotAssignment.get(0).getElo());
         System.out.println("Slot number " + (totalSlots-1) + playerSlotAssignment.get(totalSlots-1).getElo());
         System.out.println("TOtal number of unseeded players: " + unseededPlayers.size());
@@ -579,7 +591,7 @@ public class TournamentServiceImpl implements TournamentService {
             //fillRemainingSlots(playerSlotAssignment, unseededPlayers, totalSlots);
             return; // If there are only 4 seeded players
         }
-    
+
         // Assign remaining seeds
         List<Integer> slotsToAssign = new ArrayList<>();
         slotsToAssign.add(numberOfSeeds - 1);
@@ -597,6 +609,7 @@ public class TournamentServiceImpl implements TournamentService {
                 if (i < seededPlayers.length) {
                     int tempindex = slotsToAssign.get(0);
                     playerSlotAssignment.put(tempindex, seededPlayers[i]);
+                    slotToSeed(seedMap, tempindex, i+1);
                     assignUnseededPlayers(unseededPlayers, playerSlotAssignment, tempindex);
                     
                     slotsToAssign.add(tempindex - 8);
