@@ -16,9 +16,9 @@ public class AmateurAces {
         ApplicationContext ctx = SpringApplication.run(AmateurAces.class, args);
 
         // JPA user repository init
-        // UserRepository users = ctx.getBean(UserRepository.class);
-        // BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
-        // System.out.println("[Add user]: " + users.save(
-        //     new User("admin@helpdesk.com","admin", encoder.encode("goodpassword"), "ROLE_ADMIN")).getUsername());
+        UserRepository users = ctx.getBean(UserRepository.class);
+        BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
+        System.out.println("[Add user]: " + users.save(
+            new User("admin@helpdesk.com","admin", encoder.encode("goodpassword"), "ROLE_ADMIN")).getUsername());
     }
 }
