@@ -1,7 +1,7 @@
 // src/api/playerApi.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const authHeader = 'Basic ' + btoa('admin:goodpassword'); // Update with actual credentials if needed
 
 // Create an axios instance with default headers

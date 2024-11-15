@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/auth'; // Change this to match your backend login endpoint
+const API_URL = 'http://47.129.130.11:8080/api/auth'; // Change this to match your backend login endpoint
+
 
 export const login = async (email, password) => {
   try {
