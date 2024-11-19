@@ -313,7 +313,10 @@ public class TournamentServiceImpl implements TournamentService {
         Player[] seededPlayers = Arrays.copyOfRange(playerArray, 0, totalSeededPlayers);
         List<Player> unseededPlayers = new ArrayList<>(Arrays.asList(Arrays.copyOfRange(playerArray, totalSeededPlayers, totalPlayers)));
 
-        for (int i=totalPlayers; i<totalSlots; i++) {
+        // If the total number of participants is not a power of 2, some players will get a walkover / BYE (represented as NULL) in the first round. 
+        // For every iteration add null to the front of the list, ensures that the top k seeded players will get a walkover in the first round (where k = firstRoundByes)
+        int firstRoundByes = totalSlots - totalPlayers;
+        for (int i=0; i<firstRoundByes; i++) {
             unseededPlayers.add(0, null);
         }
 
@@ -426,6 +429,7 @@ public class TournamentServiceImpl implements TournamentService {
      * If the most recently assigned seeded player is assigned to an even number slot number, 
      * Then assign the unseeded player to the slot above 
      * Else assign the unseeded to the slot number below 
+     * If the front of the unseeded player list is null, the lucky previously assigned seeded player will get a walkover in the first round
      */
     private void assignUnseededPlayers(List<Player> unseededPlayers, Map<Integer, Player> playerAssignment, int index) {
         if (!unseededPlayers.isEmpty()) {
@@ -445,7 +449,7 @@ public class TournamentServiceImpl implements TournamentService {
      * 
      * Iterate through every 2 slots, to evenly distribute the unseeded players
      * Ensures that in the case of many walkovers, there won't be too many empty slots in 1 half of the draw
-     * Ensures that no players will get a walkover in the 2nd round. (Unless both players in the first round don't show up)
+     * Ensures that no players will get a walkover in the 2nd round. (Whether the player(s) show up or not is not within the algorithm's control)
      */
     private void fillRemainingSlots(Map<Integer, Player> playerSlotAssignment, List<Player> unseededPlayers, int totalSlots) {
         int i = 2 ;
