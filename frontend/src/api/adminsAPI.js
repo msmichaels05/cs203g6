@@ -16,7 +16,7 @@ const axiosInstance = axios.create({
 // Fetch all admins (GET /admin or /admins)
 export const fetchAdmins = async () => {
   try {
-    const response = await axiosInstance.get('/admin'); // Change to `/admins` if that’s your endpoint
+    const response = await axiosInstance.get('/users');
     return response.data; // Ensure the backend returns the phone field as well
   } catch (error) {
     console.error('Error fetching admins:', error);

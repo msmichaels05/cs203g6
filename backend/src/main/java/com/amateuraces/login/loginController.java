@@ -1,19 +1,16 @@
 package com.amateuraces.login;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.amateuraces.security.AuthenticationService;
-
-
 import java.util.Base64;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.amateuraces.security.AuthenticationService;
 import com.amateuraces.user.User;
 
 @RestController
-@RequestMapping("/login")
 public class loginController {
 
     private final AuthenticationService authenticationService;
@@ -21,8 +18,8 @@ public class loginController {
     public loginController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
-
-    @PostMapping
+    
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestHeader("Authorization") String authHeader) {
         try {
             // Extract credentials from Basic Auth header

@@ -15,7 +15,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")  // Apply to all endpoints
-                        .allowedOrigins("https://cs203g6-tennis.vercel.app/")  // Allow React frontend
+                        .allowedOrigins("https://cs203g6-tennis.vercel.app")  // Allow React frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // Specify allowed HTTP methods
                         .allowCredentials(true);  // Allow cookies if necessary
             }
