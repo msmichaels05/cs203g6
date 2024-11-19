@@ -15,7 +15,7 @@ public class AmateurAces {
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(AmateurAces.class, args);
 
-        // JPA user repository init
+        // // JPA user repository init
         UserRepository users = ctx.getBean(UserRepository.class);
         BCryptPasswordEncoder encoder = ctx.getBean(BCryptPasswordEncoder.class);
         System.out.println("[Add user]: " + users.save(
