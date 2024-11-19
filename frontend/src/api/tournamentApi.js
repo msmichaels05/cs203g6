@@ -1,7 +1,7 @@
 // src/api/tournamentApi.js
 import axios from 'axios';
 
-const API_BASE_URL = "http://18.143.149.212:8080";
+const API_BASE_URL = "http://18.141.57.161:8080";
 const authHeader = 'Basic ' + btoa('admin:goodpassword'); // Encode credentials
 
 // Create an axios instance with default headers
