@@ -12,7 +12,6 @@ jobs:
 
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_ACCOUNT_ID: "850995574179"  # Replace with your actual AWS Account ID
 
     steps:
       - name: Checkout Code
@@ -27,16 +26,8 @@ jobs:
       - name: Build Backend JAR
         run: |
           cd backend
-          chmod +x ./mvnw
+          chmod +x ./mvnw 
           ./mvnw clean package -DskipTests
-
-      - name: Ensure ECR Repository Exists
-        run: |
-          aws ecr describe-repositories --repository-names my-backend --region ${{ secrets.AWS_REGION }} || \
-          aws ecr create-repository --repository-name my-backend --region ${{ secrets.AWS_REGION }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Log in to Amazon ECR
         id: login-ecr
@@ -48,8 +39,8 @@ jobs:
       - name: Build, Tag, and Push Docker Image
         run: |
           docker build -t my-backend ./backend
-          docker tag my-backend:latest 850995574179.dkr.ecr.ap-southeast-1.amazonaws.com/my-backend:latest
-          docker push 850995574179.dkr.ecr.ap-southeast-1.amazonaws.com/my-backend:latest
+          docker tag my-backend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-backend:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-backend:latest
 
       - name: Deploy to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
