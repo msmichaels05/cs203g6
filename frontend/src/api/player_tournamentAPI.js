@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Define the API base URL
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = "http://18.143.149.212:8080";
 
 // Create an axios instance without default credentials
 const axiosInstance = axios.create({

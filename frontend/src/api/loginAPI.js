@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL; // Your backend URL
+const API_BASE_URL = "http://18.143.149.212:8080"; // Your backend URL
 
 
 export const loginAPI = async (username, password) => {
