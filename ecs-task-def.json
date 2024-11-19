@@ -1,0 +1,31 @@
+{
+    "family": "amateuracestask",
+    "containerDefinitions": [
+      {
+        "name": "amateuracescontainer",
+        "image": "docker.io/msmichaels/amateuraces:backend",
+        "cpu": 1024,
+        "memory": 2048,
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 8080,
+            "hostPort": 8080
+          }
+        ],
+        "networkMode": "awsvpc"
+      }
+    ],
+    "taskRoleArn": "arn:aws:iam::850995574179:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::850995574179:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "cpu": "1024",
+    "memory": "2048",
+    "requiresCompatibilities": [
+      "FARGATE"
+    ],
+    "ephemeralStorage": {
+      "sizeInGiB": 20
+    }
+  }
+  

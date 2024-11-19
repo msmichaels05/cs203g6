@@ -46,8 +46,8 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ecs-task-def.json
-          service: my-backend-service
-          cluster: my-backend-cluster
+          service: amateuracesservice-backend
+          cluster: amateuracescluster
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
