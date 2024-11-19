@@ -1,7 +1,7 @@
 // src/api/adminApi.js
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = "http://18.141.57.161:8080";
 const authHeader = 'Basic ' + btoa('admin:goodpassword'); // Update with actual credentials if needed
 
 // Create an axios instance with default headers
@@ -16,7 +16,7 @@ const axiosInstance = axios.create({
 // Fetch all admins (GET /admin or /admins)
 export const fetchAdmins = async () => {
   try {
-    const response = await axiosInstance.get('/admin'); // Change to `/admins` if that’s your endpoint
+    const response = await axiosInstance.get('/users');
     return response.data; // Ensure the backend returns the phone field as well
   } catch (error) {
     console.error('Error fetching admins:', error);

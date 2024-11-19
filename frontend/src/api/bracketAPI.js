@@ -1,7 +1,7 @@
 // src/api/bracketAPI.js
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = "http://18.141.57.161:8080";
 const authHeader = 'Basic ' + btoa('admin:goodpassword'); // Encode credentials
 
 // Create an axios instance with default headers

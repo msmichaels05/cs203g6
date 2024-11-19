@@ -184,73 +184,19 @@ public class TournamentServiceImpl implements TournamentService {
         }
     }
 
-    // @Transactional
-    // public List<Match> generateMatches(Long tournamentId) {
-    //     Tournament tournament = tournamentRepository.findById(tournamentId)
-    //             .orElseThrow(() -> new TournamentNotFoundException(tournamentId));
-
-    //     int totalPlayers = tournament.getPlayerCount();
-    //     List<Player> players = new ArrayList<>(tournament.getPlayers()); // Convert the set to a list
-    //     Collections.shuffle(players); // Optional: Shuffle players for random pairing
-
-    //     // Determine the next power of two greater than or equal to totalPlayers
-    //     int nextPowerOfTwo = 1;
-    //     while (nextPowerOfTwo < totalPlayers) {
-    //         nextPowerOfTwo *= 2;
-    //     }
-    //     int numberOfByes = nextPowerOfTwo - totalPlayers;
-
-    //     // Initialize matches list
-    //     List<Match> matches = new ArrayList<>();
-
-    //     // Create first round matches
-    //     List<Match> firstRoundMatches = new ArrayList<>();
-    //     int playerIndex = 0;
-
-    //     // Assign byes if necessary
-    //     while (numberOfByes > 0 && playerIndex < players.size()) {
-    //         Player playerWithBye = players.get(playerIndex++);
-    //         Match match = new Match(tournament, playerWithBye, null); // Player gets a bye
-    //         firstRoundMatches.add(match);
-    //         numberOfByes--;
-    //     }
-
-    //     // Create matches for remaining players
-    //     while (playerIndex < players.size()) {
-    //         Player player1 = players.get(playerIndex++);
-    //         Player player2 = (playerIndex < players.size()) ? players.get(playerIndex++) : null;
-    //         Match match = new Match(tournament, player1, player2);
-    //         firstRoundMatches.add(match);
-    //     }
-
-    //     matches.addAll(firstRoundMatches);
-
-    //     // Build subsequent rounds
-    //     List<Match> previousRoundMatches = firstRoundMatches;
-    //     while (previousRoundMatches.size() > 1) {
-    //         List<Match> currentRoundMatches = new ArrayList<>();
-    //         for (int i = 0; i < previousRoundMatches.size(); i += 2) {
-    //             // Create a match where the players will be determined by the winners of
-    //             // previous matches
-    //             Match match = new Match(tournament, null, null);
-    //             // Optionally, set the match dependencies (e.g., match.setPreviousMatches(...))
-    //             currentRoundMatches.add(match);
-    //             matches.add(match);
-
-    //             // Set the nextMatch in previous matches
-    //             previousRoundMatches.get(i).setNextMatch(match);
-    //             if (i + 1 < previousRoundMatches.size()) {
-    //                 previousRoundMatches.get(i + 1).setNextMatch(match);
-    //             }
-    //         }
-    //         previousRoundMatches = currentRoundMatches;
-    //     }
-
-    //     // Save and return generated matches
-    //     matchRepository.saveAll(matches);
-    //     return matches;
-    // }
-
+    /**
+     * If there is no tournament with the given "id", throw a
+     * TournamentNotFoundException
+     * 
+     * Creates draw while generating all matches for the first round
+     * Subsequently creates all matches for subsequent rounds
+     * 
+     * @param id
+     * 
+     * Every match has 2 slots, each slot contains either a Player or null
+     * 
+     * @return List of all matches from round 1 to finals
+     */
     @Transactional
     public List<Match> generateMatches(Long tournamentId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
@@ -268,14 +214,12 @@ public class TournamentServiceImpl implements TournamentService {
         while (nextPowerOfTwo < totalPlayers) {
             nextPowerOfTwo *= 2;
         }
-        int numberOfByes = nextPowerOfTwo - totalPlayers;
 
         // Initialize matches list
         List<Match> matches = new ArrayList<>();
 
         // Create first round matches
         List<Match> firstRoundMatches = new ArrayList<>();
-        int playerIndex = 0;
 
         for (int i = 0; i < totalSlots; i += 2) {
             Player player1 = playerSlotAssignment.get(i);
@@ -319,11 +263,43 @@ public class TournamentServiceImpl implements TournamentService {
         return matches;
     }
 
-    private int calculateNumberOfSeeds(int playerCount) {
-        if (playerCount < 9) return 2; // Only 2 seeded players if there are fewer than 9 players
-        return playerCount / 4;
+    /**
+     * 
+     * Helper method to determines the total number of seeded players given 
+     * 
+     * @param playerCount The total number of players participating in the tournament
+     * 
+     * Seeded players are players who are ranked in the tournament
+     * Among the seeded players, the higher his ELO ranking, the his seed
+     * Our rationale is we set the total number of seeded players as total number of slots / 4
+     * But if there are only 8 or less players, there will only be 2 seeded players
+     * 
+     * @return Total number of seeded players
+     */
+    private int calculateNumberOfSeeds(int totalSlots) {
+        if (totalSlots < 9) return 2; // Only 2 seeded players if there are fewer than 9 players
+        return totalSlots / 4;
     }
 
+    /**
+     * 
+     * Helper method to edit the PlayerSlotAssignment Map
+     * 
+     * @param playerSet Set of players participating in the tournament
+     * @param totalSeededPlayers Total number of seeded players
+     * @param playerSlotAssignment Map with Slot number as key, its value is the player assigned to the slot number
+     * @param totalSlots Total number of slots
+     * 
+     * 1. Sort player array by descending order of ELO ranking
+     * 2. Get array of seeded players, followed by getting array of unseeded players
+     * 
+     * If the total number of players is a power of 2, nobody will get a walkover in the first round
+     * Else, the number of players who get a walkover in the first round is the difference between the total slots & the total number of players
+     * Adding null indicates that the player mapped to null gets a walkover.
+     * Null added to the front of the list because we assign an unseeded player to play a seeded player first before assigning them to a random empty slot
+     * We first assign seeded players, and we assign seeded players in descending order of ELO ranking
+     * Ex. if there are 13 players, there will be 3 nulls added to unseeded players. Algo ensures that only top 3 seeds get walkover in the first round
+     */
     private void assignPlayersToMatches(Set<Player> playerSet, int totalSeededPlayers, Map<Integer, Player> playerSlotAssignment, int totalSlots) {
         if (playerSet == null || playerSet.isEmpty()) {
             throw new IllegalArgumentException("Player list is empty or null.");
@@ -337,7 +313,10 @@ public class TournamentServiceImpl implements TournamentService {
         Player[] seededPlayers = Arrays.copyOfRange(playerArray, 0, totalSeededPlayers);
         List<Player> unseededPlayers = new ArrayList<>(Arrays.asList(Arrays.copyOfRange(playerArray, totalSeededPlayers, totalPlayers)));
 
-        for (int i=totalPlayers; i<totalSlots; i++) {
+        // If the total number of participants is not a power of 2, some players will get a walkover / BYE (represented as NULL) in the first round. 
+        // For every iteration add null to the front of the list, ensures that the top k seeded players will get a walkover in the first round (where k = firstRoundByes)
+        int firstRoundByes = totalSlots - totalPlayers;
+        for (int i=0; i<firstRoundByes; i++) {
             unseededPlayers.add(0, null);
         }
 
@@ -348,6 +327,17 @@ public class TournamentServiceImpl implements TournamentService {
         fillRemainingSlots(playerSlotAssignment, unseededPlayers, totalSlots);
     }
 
+    /**
+     * 
+     * Helper method to edit the PlayerSlotAssignment Map
+     * 
+     * @param playerSlotAssignment Map with Slot number as key, its value is the player assigned to the slot number
+     * @param seededPlayers Array of all seeded players sorted in descending order of ELO ranking
+     * @param totalSlots Total number of slots
+     * 
+     * Assign seeded 1 & 2 to the top & bottom of the draw respectively as they are projected to meet in the finals seems they are the '2 best players' in the torunament by ELO 
+     * Assign seeded 3 & 4 to the middle of the draw so that they meet the top 2 seeds in the semi finals 
+     */
     private void assignTop4Seeds(Map<Integer, Player> playerSlotAssignment, Player[] seededPlayers, int totalSlots) {
         int mid = totalSlots / 2;
         playerSlotAssignment.put(0, seededPlayers[0]); // Assign seeded 1 to top of the draw
@@ -357,6 +347,27 @@ public class TournamentServiceImpl implements TournamentService {
         playerSlotAssignment.put(mid, seededPlayers[2]); // Assign seeded 4 to middle of the draw
     }
     
+    /**
+     * 
+     * Helper method to edit the PlayerSlotAssignment Map
+     * 
+     * @param unseededPlayers List of unseeded players
+     * @param seededPlayers Array of seeded players
+     * @param playerSlotAssignment Map with Slot number as key, its value is the player assigned to the slot number
+     * @param totalSlots Total number of slots
+     * 
+     * mid = Index of the slot in the middle 
+     * Each time we assign a seeded player, we assign an unlucky unseeded player to meet the seeded player in the first round
+     * 
+     * The lowerBound and upperBound is to set to assign the next set of seeded players
+     * After assigning top 4 seeds, the next set of seeded players to be assigned is seeded 5-8. 
+     * We assign 2 of these new set of seeded players to the middle of 2 nearest previously assigned seeded player.
+     * Ex. 5 & 7 may be assigned to the middle of 1 & 4 so that 1 will meet 5 & 4 will meet 7 in the quarter finals
+     * Repeat previous 2 steps again, but next set of seeded players will be seeded 9-16
+     * 
+     * slotsToAssign stores the slot number to assign the next set of seeded players
+     * Every time a seeded player is assigned a slot from seeded 5 onwards, the next slot for the next set of seeded players will be added to the List
+     */
     private void assignSeededPlayers(List<Player> unseededPlayers, Player[] seededPlayers, int numberOfSeeds, int totalSlots, Map<Integer, Player> playerSlotAssignment) {
         int mid = totalSlots / 2;
         int seededPlayersSize = seededPlayers.length;
@@ -369,7 +380,6 @@ public class TournamentServiceImpl implements TournamentService {
         assignUnseededPlayers(unseededPlayers, playerSlotAssignment, totalSlots - 1);
     
         if (seededPlayersSize < 4) {
-            //fillRemainingSlots(playerSlotAssignment, unseededPlayers, totalSlots);
             return; // If there are only 2 seeded players
         }
     
@@ -378,7 +388,6 @@ public class TournamentServiceImpl implements TournamentService {
         assignUnseededPlayers(unseededPlayers, playerSlotAssignment, mid - 1);
     
         if (seededPlayersSize < 8) {
-            //fillRemainingSlots(playerSlotAssignment, unseededPlayers, totalSlots);
             return; // If there are only 4 seeded players
         }
     
@@ -409,6 +418,19 @@ public class TournamentServiceImpl implements TournamentService {
         }
     }
 
+    /**
+     * 
+     * Helper method to asign unlucky unseeded player to play seeded player in the first round
+     * 
+     * @param playerSlotAssignment Map with Slot number as key, its value is the player assigned to the slot number
+     * @param unseededPlayers List of all unseeded players (Players who are not seeded)
+     * @param index index to assign the unseeded player
+     * 
+     * If the most recently assigned seeded player is assigned to an even number slot number, 
+     * Then assign the unseeded player to the slot above 
+     * Else assign the unseeded to the slot number below 
+     * If the front of the unseeded player list is null, the lucky previously assigned seeded player will get a walkover in the first round
+     */
     private void assignUnseededPlayers(List<Player> unseededPlayers, Map<Integer, Player> playerAssignment, int index) {
         if (!unseededPlayers.isEmpty()) {
             if (index % 2 == 0) playerAssignment.put(index + 1, unseededPlayers.remove(0));
@@ -416,6 +438,19 @@ public class TournamentServiceImpl implements TournamentService {
         }
     }    
 
+    /**
+     * 
+     * Helper method to asign remaining unseeded players who are lucky to be not mapped to a seeded player in the first round
+     * Assign them to remianing slots that are still empty after assigning all seeded players & unlucky unseeded players
+     * 
+     * @param playerSlotAssignment Map with Slot number as key, its value is the player assigned to the slot number
+     * @param unseededPlayers List of all unseeded players (Players who are not seeded)
+     * @param totalSlots total number of slots
+     * 
+     * Iterate through every 2 slots, to evenly distribute the unseeded players
+     * Ensures that in the case of many walkovers, there won't be too many empty slots in 1 half of the draw
+     * Ensures that no players will get a walkover in the 2nd round. (Whether the player(s) show up or not is not within the algorithm's control)
+     */
     private void fillRemainingSlots(Map<Integer, Player> playerSlotAssignment, List<Player> unseededPlayers, int totalSlots) {
         int i = 2 ;
         while (unseededPlayers.size() > 0 && i < totalSlots) {

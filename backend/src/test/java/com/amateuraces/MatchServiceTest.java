@@ -54,35 +54,4 @@ public class MatchServiceTest {
 
         verify(matchRepository).save(match);
     }
-
-    // @Test
-    // public void updateMatch_ValidId_ReturnUpdatedMatch() {
-    //     Match existingMatch = new Match(new Tournament("test tournament"), new Player("adam"), new Player("bob"));
-
-    //     Match newMatchInfo = existingMatch;
-    //     newMatchInfo.setWinner(existingMatch.getPlayer1());
-    //     newMatchInfo.setScore("6-9");
-
-    //     when(matchRepository.findById(1L)).thenReturn(Optional.of(existingMatch));
-    //     when(matchRepository.save(any(Match.class))).thenReturn(existingMatch);
-
-    //     Match updatedMatch = matchService.updateMatch(1L, newMatchInfo, 1L);
-
-    //     assertNotNull(updatedMatch);
-    //     assertEquals(newMatchInfo.getWinner(), updatedMatch.getWinner());
-
-    //     verify(matchRepository).save(existingMatch);
-    // }
-
-    // @Test
-    // void updateMatch_NotFound_ReturnNull(){
-    //     Match match = new Match(new Tournament("test tournament"), new Player("adam"), new Player("bob"));
-    //     Long matchID = 10L;
-    //     when(matchRepository.findById(matchID)).thenReturn(Optional.empty());
-        
-    //     Match updatedMatch = matchService.updateMatch(matchID, match);
-        
-    //     assertNull(updatedMatch);
-    //     verify(matchRepository).findById(matchID);
-    // }
 }
