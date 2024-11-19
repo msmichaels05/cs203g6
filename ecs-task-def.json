@@ -1,30 +1,29 @@
 {
-    "family": "amateuracestask",
-    "networkMode": "awsvpc",
-    "containerDefinitions": [
-      {
-        "name": "amateuracescontainer",
-        "image": "docker.io/msmichaels/amateuraces:backend",
-        "cpu": 1024,
-        "memory": 2048,
-        "essential": true,
-        "portMappings": [
-          {
-            "containerPort": 8080,
-            "hostPort": 8080
-          }
-        ]
-      }
-    ],
-    "taskRoleArn": "arn:aws:iam::850995574179:role/ecsTaskExecutionRole",
-    "executionRoleArn": "arn:aws:iam::850995574179:role/ecsTaskExecutionRole",
-    "cpu": "1024",
-    "memory": "2048",
-    "requiresCompatibilities": [
-      "FARGATE"
-    ],
-    "ephemeralStorage": {
-      "sizeInGiB": 20
+  "family": "amateuracestask",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "name": "amateuracescontainer",
+      "image": "docker.io/msmichaels/amateuraces:backend",
+      "cpu": 1024,
+      "memory": 2048,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080
+        }
+      ]
     }
+  ],
+  "taskRoleArn": "arn:aws:iam::850995574179:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::850995574179:role/ecsTaskExecutionRole",
+  "cpu": "1024",
+  "memory": "2048",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "ephemeralStorage": {
+    "sizeInGiB": 21
   }
-  
+}
