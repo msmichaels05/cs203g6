@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL; // Your backend URL
+console.log(API_BASE_URL)
 
 export const loginAPI = async (username, password) => {
   const authHeader = 'Basic ' + btoa(`${username}:${password}`);  // Using Basic Auth
