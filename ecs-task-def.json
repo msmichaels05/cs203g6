@@ -1,5 +1,6 @@
 {
     "family": "amateuracestask",
+    "networkMode": "awsvpc",
     "containerDefinitions": [
       {
         "name": "amateuracescontainer",
@@ -12,13 +13,11 @@
             "containerPort": 8080,
             "hostPort": 8080
           }
-        ],
-        "networkMode": "awsvpc"
+        ]
       }
     ],
     "taskRoleArn": "arn:aws:iam::850995574179:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::850995574179:role/ecsTaskExecutionRole",
-    "networkMode": "awsvpc",
     "cpu": "1024",
     "memory": "2048",
     "requiresCompatibilities": [
