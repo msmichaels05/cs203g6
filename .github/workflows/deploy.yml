@@ -1,60 +1,60 @@
-name: Deploy to EC2
+name: Deploy to ECS and Vercel
 
 on:
   push:
     branches:
-      - main  # Change this to your deployment branch if necessary
+      - main  # Change to your deployment branch if necessary
 
 jobs:
-  deploy:
+  deploy-to-ecs:
+    name: Deploy Backend to ECS
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, Tag, and Push Docker Image
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          # Build the Docker image for the backend
+          docker build -t my-backend ./backend
+          # Tag the image for ECR
+          docker tag my-backend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-backend:latest
+          # Push the image to ECR
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/my-backend:latest
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          node-version: '16'  # Use the Node.js version your app requires
-
-      - name: Install dependencies
-        working-directory: ./frontend 
-        run: npm install
-
-      - name: Build the project
-        working-directory: ./frontend
-        run: CI=false npm run build
-
-      - name: Copy files to EC2
+          task-definition: ecs-task-def.json
+          service: my-backend-service
+          cluster: my-backend-cluster
         env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USER: ${{ secrets.EC2_USER }}
-          PEM_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
-        run: |
-          echo "$PEM_KEY" > key.pem
-          chmod 400 key.pem
-          # Ensure the app directory exists on EC2
-          ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "mkdir -p /home/ubuntu/app/build"
-          # Copy the build files
-          scp -i key.pem -o StrictHostKeyChecking=no -r ./frontend/build $EC2_USER@$EC2_HOST:/home/ubuntu/app
-          rm key.pem
+          AWS_REGION: ${{ secrets.AWS_REGION }}
 
-      - name: SSH and restart server
+  deploy-to-vercel:
+    name: Deploy Frontend to Vercel
+    runs-on: ubuntu-latest
+    needs: deploy-to-ecs
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel
         env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USER: ${{ secrets.EC2_USER }}
-          PEM_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          echo "$PEM_KEY" > key.pem
-          chmod 400 key.pem
-          ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            # Copy build files to the app directory
-            rm -rf /home/ubuntu/app/build/*
-            cp -r /home/ubuntu/app/frontend/build/* /home/ubuntu/app/build
-            # Restart Nginx to load the new build
-            sudo systemctl restart nginx
-          EOF
-          rm key.pem
-#updated/test2
-          
+          # Navigate to the frontend directory
+          cd ./frontend
+          # Deploy to Vercel
+          vercel --prod --token $VERCEL_TOKEN
