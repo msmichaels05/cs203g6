@@ -53,6 +53,7 @@ public class TournamentServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+
     @Test
     void addTournament_SameName_ReturnException(){
         Tournament tournament = new Tournament("New Tournament");
