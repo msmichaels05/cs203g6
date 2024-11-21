@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Define the API base URL
-const API_BASE_URL = "http://18.141.57.161:8080";
+const API_BASE_URL = "http://18.141.57.161:3306";
 
 // Create an axios instance without default credentials
 const axiosInstance = axios.create({

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = "http://18.141.57.161:8080"; // Your backend URL
+const API_BASE_URL = "http://18.141.57.161:3306"; // Your backend URL
 
 
 export const loginAPI = async (username, password) => {

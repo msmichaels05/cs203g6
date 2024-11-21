@@ -81,6 +81,7 @@
                         <env>
                             <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
                         </env>
+                        <name>msmichaels/amateuraces:backend</name>
                         <builder>paketobuildpacks/builder:base</builder>
                         <runImage>paketobuildpacks/run:base-cnb</runImage>
                     </image>
