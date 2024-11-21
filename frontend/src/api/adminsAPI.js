@@ -1,7 +1,7 @@
 // src/api/adminApi.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'http://54.152.65.230:8080';
 const authHeader = 'Basic ' + btoa('admin:goodpassword'); // Update with actual credentials if needed
 
 // Create an axios instance with default headers

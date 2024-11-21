@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080'; // Your backend URL
+const API_BASE_URL = 'http://54.152.65.230:8080'; // Your backend URL
 
 export const loginAPI = async (username, password) => {
   // Encode the credentials for Basic Auth
