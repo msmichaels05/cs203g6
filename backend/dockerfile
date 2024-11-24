@@ -1,15 +1,17 @@
 # Start with a base image that has Java installed
 FROM openjdk:17-jdk-slim
 
-# Set the working directory in the container
+# # Set the working directory in the container
 WORKDIR /app
 
-# Copy the Spring Boot application's JAR file into the container
-# Replace "app.jar" with your JAR file name, e.g., "your-application-0.0.1-SNAPSHOT.jar"
+# # Copy the Spring Boot application's JAR file into the container
+# # Replace "app.jar" with your JAR file name, e.g., "your-application-0.0.1-SNAPSHOT.jar"
 COPY target/amateuraces-0.0.1-SNAPSHOT.jar /app/amateuraces-0.0.1-SNAPSHOT.jar
 
-# Expose the port that the application runs on
-EXPOSE 8080
+# COPY . .
 
-# Define the command to run the application
+# # Expose the port that the application runs on
+EXPOSE 3306
+
+# # Define the command to run the application
 ENTRYPOINT ["java", "-jar", "/app/amateuraces-0.0.1-SNAPSHOT.jar"]
