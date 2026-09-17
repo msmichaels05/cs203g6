@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime
+from pathlib import Path
 from typing import List, Literal, Optional
 
 from git import NULL_TREE, Repo
@@ -19,6 +20,8 @@ class ArtifactBundle(BaseModel):
     commits: List["CommitInfo"] = Field(default_factory=list)
     jira_tickets: List["JiraTicket"] = Field(default_factory=list)
     peer_evaluations: List[PeerEvaluation] = Field(default_factory=list)
+    code_files: List[str] = Field(default_factory=list, description="List of relevant code files for dimension evaluation")
+    documents: List[str] = Field(default_factory=list, description="List of relevant documents for dimension evaluation")
 
 
 class FileDiff(BaseModel):
@@ -96,6 +99,36 @@ def _normalize_stat_keys(stats_by_file: dict[str, dict]) -> dict[str, dict]:
     return normalized
 
 
+CODE_EXTENSIONS = {
+    ".py", ".js", ".jsx", ".ts", ".tsx", ".java", ".kt", ".go", ".rb", ".php", ".cs", ".cpp", ".c", ".h",
+    ".hpp", ".swift", ".rs", ".scala", ".sql", ".sh", ".yaml", ".yml", ".json", ".xml", ".properties", ".gradle",
+}
+DOCUMENT_EXTENSIONS = {".md", ".rst", ".txt", ".adoc", ".pdf", ".doc", ".docx", ".drawio"}
+DOCUMENT_BASENAMES = {"readme", "changelog", "license", "contributing", "architecture"}
+
+
+def _is_document_file(path: str) -> bool:
+    p = Path(path)
+    name = p.stem.lower()
+    suffix = p.suffix.lower()
+    return (
+        suffix in DOCUMENT_EXTENSIONS
+        or p.name.lower() == "readme"
+        or name in DOCUMENT_BASENAMES
+        or "docs" in {part.lower() for part in p.parts}
+    )
+
+
+def _is_code_file(path: str) -> bool:
+    p = Path(path)
+    return p.suffix.lower() in CODE_EXTENSIONS
+
+
+def _tracked_documents(repo: Repo) -> list[str]:
+    tracked = repo.git.ls_files().splitlines()
+    return sorted({path for path in tracked if _is_document_file(path)})
+
+
 def build_artifact_bundle(
     repo_path: str,
     team_id: str,
@@ -115,6 +148,8 @@ def build_artifact_bundle(
     commits.reverse()
 
     commit_models: list[CommitInfo] = []
+    code_files: set[str] = set()
+    documents: set[str] = set()
     for commit in commits:
         if commit.parents:
             diff_items = commit.parents[0].diff(commit, create_patch=False)
@@ -128,6 +163,10 @@ def build_artifact_bundle(
         for diff_item in diff_items:
             filename = _diff_filename(diff_item)
             stat_values = stats_lookup.get(filename, {})
+            if _is_document_file(filename):
+                documents.add(filename)
+            elif _is_code_file(filename):
+                code_files.add(filename)
             file_diffs.append(
                 FileDiff(
                     filename=filename,
@@ -152,7 +191,16 @@ def build_artifact_bundle(
             )
         )
 
-    return ArtifactBundle(team_id=team_id, sprint_id=sprint_id, commits=commit_models)
+    if not documents:
+        documents.update(_tracked_documents(repo))
+
+    return ArtifactBundle(
+        team_id=team_id,
+        sprint_id=sprint_id,
+        commits=commit_models,
+        code_files=sorted(code_files),
+        documents=sorted(documents),
+    )
 
 
 def main() -> None:

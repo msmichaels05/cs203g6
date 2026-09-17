@@ -1034,5 +1034,44 @@
     }
   ],
   "jira_tickets": [],
-  "peer_evaluations": []
+  "peer_evaluations": [],
+  "code_files": [
+    ".github/workflows/deploy.yml",
+    "backend/docker-compose.yaml",
+    "backend/pom.xml",
+    "backend/src/main/java/com/amateuraces/config/WebConfig.java",
+    "backend/src/main/java/com/amateuraces/highlight/Highlight.java",
+    "backend/src/main/java/com/amateuraces/highlight/HighlightController.java",
+    "backend/src/main/java/com/amateuraces/highlight/HighlightNotFoundException.java",
+    "backend/src/main/java/com/amateuraces/highlight/HighlightRepository.java",
+    "backend/src/main/java/com/amateuraces/highlight/HighlightService.java",
+    "backend/src/main/java/com/amateuraces/highlight/HighlightServiceImpl.java",
+    "backend/src/main/java/com/amateuraces/login/loginController.java",
+    "backend/src/main/java/com/amateuraces/player/Player.java",
+    "backend/src/main/java/com/amateuraces/security/SecurityConfig.java",
+    "backend/src/main/java/com/amateuraces/tournament/TournamentServiceImpl.java",
+    "backend/src/main/java/com/amateuraces/user/UserController.java",
+    "backend/src/main/resources/application.properties",
+    "backend/src/test/java/com/amateuraces/AdminIntegrationTest.java",
+    "backend/src/test/java/com/amateuraces/HighlightServiceTest.java",
+    "backend/src/test/java/com/amateuraces/MatchServiceTest.java",
+    "backend/src/test/java/com/amateuraces/PlayerIntegrationTest.java",
+    "backend/src/test/java/com/amateuraces/SpringBootIntegrationTest.java",
+    "backend/src/test/java/com/amateuraces/TournamentIntegrationTest.java",
+    "backend/src/test/java/com/amateuraces/TournamentServiceTest.java",
+    "backend/src/test/java/com/amateuraces/UserIntegrationTest.java",
+    "ecs-task-def.json",
+    "frontend/src/api/adminsAPI.js",
+    "frontend/src/api/bracketAPI.js",
+    "frontend/src/api/loginAPI.js",
+    "frontend/src/api/player_tournamentAPI.js",
+    "frontend/src/api/playersAPI.js",
+    "frontend/src/api/tournamentApi.js",
+    "frontend/src/services/authService.js"
+  ],
+  "documents": [
+    "backend/README.md",
+    "frontend/README.md",
+    "frontend/public/robots.txt"
+  ]
 }
